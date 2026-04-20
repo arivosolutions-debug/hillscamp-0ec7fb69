@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
+import { SearchSuggestions } from '@/components/home/SearchSuggestions';
 
 const SEARCH_KEYWORDS = [
   'for Wayanad...',
@@ -97,6 +98,7 @@ const AnimatedSearchBar: React.FC<{ onSubmit: (value: string) => void }> = ({ on
 
 export const FloatingSearch: React.FC = () => {
   const navigate = useNavigate();
+  const [desktopQuery, setDesktopQuery] = useState('');
 
   const handleSearch = (value: string) => {
     const params = new URLSearchParams();
@@ -108,9 +110,11 @@ export const FloatingSearch: React.FC = () => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const params = new URLSearchParams();
+    const q = (data.get('q') as string) || desktopQuery;
     const district = data.get('district') as string;
     const type = data.get('type') as string;
     const guests = data.get('guests') as string;
+    if (q) params.set('q', q);
     if (district) params.set('district', district.toLowerCase());
     if (type) params.set('type', type.toLowerCase().replace(' ', '_'));
     if (guests) params.set('guests', guests.replace(/\D/g, ''));
@@ -125,9 +129,25 @@ export const FloatingSearch: React.FC = () => {
       {/* Desktop: full search bar */}
       <form
         onSubmit={handleDesktopSearch}
-        className="hidden md:flex bg-white rounded-2xl shadow-[0_20px_25px_-5px_rgba(27,28,28,0.05),0_8px_10px_-6px_rgba(27,28,28,0.05)] p-2 items-center gap-2">
-        <div className="flex-1 grid grid-cols-3 gap-2">
-          <div className="px-6 py-3 rounded-xl">
+        className="hidden md:flex bg-white rounded-2xl shadow-[0_20px_25px_-5px_rgba(27,28,28,0.05),0_8px_10px_-6px_rgba(27,28,28,0.05)] p-2 items-center gap-2 relative">
+        <div className="flex-1 grid grid-cols-4 gap-2">
+          <div className="px-6 py-3 rounded-xl relative">
+            <label className="block text-xs font-bold uppercase tracking-wider mb-1 mx-[4px] text-[#944729]">
+              Search
+            </label>
+            <input
+              name="q"
+              value={desktopQuery}
+              onChange={(e) => setDesktopQuery(e.target.value)}
+              placeholder="Munnar, treehouse…"
+              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-none text-sm placeholder:text-hc-text/50"
+            />
+            <SearchSuggestions
+              query={desktopQuery}
+              onSelect={() => setDesktopQuery('')}
+              className="!left-0 !right-auto w-[360px]"
+            />
+          </div>
             <label className="block text-xs font-bold uppercase tracking-wider mb-1 mx-[4px] text-[#944729]">
               District
             </label>
