@@ -614,6 +614,39 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
           </div>
           <textarea placeholder="Day description" value={day.description} onChange={e => update(i, 'description', e.target.value)} rows={3}
             className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
+          <div className="flex items-center gap-3">
+            {day.image_url ? (
+              <div className="relative">
+                <img src={day.image_url} alt="" className="w-24 h-24 object-cover rounded-lg" />
+                <button
+                  onClick={() => {
+                    const n = [...days];
+                    n[i] = { ...n[i], image_url: undefined, file: undefined };
+                    onChange(n);
+                  }}
+                  className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow text-red-500"
+                  type="button"
+                >
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            ) : null}
+            <label className="cursor-pointer text-xs font-body text-hc-secondary hover:underline">
+              {day.image_url ? 'Replace photo' : '+ Add photo'}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const n = [...days];
+                  n[i] = { ...n[i], image_url: URL.createObjectURL(file), file };
+                  onChange(n);
+                }}
+              />
+            </label>
+          </div>
         </div>
       ))}
     </div>
