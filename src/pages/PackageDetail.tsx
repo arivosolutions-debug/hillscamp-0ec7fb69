@@ -12,6 +12,7 @@ import { usePackage } from '@/hooks/usePackage';
 import { ShareSheet } from '@/components/shared/ShareSheet';
 import { usePackages } from '@/hooks/usePackages';
 import type { PropertyImage } from '@/lib/types';
+import { PropertyReviews } from '@/components/property/PropertyReviews';
 
 const WHATSAPP_PHONE = '919847012345';
 
@@ -239,6 +240,11 @@ const PackageDetail: React.FC = () => {
             {pkg.terms_conditions && pkg.terms_conditions.length > 0 && (
               <CollapsibleList title="Terms & Conditions" items={pkg.terms_conditions} />
             )}
+          </section>
+
+          {/* Guest Reviews */}
+          <section className="px-5 md:px-8 max-w-[1280px] md:mx-auto">
+            <PropertyReviews packageId={pkg.id} />
           </section>
 
           {/* Similar Packages */}
