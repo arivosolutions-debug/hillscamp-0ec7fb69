@@ -31,6 +31,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onDistrict, onPropertyType, onGuests,
   isSticky = false,
 }) => {
+  const { data: typeOptions = [] } = usePropertyTypes();
   return (
     <div
       className={`rounded-2xl overflow-hidden transition-all duration-300 ${
