@@ -1,11 +1,34 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Logo } from '@/components/shared/Logo';
+import { Switch } from '@/components/ui/switch';
 import {
   Plus, Trash2, Edit2, Eye, EyeOff, X, Save, LogOut,
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
   FileText, Upload, GripVertical
 } from 'lucide-react';
+
+const MAX_FEATURED = 4;
+
+async function checkFeaturedCap(
+  table: 'properties' | 'packages',
+  willBeFeatured: boolean,
+  currentId?: string,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  if (!willBeFeatured) return { ok: true };
+  const { data, error } = await (supabase.from(table as any) as any)
+    .select('id')
+    .eq('is_featured', true);
+  if (error) return { ok: true };
+  const others = (data ?? []).filter((r: any) => r.id !== currentId);
+  if (others.length >= MAX_FEATURED) {
+    return {
+      ok: false,
+      message: `Maximum ${MAX_FEATURED} featured items allowed. Unfeature one first.`,
+    };
+  }
+  return { ok: true };
+}
 
 const ADMIN_PASSWORD = 'hillscamp2025';
 
