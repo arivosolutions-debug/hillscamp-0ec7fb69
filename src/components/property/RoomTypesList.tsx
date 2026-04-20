@@ -65,6 +65,7 @@ const RoomCarousel: React.FC<{
 };
 
 export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage }) => {
+  const [grid, setGrid] = useState<{ images: string[]; roomName: string } | null>(null);
   const [lightbox, setLightbox] = useState<{
     images: string[];
     index: number;
