@@ -981,6 +981,25 @@ const PackageFormPage: React.FC<{
         )
       );
 
+      // Upload itinerary day images
+      const uploadedItinerary = await Promise.all(
+        form.itinerary.map(async (day) => {
+          let imageUrl: string | null = day.image ?? null;
+          if (day.imageFile) {
+            imageUrl = await uploadFile(day.imageFile, 'package-images', 'itinerary/');
+          } else if (imageUrl && imageUrl.startsWith('blob:')) {
+            imageUrl = null;
+          }
+          return {
+            day: day.day,
+            title: day.title,
+            subtitle: day.subtitle,
+            description: day.description,
+            image: imageUrl,
+          };
+        })
+      );
+
       const payload = {
         name: form.name, slug: form.slug, location: form.location || null, region: form.region || null,
         price_inr: form.price_inr ? parseFloat(form.price_inr) : null,
@@ -995,7 +1014,7 @@ const PackageFormPage: React.FC<{
         is_featured: form.is_featured, is_published: form.is_published,
         sort_order: form.sort_order,
         tags: form.tags.length ? form.tags : null,
-        itinerary: form.itinerary.length ? form.itinerary : null,
+        itinerary: uploadedItinerary.length ? uploadedItinerary : null,
         whats_not_included: form.whats_not_included.length ? form.whats_not_included : null,
         terms_conditions: form.terms_conditions.length ? form.terms_conditions : null,
       };
