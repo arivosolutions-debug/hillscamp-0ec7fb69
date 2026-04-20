@@ -30,8 +30,11 @@ export const RoomGalleryGrid: React.FC<RoomGalleryGridProps> = ({
     return () => { document.body.style.overflow = ''; };
   }, []);
 
-  return (
-    <div className="fixed inset-0 z-[200] bg-hc-bg flex flex-col" style={{ height: '100dvh' }}>
+  const content = (
+    <div
+      className="fixed inset-0 bg-hc-bg flex flex-col"
+      style={{ height: '100dvh', zIndex: 99998 }}
+    >
       <div
         className="flex items-center justify-between px-5 pb-3 bg-hc-bg/90 backdrop-blur-md sticky top-0 z-10"
         style={{ paddingTop: 'max(calc(3.5rem + env(safe-area-inset-top, 16px)), 72px)' }}
@@ -83,4 +86,6 @@ export const RoomGalleryGrid: React.FC<RoomGalleryGridProps> = ({
       </div>
     </div>
   );
+
+  return ReactDOM.createPortal(content, document.body);
 };
