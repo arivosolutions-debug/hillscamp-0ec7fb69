@@ -193,10 +193,7 @@ const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & { l
 const Toggle: React.FC<{ label: string; checked: boolean; onChange: (v: boolean) => void }> = ({ label, checked, onChange }) => (
   <div className="flex items-center justify-between bg-hc-bg-alt rounded-xl px-4 py-3">
     <span className="text-sm font-body text-hc-text">{label}</span>
-    <button type="button" onClick={() => onChange(!checked)}
-      className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-hc-primary' : 'bg-hc-text-light/30'}`}>
-      <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
-    </button>
+    <Switch checked={checked} onCheckedChange={onChange} />
   </div>
 );
 
