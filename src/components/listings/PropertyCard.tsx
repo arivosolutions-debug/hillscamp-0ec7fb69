@@ -4,9 +4,10 @@ import { MapPin, Users, ArrowRight } from 'lucide-react';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
 import { usePropertyTypeLabels } from '@/hooks/usePropertyTypes';
 import type { Property } from '@/lib/types';
+import { CardSlideshow } from '@/components/shared/CardSlideshow';
 
 interface PropertyCardProps {
-  property: Property & { amenity_names?: string[]; tags?: string[] | null };
+  property: Property & { amenity_names?: string[]; tags?: string[] | null; gallery_images?: string[] };
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
@@ -21,18 +22,19 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
 
   const tags = property.tags && property.tags.length > 0 ? property.tags.slice(0, 3) : [];
 
+  const slideshowImages = [
+    property.cover_image ?? undefined,
+    ...((property.gallery_images ?? []) as string[]),
+  ].filter((s): s is string => Boolean(s));
+  const finalImages = slideshowImages.length > 0 ? slideshowImages : ['/placeholder.svg'];
+
   return (
     <Link to={`/property/${property.slug}`} className="group block">
       {/* Image */}
       <div className="relative rounded-2xl overflow-hidden mb-3 aspect-[4/3] md:aspect-[4/5]">
-        <img
-          src={property.cover_image ?? '/placeholder.svg'}
-          alt={property.name}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+        <CardSlideshow images={finalImages} alt={property.name} />
         {/* Property type chip — matches Featured Retreats badge style */}
-        <span className="absolute top-3 left-3 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-[10px] font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
+        <span className="absolute top-3 left-3 z-20 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-[10px] font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
           {propertyTypeLabel}
         </span>
       </div>
