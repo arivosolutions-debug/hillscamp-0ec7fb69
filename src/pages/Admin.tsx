@@ -590,9 +590,15 @@ const AttractionEditor: React.FC<{ items: NearbyAttractionForm[]; onChange: (ite
 // ─── Itinerary Editor ─────────────────────────────────────────────
 
 const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: ItineraryDay[]) => void }> = ({ days, onChange }) => {
-  const add = () => onChange([...days, { day: days.length + 1, title: '', subtitle: '', description: '' }]);
-  const update = (i: number, field: keyof ItineraryDay, val: string | number) => {
+  const add = () => onChange([...days, { day: days.length + 1, title: '', subtitle: '', description: '', image: null }]);
+  const update = (i: number, field: keyof ItineraryDay, val: string | number | File | null) => {
     const n = [...days]; (n[i] as any)[field] = val; onChange(n);
+  };
+  const handleImage = (i: number, file: File | undefined) => {
+    if (!file) return;
+    const n = [...days];
+    n[i] = { ...n[i], image: URL.createObjectURL(file), imageFile: file };
+    onChange(n);
   };
   return (
     <div className="flex flex-col gap-3">
@@ -614,6 +620,27 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
           </div>
           <textarea placeholder="Day description" value={day.description} onChange={e => update(i, 'description', e.target.value)} rows={3}
             className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
+          <div className="flex items-center gap-3">
+            {day.image ? (
+              <div className="relative">
+                <img src={day.image} alt="" className="w-24 h-24 object-cover rounded-lg" />
+                <button
+                  type="button"
+                  onClick={() => { const n = [...days]; n[i] = { ...n[i], image: null, imageFile: undefined }; onChange(n); }}
+                  className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow border border-hc-text-light/20 text-hc-text-light hover:text-red-500"
+                >
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            ) : (
+              <div className="w-24 h-24 rounded-lg bg-white border border-dashed border-hc-text-light/30 flex items-center justify-center text-hc-text-light text-xs">No photo</div>
+            )}
+            <label className="cursor-pointer inline-flex items-center gap-2 text-xs font-semibold text-hc-secondary font-body">
+              <Upload size={13} />
+              {day.image ? 'Replace photo' : 'Upload photo'}
+              <input type="file" accept="image/*" className="hidden" onChange={e => handleImage(i, e.target.files?.[0])} />
+            </label>
+          </div>
         </div>
       ))}
     </div>
