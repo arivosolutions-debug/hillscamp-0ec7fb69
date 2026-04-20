@@ -35,6 +35,7 @@ export function usePackages(filters: PackageFilters = {}) {
       let query = supabase
         .from('packages' as any)
         .select('*')
+        .eq('is_published', true)
         .order('is_featured', { ascending: false })
         .order('created_at', { ascending: false });
 
