@@ -52,7 +52,9 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
-        backgroundColor: 'rgba(0,0,0,0.96)',
+        backgroundColor: 'rgba(0,0,0,0.20)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         display: 'flex',
         flexDirection: 'column',
       }}
