@@ -528,7 +528,7 @@ const AmenitySelector: React.FC<{ selected: string[]; onChange: (ids: string[]) 
 // ─── Room Type Editor ─────────────────────────────────────────────
 
 const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTypeForm[]) => void }> = ({ rooms, onChange }) => {
-  const add = () => onChange([...rooms, { name: '', bed_type: '', max_guests: 2, sort_order: rooms.length, images: [] }]);
+  const add = () => onChange([...rooms, { name: '', bed_type: '', max_guests: 2, price_per_night: '', description: '', sort_order: rooms.length, images: [] }]);
 
   const update = (i: number, field: keyof RoomTypeForm, val: any) => {
     const n = [...rooms]; (n[i] as any)[field] = val; onChange(n);
@@ -550,18 +550,24 @@ const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTy
       </div>
       {rooms.map((room, i) => (
         <div key={i} className="bg-hc-bg-alt rounded-2xl p-4 flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex flex-col gap-1">
+          <div className="flex items-start gap-2">
+            <div className="flex flex-col gap-1 pt-1">
               <button onClick={() => move(i, -1)} className="p-1 hover:text-hc-primary text-hc-text-light"><ChevronUp size={14} /></button>
               <button onClick={() => move(i, 1)} className="p-1 hover:text-hc-primary text-hc-text-light"><ChevronDown size={14} /></button>
             </div>
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
-              <input placeholder="Room name" value={room.name} onChange={e => update(i, 'name', e.target.value)}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
-              <input placeholder="Bed type (e.g. King)" value={room.bed_type} onChange={e => update(i, 'bed_type', e.target.value)}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
-              <input type="number" placeholder="Max guests" value={room.max_guests} onChange={e => update(i, 'max_guests', parseInt(e.target.value) || 1)}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+            <div className="flex-1 flex flex-col gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <input placeholder="Room name" value={room.name} onChange={e => update(i, 'name', e.target.value)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                <input placeholder="Bed type (e.g. King)" value={room.bed_type} onChange={e => update(i, 'bed_type', e.target.value)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                <input type="number" placeholder="Max guests" value={room.max_guests} onChange={e => update(i, 'max_guests', parseInt(e.target.value) || 1)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                <input type="number" placeholder="Price / night (₹)" value={room.price_per_night} onChange={e => update(i, 'price_per_night', e.target.value)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+              </div>
+              <textarea placeholder="Short description (shown under bed type & guests)" value={room.description} onChange={e => update(i, 'description', e.target.value)} rows={2}
+                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
             </div>
             <button onClick={() => onChange(rooms.filter((_, j) => j !== i))} className="text-hc-text-light hover:text-red-500 shrink-0">
               <Trash2 size={16} />
