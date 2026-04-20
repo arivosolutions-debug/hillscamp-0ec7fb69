@@ -1,6 +1,7 @@
 import React from 'react';
 import { Minus, Plus, ChevronDown } from 'lucide-react';
 import type { District, PropertyType } from '@/lib/types';
+import { usePropertyTypes } from '@/hooks/usePropertyTypes';
 
 interface FilterBarProps {
   district: District | '';
