@@ -18,6 +18,7 @@ import { AmenitiesGrid } from '@/components/property/AmenitiesGrid';
 import { GettingThereMobile } from '@/components/property/GettingThereMobile';
 import { HighlightsAccordion, TermsAccordion } from '@/components/property/PropertyAccordion';
 import { SimilarStays } from '@/components/property/SimilarStays';
+import { PropertyReviews } from '@/components/property/PropertyReviews';
 import { useProperty } from '@/hooks/useProperty';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
 import { Helmet } from 'react-helmet-async';
@@ -242,6 +243,11 @@ const PropertyDetail = () => {
           <div className="mt-10 md:px-8 md:max-w-[1280px] md:mx-auto">
             <HighlightsAccordion highlights={property.highlights} />
             <TermsAccordion terms={property.terms_conditions ?? null} />
+          </div>
+
+          {/* Guest Reviews */}
+          <div className="md:px-8 md:max-w-[1280px] md:mx-auto">
+            <PropertyReviews propertyId={property.id} />
           </div>
 
           {/* Similar Stays */}
