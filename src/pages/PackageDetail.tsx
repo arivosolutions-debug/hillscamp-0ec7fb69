@@ -355,8 +355,18 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
         </div>
         <Plus size={20} className={`text-hc-primary shrink-0 transition-transform duration-300 ${open ? 'rotate-45' : ''}`} />
       </button>
-      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '400px' : '0px' }}>
-        <p className="pl-16 pr-4 pb-5 text-sm text-hc-text font-body leading-relaxed">{day.description}</p>
+      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '900px' : '0px' }}>
+        <div className="pl-16 pr-4 pb-5">
+          {day.image && (
+            <img
+              src={day.image}
+              alt={`Day ${day.day} — ${day.title}`}
+              className="w-full max-w-2xl rounded-xl object-cover aspect-[16/9] mb-4"
+              loading="lazy"
+            />
+          )}
+          <p className="text-sm text-hc-text font-body leading-relaxed">{day.description}</p>
+        </div>
       </div>
     </div>
   );
