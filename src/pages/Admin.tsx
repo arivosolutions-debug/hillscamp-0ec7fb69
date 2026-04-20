@@ -845,6 +845,8 @@ const PropertyFormPage: React.FC<{
         const { data: roomData } = await supabase.from('room_types').insert({
           property_id: propertyId!, name: r.name, bed_type: r.bed_type || null,
           max_guests: r.max_guests, sort_order: i,
+          price_per_night: r.price_per_night ? parseFloat(r.price_per_night) : null,
+          description: r.description || null,
         }).select().single();
         if (roomData && r.images.length) {
           const roomImgs = await Promise.all(r.images.map(async (img, j) => {
