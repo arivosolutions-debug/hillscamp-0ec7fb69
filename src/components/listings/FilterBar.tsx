@@ -1,37 +1,29 @@
 import React from 'react';
 import { Minus, Plus, ChevronDown } from 'lucide-react';
-import type { District, PropertyType } from '@/lib/types';
+import type { PropertyType } from '@/lib/types';
 import { usePropertyTypes } from '@/hooks/usePropertyTypes';
+import { useLocations } from '@/hooks/useLocations';
 
 interface FilterBarProps {
-  district: District | '';
+  location: string;
   propertyType: PropertyType | '';
   guests: number;
-  onDistrict: (v: District | '') => void;
+  onLocation: (v: string) => void;
   onPropertyType: (v: PropertyType | '') => void;
   onGuests: (v: number) => void;
   totalCount?: number;
   isSticky?: boolean;
 }
 
-const DISTRICTS: { value: District; label: string }[] = [
-  { value: 'wayanad', label: 'Wayanad' },
-  { value: 'munnar', label: 'Munnar' },
-  { value: 'alleppey', label: 'Alleppey' },
-  { value: 'thekkady', label: 'Thekkady' },
-  { value: 'vagamon', label: 'Vagamon' },
-  { value: 'kozhikode', label: 'Kozhikode' },
-  { value: 'kannur', label: 'Kannur' },
-];
-
-// Property types are now loaded dynamically from the `property_types` admin table.
+// Property types and locations are loaded dynamically from admin tables.
 
 export const FilterBar: React.FC<FilterBarProps> = ({
-  district, propertyType, guests,
-  onDistrict, onPropertyType, onGuests,
+  location, propertyType, guests,
+  onLocation, onPropertyType, onGuests,
   isSticky = false,
 }) => {
   const { data: typeOptions = [] } = usePropertyTypes();
+  const { data: locationOptions = [] } = useLocations();
   return (
     <div
       className={`rounded-2xl overflow-hidden transition-all duration-300 ${
@@ -48,13 +40,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           </label>
           <div className="relative">
             <select
-              value={district}
-              onChange={(e) => onDistrict(e.target.value as District | '')}
+              value={location}
+              onChange={(e) => onLocation(e.target.value)}
               className="w-full appearance-none bg-white/15 text-xs md:text-sm rounded-full px-3 md:px-4 py-2 md:py-2.5 pr-8 border-none focus:ring-0 font-body cursor-pointer text-white opacity-100"
             >
               <option value="" className="text-black">All Kerala</option>
-              {DISTRICTS.map((d) => (
-                <option key={d.value} value={d.value} className="text-black">{d.label}</option>
+              {locationOptions.map((l) => (
+                <option key={l.id} value={l.name} className="text-black">{l.name}</option>
               ))}
             </select>
             <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
