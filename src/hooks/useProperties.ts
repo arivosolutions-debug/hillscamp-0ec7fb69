@@ -15,7 +15,7 @@ export function useProperties(filters: PropertyFilters = {}) {
     queryFn: async () => {
       let query = supabase
         .from('properties')
-        .select('*, property_amenities(amenity_id, amenities(name))')
+        .select('*, property_amenities(amenity_id, amenities(name)), property_images(image_url, sort_order)')
         .eq('is_published', true)
         .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false });
@@ -33,8 +33,16 @@ export function useProperties(filters: PropertyFilters = {}) {
         const amenity_names: string[] = (p.property_amenities ?? [])
           .map((pa: any) => pa.amenities?.name)
           .filter(Boolean);
-        const { property_amenities, ...rest } = p;
-        return { ...rest, amenity_names } as Property & { amenity_names: string[] };
+        const gallery_images: string[] = ((p.property_images ?? []) as any[])
+          .slice()
+          .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+          .map((pi: any) => pi.image_url)
+          .filter(Boolean);
+        const { property_amenities, property_images, ...rest } = p;
+        return { ...rest, amenity_names, gallery_images } as Property & {
+          amenity_names: string[];
+          gallery_images: string[];
+        };
       });
     },
   });
