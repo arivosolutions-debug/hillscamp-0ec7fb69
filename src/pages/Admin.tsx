@@ -786,6 +786,8 @@ const PropertyFormPage: React.FC<{
 
   const handleSubmit = async () => {
     if (!form.name || !form.slug) { onToast('Name and slug are required', 'error'); return; }
+    const cap = await checkFeaturedCap('properties', form.is_featured, form.id);
+    if (!cap.ok) { onToast(cap.message, 'error'); return; }
     setSaving(true);
     try {
       // Upload cover image if file selected
