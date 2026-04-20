@@ -14,20 +14,17 @@ async function checkFeaturedCap(
   table: 'properties' | 'packages',
   willBeFeatured: boolean,
   currentId?: string,
-): Promise<{ ok: true } | { ok: false; message: string }> {
-  if (!willBeFeatured) return { ok: true };
+): Promise<string | null> {
+  if (!willBeFeatured) return null;
   const { data, error } = await (supabase.from(table as any) as any)
     .select('id')
     .eq('is_featured', true);
-  if (error) return { ok: true };
+  if (error) return null;
   const others = (data ?? []).filter((r: any) => r.id !== currentId);
   if (others.length >= MAX_FEATURED) {
-    return {
-      ok: false,
-      message: `Maximum ${MAX_FEATURED} featured items allowed. Unfeature one first.`,
-    };
+    return `Maximum ${MAX_FEATURED} featured items allowed. Unfeature one first.`;
   }
-  return { ok: true };
+  return null;
 }
 
 const ADMIN_PASSWORD = 'hillscamp2025';
