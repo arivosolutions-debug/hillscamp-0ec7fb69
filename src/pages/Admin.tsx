@@ -1201,6 +1201,8 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
       })),
       room_types: (roomsRes.data ?? []).map((r: any) => ({
         id: r.id, name: r.name, bed_type: r.bed_type ?? '', max_guests: r.max_guests,
+        price_per_night: r.price_per_night?.toString() ?? '',
+        description: r.description ?? '',
         sort_order: r.sort_order ?? 0,
         images: (r.room_type_images ?? []).map((img: any) => ({
           id: img.id, image_url: img.image_url, alt_text: img.alt_text ?? '', sort_order: img.sort_order,
