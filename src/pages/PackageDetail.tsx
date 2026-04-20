@@ -22,7 +22,6 @@ interface ItineraryDay {
   title: string;
   subtitle: string;
   description: string;
-  image_url?: string | null;
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -355,18 +354,8 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
         </div>
         <Plus size={20} className={`text-hc-primary shrink-0 transition-transform duration-300 ${open ? 'rotate-45' : ''}`} />
       </button>
-      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '800px' : '0px' }}>
-        <div className="pl-16 pr-4 pb-5">
-          {day.image_url && (
-            <img
-              src={day.image_url}
-              alt={day.title}
-              loading="lazy"
-              className="w-full max-w-md aspect-[4/3] object-cover rounded-2xl mb-4"
-            />
-          )}
-          <p className="text-sm text-hc-text font-body leading-relaxed">{day.description}</p>
-        </div>
+      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '400px' : '0px' }}>
+        <p className="pl-16 pr-4 pb-5 text-sm text-hc-text font-body leading-relaxed">{day.description}</p>
       </div>
     </div>
   );

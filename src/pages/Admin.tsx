@@ -67,8 +67,6 @@ interface ItineraryDay {
   title: string;
   subtitle: string;
   description: string;
-  image_url?: string;
-  file?: File;
 }
 
 interface PackageGalleryForm {
@@ -614,39 +612,6 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
           </div>
           <textarea placeholder="Day description" value={day.description} onChange={e => update(i, 'description', e.target.value)} rows={3}
             className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
-          <div className="flex items-center gap-3">
-            {day.image_url ? (
-              <div className="relative">
-                <img src={day.image_url} alt="" className="w-24 h-24 object-cover rounded-lg" />
-                <button
-                  onClick={() => {
-                    const n = [...days];
-                    n[i] = { ...n[i], image_url: undefined, file: undefined };
-                    onChange(n);
-                  }}
-                  className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow text-red-500"
-                  type="button"
-                >
-                  <Trash2 size={12} />
-                </button>
-              </div>
-            ) : null}
-            <label className="cursor-pointer text-xs font-body text-hc-secondary hover:underline">
-              {day.image_url ? 'Replace photo' : '+ Add photo'}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={e => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  const n = [...days];
-                  n[i] = { ...n[i], image_url: URL.createObjectURL(file), file };
-                  onChange(n);
-                }}
-              />
-            </label>
-          </div>
         </div>
       ))}
     </div>
@@ -987,18 +952,6 @@ const PackageFormPage: React.FC<{
         )
       );
 
-      // Upload itinerary photos
-      const itineraryWithPhotos = await Promise.all(
-        form.itinerary.map(async (day) => {
-          const url = day.file
-            ? await uploadFile(day.file, 'package-images', 'itinerary/')
-            : day.image_url;
-          // strip file (non-serializable) before persisting
-          const { file, ...rest } = day;
-          return { ...rest, image_url: url || null };
-        })
-      );
-
       const payload = {
         name: form.name, slug: form.slug, location: form.location || null, region: form.region || null,
         price_inr: form.price_inr ? parseFloat(form.price_inr) : null,
@@ -1013,7 +966,7 @@ const PackageFormPage: React.FC<{
         is_featured: form.is_featured, is_published: form.is_published,
         sort_order: form.sort_order,
         tags: form.tags.length ? form.tags : null,
-        itinerary: itineraryWithPhotos.length ? itineraryWithPhotos : null,
+        itinerary: form.itinerary.length ? form.itinerary : null,
         whats_not_included: form.whats_not_included.length ? form.whats_not_included : null,
         terms_conditions: form.terms_conditions.length ? form.terms_conditions : null,
       };
