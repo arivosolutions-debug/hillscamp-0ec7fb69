@@ -39,6 +39,8 @@ interface RoomTypeForm {
   name: string;
   bed_type: string;
   max_guests: number;
+  price_per_night: string;
+  description: string;
   sort_order: number;
   images: { id?: string; image_url: string; alt_text: string; sort_order: number; file?: File }[];
 }
