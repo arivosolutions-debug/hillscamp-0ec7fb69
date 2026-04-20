@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { BedDouble, Users } from 'lucide-react';
 import type { RoomType } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
+import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
 interface MobileRoomCardsProps {
   rooms: RoomType[];
