@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Users, ArrowRight } from 'lucide-react';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
+import { usePropertyTypeLabels } from '@/hooks/usePropertyTypes';
 import type { Property } from '@/lib/types';
 
 interface PropertyCardProps {
@@ -9,11 +10,16 @@ interface PropertyCardProps {
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  // Show tags first; fallback to property_type label so card never looks empty
-  const tags =
-    property.tags && property.tags.length > 0
-      ? property.tags.slice(0, 3)
-      : [PROPERTY_TYPE_LABELS[property.property_type] ?? property.property_type];
+  const typeLabels = usePropertyTypeLabels();
+
+  // Resolve the property type label from the admin-managed `property_types` table,
+  // falling back to the curated PROPERTY_TYPE_LABELS map and finally the raw slug.
+  const propertyTypeLabel =
+    typeLabels[property.property_type] ??
+    PROPERTY_TYPE_LABELS[property.property_type] ??
+    property.property_type;
+
+  const tags = property.tags && property.tags.length > 0 ? property.tags.slice(0, 3) : [];
 
   return (
     <Link to={`/property/${property.slug}`} className="group block">
@@ -25,6 +31,10 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
+        {/* Property type chip — matches Featured Retreats badge style */}
+        <span className="absolute top-3 left-3 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-[10px] font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
+          {propertyTypeLabel}
+        </span>
       </div>
 
       {/* Body */}
@@ -42,17 +52,19 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           Up to {property.max_guests} Guests
         </p>
 
-        {/* Tag pills */}
-        <div className="flex flex-wrap gap-1.5 mt-3">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-hc-accent-light text-hc-primary border border-hc-primary/10 text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full font-body"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        {/* Admin-defined tag pills */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-hc-accent-light text-hc-primary border border-hc-primary/10 text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full font-body"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="mt-4 flex items-center justify-between">
           <span className="font-bold text-hc-primary text-sm font-body">
