@@ -72,12 +72,6 @@ export const Navbar: React.FC = () => {
 
           {/* Right */}
           <div className="flex items-center gap-5">
-            <button
-              className={`${textPrimary} hidden md:block hover:text-hc-secondary transition-colors`}
-              aria-label="Search"
-            >
-              <Search size={20} strokeWidth={1.75} />
-            </button>
             <a
               href={WHATSAPP_URL}
               target="_blank"
