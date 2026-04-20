@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Images } from 'lucide-react';
 import type { PropertyImage } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
+import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
 interface PhotoGalleryProps {
   coverImage:   string | null;
@@ -11,6 +12,7 @@ interface PhotoGalleryProps {
 
 export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, propertyName }) => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [gridOpen, setGridOpen] = useState(false);
 
   const allImages: string[] = [
     coverImage ?? '/placeholder.svg',
