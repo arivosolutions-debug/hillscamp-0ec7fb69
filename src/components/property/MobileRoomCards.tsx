@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { BedDouble, Users } from 'lucide-react';
 import type { RoomType } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
+import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
 interface MobileRoomCardsProps {
   rooms: RoomType[];
@@ -96,6 +97,7 @@ const RoomImageCarouselClickable: React.FC<{
 
 export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverImage }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [grid, setGrid] = useState<{ images: string[]; roomName: string } | null>(null);
   const [lightbox, setLightbox] = useState<{
     images: string[];
     index: number;
@@ -124,16 +126,24 @@ export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverIm
                 <RoomImageCarouselClickable
                   images={images}
                   alt={room.name}
-                  onImageClick={(idx) =>
-                    setLightbox({ images, index: idx, roomName: room.name })
-                  }
+                  onImageClick={() => setGrid({ images, roomName: room.name })}
                 />
               </div>
             );
           })}
         </div>
       </div>
-    {lightbox && (
+
+      {grid && !lightbox && (
+        <RoomGalleryGrid
+          images={grid.images}
+          roomName={grid.roomName}
+          onClose={() => setGrid(null)}
+          onSelect={(idx) => setLightbox({ images: grid.images, index: idx, roomName: grid.roomName })}
+        />
+      )}
+
+      {lightbox && (
         <ImageLightbox
           images={lightbox.images}
           index={lightbox.index}
