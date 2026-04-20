@@ -130,13 +130,22 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, 
         </div>
       </div>
 
+      {gridOpen && lightboxIndex === null && (
+        <RoomGalleryGrid
+          images={allImages}
+          roomName={propertyName}
+          onClose={() => setGridOpen(false)}
+          onSelect={(idx) => setLightboxIndex(idx)}
+        />
+      )}
+
       {/* ── Lightbox ───────────────────────────────────────────────── */}
       {lightboxIndex !== null && (
         <ImageLightbox
           images={allImages}
           index={lightboxIndex}
           title={propertyName}
-          onClose={closeLightbox}
+          onClose={() => { setLightboxIndex(null); setGridOpen(false); }}
           onNavigate={setLightboxIndex}
         />
       )}
