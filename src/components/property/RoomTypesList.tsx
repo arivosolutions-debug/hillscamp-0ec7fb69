@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BedDouble, Users, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { RoomType } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
+import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
 interface RoomTypesListProps {
   rooms:      RoomType[];
