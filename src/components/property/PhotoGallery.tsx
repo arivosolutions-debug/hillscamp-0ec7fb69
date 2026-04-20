@@ -113,7 +113,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, 
         {/* Mobile: show 2nd image as strip below hero */}
         <div
           className="md:hidden col-span-12 h-32 relative overflow-hidden cursor-pointer group"
-          onClick={() => openLightbox(1)}
+          onClick={() => allImages.length > 2 ? setGridOpen(true) : openLightbox(1)}
         >
           <img
             src={mosaic[1]}
