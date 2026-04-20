@@ -6,7 +6,7 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { FilterBar } from '@/components/listings/FilterBar';
 import { PropertyGrid } from '@/components/listings/PropertyGrid';
 import { useProperties } from '@/hooks/useProperties';
-import type { District, PropertyType } from '@/lib/types';
+import type { PropertyType } from '@/lib/types';
 import listingsHeroBg from '@/assets/listings-hero-bg.jpg';
 
 const PAGE_SIZE = 6;
