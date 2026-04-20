@@ -45,7 +45,7 @@ const MobileHeroSearch: React.FC<{ onSubmit: (value: string) => void }> = ({ onS
   return (
     <form onSubmit={handleSubmit} className="mt-4 md:hidden">
       <div className="relative">
-        <SearchSuggestions query={inputValue} onSelect={() => setInputValue('')} />
+        <SearchSuggestions query={inputValue} anchorRef={inputRef} onSelect={() => setInputValue('')} />
         <input
           ref={inputRef}
           type="text"
