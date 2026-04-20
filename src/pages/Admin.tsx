@@ -1397,7 +1397,6 @@ const ReviewsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') =
         ...editing,
         property_id: editing.property_id || null,
         package_id: editing.package_id || null,
-        initials: editing.initials || editing.guest_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(),
       };
       if (editing.id) {
         await (supabase.from('reviews' as any) as any).update(payload).eq('id', editing.id);
