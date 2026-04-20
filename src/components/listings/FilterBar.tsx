@@ -24,14 +24,7 @@ const DISTRICTS: { value: District; label: string }[] = [
   { value: 'kannur', label: 'Kannur' },
 ];
 
-const TYPES: { value: PropertyType; label: string }[] = [
-  { value: 'tree_house', label: 'Treehouse' },
-  { value: 'backwater_villa', label: 'Backwater' },
-  { value: 'mountain_lookout', label: 'Mountain' },
-  { value: 'tea_estate_cabin', label: 'Tea Estate' },
-  { value: 'heritage_bungalow', label: 'Heritage' },
-  { value: 'riverside_cottage', label: 'Riverside' },
-];
+// Property types are now loaded dynamically from the `property_types` admin table.
 
 export const FilterBar: React.FC<FilterBarProps> = ({
   district, propertyType, guests,
