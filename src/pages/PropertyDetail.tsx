@@ -90,6 +90,7 @@ const PropertyDetail = () => {
             location={property.location}
             maxGuests={property.max_guests}
             amenityNames={amenityNames}
+            onImageClick={() => setMobileGalleryOpen(true)}
           />
 
           {/* 2. Gallery Icon Button */}
@@ -97,6 +98,8 @@ const PropertyDetail = () => {
             coverImage={property.cover_image}
             images={property.property_images}
             propertyName={property.name}
+            open={mobileGalleryOpen}
+            onOpenChange={setMobileGalleryOpen}
           />
 
           {/* 3. Mobile Share Row */}
