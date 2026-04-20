@@ -99,6 +99,7 @@ const AnimatedSearchBar: React.FC<{ onSubmit: (value: string) => void }> = ({ on
 export const FloatingSearch: React.FC = () => {
   const navigate = useNavigate();
   const [desktopQuery, setDesktopQuery] = useState('');
+  const desktopInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = (value: string) => {
     const params = new URLSearchParams();
@@ -136,6 +137,7 @@ export const FloatingSearch: React.FC = () => {
               Search
             </label>
             <input
+              ref={desktopInputRef}
               name="q"
               value={desktopQuery}
               onChange={(e) => setDesktopQuery(e.target.value)}
@@ -144,8 +146,9 @@ export const FloatingSearch: React.FC = () => {
             />
             <SearchSuggestions
               query={desktopQuery}
+              anchorRef={desktopInputRef}
               onSelect={() => setDesktopQuery('')}
-              className="!left-0 !right-auto w-[360px]"
+              width={360}
             />
           </div>
           <div className="px-6 py-3 rounded-xl">
@@ -193,12 +196,6 @@ export const FloatingSearch: React.FC = () => {
             </select>
           </div>
         </div>
-        <button
-          type="submit"
-          className="bg-[#944729] text-white rounded-xl p-5 hover:brightness-110 transition-colors shrink-0 active:scale-[0.97] px-[20px] mx-[8px]"
-          aria-label="Search">
-          <Search size={20} strokeWidth={1.75} />
-        </button>
       </form>
     </section>
   );
