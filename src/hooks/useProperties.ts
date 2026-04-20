@@ -7,7 +7,7 @@ export interface PropertyFilters {
   property_type?: PropertyType;
   max_guests?: number;
   featured?: boolean;
-  /** Free-text location query — matches against location, district, tags, highlights (ILIKE contains). */
+  /** Free-text location — partial (case-insensitive) match across location, district, tags, highlights. */
   location?: string;
 }
 
@@ -27,24 +27,26 @@ export function useProperties(filters: PropertyFilters = {}) {
       if (filters.max_guests) query = query.gte('max_guests', filters.max_guests);
       if (filters.featured) query = query.eq('is_featured', true).limit(4);
 
-      if (filters.location && filters.location.trim()) {
-        const term = filters.location.trim();
-        const like = `%${term}%`;
-        // tags/highlights are arrays — `cs` (contains) needs exact tokens, so we OR
-        // ilike on text fields and fetch a wider set, then filter array fields client-side below.
-        query = query.or(
-          [
-            `location.ilike.${like}`,
-            `district.ilike.${like}`,
-          ].join(',')
-        );
-      }
-
       const { data, error } = await query;
       if (error) throw error;
 
-      // Flatten amenity names onto each property
-      return (data as any[]).map((p) => {
+      // Client-side location filter across location, district, tags[], highlights[]
+      let rows = (data ?? []) as any[];
+      if (filters.location && filters.location.trim()) {
+        const term = filters.location.trim().toLowerCase();
+        rows = rows.filter((p) => {
+          const fields: string[] = [p.location, p.district].filter(Boolean);
+          if (fields.some((f) => String(f).toLowerCase().includes(term))) return true;
+          const tags: string[] = p.tags ?? [];
+          const highlights: string[] = p.highlights ?? [];
+          return (
+            tags.some((t) => t?.toLowerCase().includes(term)) ||
+            highlights.some((h) => h?.toLowerCase().includes(term))
+          );
+        });
+      }
+
+      return rows.map((p) => {
         const amenity_names: string[] = (p.property_amenities ?? [])
           .map((pa: any) => pa.amenities?.name)
           .filter(Boolean);
