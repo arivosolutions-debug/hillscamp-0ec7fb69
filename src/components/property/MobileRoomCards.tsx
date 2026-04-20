@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { BedDouble, Users } from 'lucide-react';
-import type { RoomType } from '@/lib/types';
+import { type RoomType, formatRoomPrice } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
 import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
@@ -59,25 +59,17 @@ const RoomImageCarouselClickable: React.FC<{
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden aspect-[16/9] cursor-pointer"
+      className="relative overflow-hidden aspect-[16/10] cursor-pointer"
       onClick={() => onImageClick(current)}
     >
       {images.map((src, i) => (
         <img key={src + i} src={src} alt={`${alt} — ${i + 1}`}
-          className="absolute inset-0 w-full h-full object-cover
-                     transition-opacity duration-500"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: i === current ? 1 : 0 }}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70
-                      to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 z-10">
-        <h3 className="font-headline text-xl text-white font-bold mb-1">
-          {alt}
-        </h3>
-      </div>
       {images.length > 1 && (
-        <div className="absolute bottom-14 left-0 right-0 flex items-center
+        <div className="absolute bottom-2 left-0 right-0 flex items-center
                         justify-center gap-1.5 z-10">
           {images.map((_, i) => (
             <button key={i}
@@ -120,14 +112,47 @@ export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverIm
               .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
               .map(img => img.image_url);
             const images = roomImages.length > 0 ? roomImages : [coverImage ?? '/placeholder.svg'];
+            const priceLabel = formatRoomPrice(room.price_per_night);
 
             return (
-              <div key={room.id} className="min-w-[85vw] snap-start" style={{ scrollSnapStop: 'always' }}>
+              <div
+                key={room.id}
+                className="min-w-[85vw] snap-start bg-hc-bg-alt rounded-2xl overflow-hidden flex flex-col"
+                style={{ scrollSnapStop: 'always' }}
+              >
                 <RoomImageCarouselClickable
                   images={images}
                   alt={room.name}
                   onImageClick={() => setGrid({ images, roomName: room.name })}
                 />
+                <div className="p-4 flex flex-col gap-2">
+                  <h3 className="font-headline text-hc-primary text-lg leading-snug">{room.name}</h3>
+                  <div className="flex items-center gap-3 text-xs text-hc-secondary font-bold uppercase tracking-wider font-body">
+                    {room.bed_type && (
+                      <span className="flex items-center gap-1">
+                        <BedDouble size={11} strokeWidth={2} />
+                        {room.bed_type}
+                      </span>
+                    )}
+                    {room.bed_type && room.max_guests && <span>·</span>}
+                    {room.max_guests && (
+                      <span className="flex items-center gap-1">
+                        <Users size={11} strokeWidth={2} />
+                        {room.max_guests} Guest{room.max_guests !== 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
+                  {room.description && (
+                    <p className="text-sm text-hc-text leading-relaxed font-body line-clamp-3">
+                      {room.description}
+                    </p>
+                  )}
+                  <div className="border-t border-hc-text-light/10 mt-1 pt-2">
+                    <span className="font-bold text-hc-primary font-body text-xs uppercase tracking-wider">
+                      {priceLabel ?? 'Contact for Pricing'}
+                    </span>
+                  </div>
+                </div>
               </div>
             );
           })}
