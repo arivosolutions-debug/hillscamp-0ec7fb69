@@ -133,7 +133,15 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
           );
         })}
       </div>
-    {lightbox && (
+      {grid && !lightbox && (
+        <RoomGalleryGrid
+          images={grid.images}
+          roomName={grid.roomName}
+          onClose={() => setGrid(null)}
+          onSelect={(idx) => setLightbox({ images: grid.images, index: idx, roomName: grid.roomName })}
+        />
+      )}
+      {lightbox && (
         <ImageLightbox
           images={lightbox.images}
           index={lightbox.index}
