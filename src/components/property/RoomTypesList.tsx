@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BedDouble, Users, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import type { RoomType } from '@/lib/types';
+import { type RoomType, formatRoomPrice } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
 import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
@@ -116,15 +116,17 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
                   </div>
 
                   {room.description && (
-                    <p className="text-sm text-hc-text leading-relaxed font-body line-clamp-3">
-                      {room.description}
-                    </p>
+                    <div className="max-h-24 overflow-y-auto pr-1 mt-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-hc-text-light/30 [&::-webkit-scrollbar-thumb]:rounded-full">
+                      <p className="text-sm text-hc-text leading-relaxed font-body">
+                        {room.description}
+                      </p>
+                    </div>
                   )}
                 </div>
 
                 <div className="border-t border-hc-text-light/10 mt-4 pt-3 flex items-center justify-between">
                   <span className="font-bold text-hc-primary font-body text-xs uppercase tracking-wider">
-                    Contact for Pricing
+                    {formatRoomPrice(room.price_per_night) ?? 'Contact for Pricing'}
                   </span>
                   <ArrowRight size={14} className="text-hc-primary group-hover:translate-x-1 transition-transform duration-200" />
                 </div>
