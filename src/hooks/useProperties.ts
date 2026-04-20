@@ -17,13 +17,13 @@ export function useProperties(filters: PropertyFilters = {}) {
         .from('properties')
         .select('*, property_amenities(amenity_id, amenities(name))')
         .eq('is_published', true)
-        .order('is_featured', { ascending: false })
+        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false });
 
       if (filters.district) query = query.eq('district', filters.district);
       if (filters.property_type) query = query.eq('property_type', filters.property_type);
       if (filters.max_guests) query = query.gte('max_guests', filters.max_guests);
-      if (filters.featured) query = query.eq('is_featured', true);
+      if (filters.featured) query = query.eq('is_featured', true).limit(4);
 
       const { data, error } = await query;
       if (error) throw error;

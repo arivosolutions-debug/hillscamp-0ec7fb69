@@ -1,11 +1,31 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Logo } from '@/components/shared/Logo';
+import { Switch } from '@/components/ui/switch';
 import {
   Plus, Trash2, Edit2, Eye, EyeOff, X, Save, LogOut,
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
   FileText, Upload, GripVertical
 } from 'lucide-react';
+
+const MAX_FEATURED = 4;
+
+async function checkFeaturedCap(
+  table: 'properties' | 'packages',
+  willBeFeatured: boolean,
+  currentId?: string,
+): Promise<string | null> {
+  if (!willBeFeatured) return null;
+  const { data, error } = await (supabase.from(table as any) as any)
+    .select('id')
+    .eq('is_featured', true);
+  if (error) return null;
+  const others = (data ?? []).filter((r: any) => r.id !== currentId);
+  if (others.length >= MAX_FEATURED) {
+    return `Maximum ${MAX_FEATURED} featured items allowed. Unfeature one first.`;
+  }
+  return null;
+}
 
 const ADMIN_PASSWORD = 'hillscamp2025';
 
@@ -16,6 +36,8 @@ interface RoomTypeForm {
   name: string;
   bed_type: string;
   max_guests: number;
+  price_per_night: string;
+  description: string;
   sort_order: number;
   images: { id?: string; image_url: string; alt_text: string; sort_order: number; file?: File }[];
 }
@@ -168,10 +190,7 @@ const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & { l
 const Toggle: React.FC<{ label: string; checked: boolean; onChange: (v: boolean) => void }> = ({ label, checked, onChange }) => (
   <div className="flex items-center justify-between bg-hc-bg-alt rounded-xl px-4 py-3">
     <span className="text-sm font-body text-hc-text">{label}</span>
-    <button type="button" onClick={() => onChange(!checked)}
-      className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-hc-primary' : 'bg-hc-text-light/30'}`}>
-      <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
-    </button>
+    <Switch checked={checked} onCheckedChange={onChange} />
   </div>
 );
 
@@ -506,7 +525,7 @@ const AmenitySelector: React.FC<{ selected: string[]; onChange: (ids: string[]) 
 // ─── Room Type Editor ─────────────────────────────────────────────
 
 const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTypeForm[]) => void }> = ({ rooms, onChange }) => {
-  const add = () => onChange([...rooms, { name: '', bed_type: '', max_guests: 2, sort_order: rooms.length, images: [] }]);
+  const add = () => onChange([...rooms, { name: '', bed_type: '', max_guests: 2, price_per_night: '', description: '', sort_order: rooms.length, images: [] }]);
 
   const update = (i: number, field: keyof RoomTypeForm, val: any) => {
     const n = [...rooms]; (n[i] as any)[field] = val; onChange(n);
@@ -528,18 +547,24 @@ const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTy
       </div>
       {rooms.map((room, i) => (
         <div key={i} className="bg-hc-bg-alt rounded-2xl p-4 flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex flex-col gap-1">
+          <div className="flex items-start gap-2">
+            <div className="flex flex-col gap-1 pt-1">
               <button onClick={() => move(i, -1)} className="p-1 hover:text-hc-primary text-hc-text-light"><ChevronUp size={14} /></button>
               <button onClick={() => move(i, 1)} className="p-1 hover:text-hc-primary text-hc-text-light"><ChevronDown size={14} /></button>
             </div>
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
-              <input placeholder="Room name" value={room.name} onChange={e => update(i, 'name', e.target.value)}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
-              <input placeholder="Bed type (e.g. King)" value={room.bed_type} onChange={e => update(i, 'bed_type', e.target.value)}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
-              <input type="number" placeholder="Max guests" value={room.max_guests} onChange={e => update(i, 'max_guests', parseInt(e.target.value) || 1)}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+            <div className="flex-1 flex flex-col gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <input placeholder="Room name" value={room.name} onChange={e => update(i, 'name', e.target.value)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                <input placeholder="Bed type (e.g. King)" value={room.bed_type} onChange={e => update(i, 'bed_type', e.target.value)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                <input type="number" placeholder="Max guests" value={room.max_guests} onChange={e => update(i, 'max_guests', parseInt(e.target.value) || 1)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                <input type="number" placeholder="Price / night (₹)" value={room.price_per_night} onChange={e => update(i, 'price_per_night', e.target.value)}
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+              </div>
+              <textarea placeholder="Short description (shown under bed type & guests)" value={room.description} onChange={e => update(i, 'description', e.target.value)} rows={2}
+                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
             </div>
             <button onClick={() => onChange(rooms.filter((_, j) => j !== i))} className="text-hc-text-light hover:text-red-500 shrink-0">
               <Trash2 size={16} />
@@ -758,6 +783,10 @@ const PropertyFormPage: React.FC<{
 
   const handleSubmit = async () => {
     if (!form.name || !form.slug) { onToast('Name and slug are required', 'error'); return; }
+    if (form.is_featured) {
+      const capError = await checkFeaturedCap('properties', true, form.id);
+      if (capError) { onToast(capError, 'error'); return; }
+    }
     setSaving(true);
     try {
       // Upload cover image if file selected
@@ -817,6 +846,8 @@ const PropertyFormPage: React.FC<{
         const { data: roomData } = await supabase.from('room_types').insert({
           property_id: propertyId!, name: r.name, bed_type: r.bed_type || null,
           max_guests: r.max_guests, sort_order: i,
+          price_per_night: r.price_per_night ? parseFloat(r.price_per_night) : null,
+          description: r.description || null,
         }).select().single();
         if (roomData && r.images.length) {
           const roomImgs = await Promise.all(r.images.map(async (img, j) => {
@@ -972,6 +1003,10 @@ const PackageFormPage: React.FC<{
 
   const handleSubmit = async () => {
     if (!form.name || !form.slug) { onToast('Name and slug are required', 'error'); return; }
+    if (form.is_featured) {
+      const capError = await checkFeaturedCap('packages', true, form.id);
+      if (capError) { onToast(capError, 'error'); return; }
+    }
     setSaving(true);
     try {
       // Upload hero images
@@ -1171,6 +1206,8 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
       })),
       room_types: (roomsRes.data ?? []).map((r: any) => ({
         id: r.id, name: r.name, bed_type: r.bed_type ?? '', max_guests: r.max_guests,
+        price_per_night: r.price_per_night?.toString() ?? '',
+        description: r.description ?? '',
         sort_order: r.sort_order ?? 0,
         images: (r.room_type_images ?? []).map((img: any) => ({
           id: img.id, image_url: img.image_url, alt_text: img.alt_text ?? '', sort_order: img.sort_order,

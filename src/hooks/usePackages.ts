@@ -36,7 +36,7 @@ export function usePackages(filters: PackageFilters = {}) {
         .from('packages' as any)
         .select('*')
         .eq('is_published', true)
-        .order('is_featured', { ascending: false })
+        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false });
 
       if (filters.region) {
@@ -44,7 +44,7 @@ export function usePackages(filters: PackageFilters = {}) {
       }
 
       if (filters.featured === true) {
-        query = query.eq('is_featured', true);
+        query = query.eq('is_featured', true).limit(4);
       }
 
       const { data, error } = await query;
