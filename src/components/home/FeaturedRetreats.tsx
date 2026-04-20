@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Users } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
+import { CardSlideshow } from "@/components/shared/CardSlideshow";
 
 const FALLBACK_CARDS = [
   {
     image: "/lovable-uploads/d9024755-5800-41b6-9aaa-b2133b6d9f87.jpg",
+    images: ["/lovable-uploads/d9024755-5800-41b6-9aaa-b2133b6d9f87.jpg"],
     badge: "Canopy Retreat",
     district: "Wayanad",
     name: "Canopy at Vythiri",
@@ -15,6 +17,7 @@ const FALLBACK_CARDS = [
   },
   {
     image: "https://images.unsplash.com/photo-1587922546307-776227941871?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1587922546307-776227941871?w=800&q=80"],
     badge: "Floating Villa",
     district: "Alleppey",
     name: "Kettuvallam on the Backwaters",
@@ -24,6 +27,7 @@ const FALLBACK_CARDS = [
   },
   {
     image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80"],
     badge: "Planter's Legacy",
     district: "Munnar",
     name: "Silver Oak Estate",
@@ -33,6 +37,7 @@ const FALLBACK_CARDS = [
   },
   {
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"],
     badge: "Heritage Bungalow",
     district: "Kannur",
     name: "Pallikkunnu Bungalow",
@@ -78,6 +83,10 @@ export const FeaturedRetreats: React.FC = () => {
     properties && properties.length > 0
       ? properties.slice(0, 4).map((p) => ({
           image: p.cover_image ?? "/placeholder.svg",
+          images: [
+            p.cover_image ?? undefined,
+            ...(((p as any).gallery_images ?? []) as string[]),
+          ].filter((s): s is string => Boolean(s)),
           badge: p.property_type.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
           district: p.district.charAt(0).toUpperCase() + p.district.slice(1),
           name: p.name,
@@ -93,12 +102,13 @@ export const FeaturedRetreats: React.FC = () => {
       className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group block flex flex-col"
     >
       <div className="relative overflow-hidden rounded-2xl">
-        <img
-          src={card.image}
-          alt={card.name}
-          className="w-full h-[280px] md:h-[280px] aspect-[4/3] md:aspect-auto object-cover transition-transform duration-700 group-hover:scale-105 brightness-90 group-hover:brightness-100"
-        />
-        <span className="absolute top-3 left-4 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-xs font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
+        <div className="w-full h-[280px] md:h-[280px] aspect-[4/3] md:aspect-auto">
+          <CardSlideshow
+            images={card.images && card.images.length > 0 ? card.images : [card.image]}
+            alt={card.name}
+          />
+        </div>
+        <span className="absolute top-3 left-4 z-20 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-xs font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
           {card.badge}
         </span>
       </div>
