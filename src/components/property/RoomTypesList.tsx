@@ -93,9 +93,7 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
                 <RoomCarousel
                 images={images}
                 alt={room.name}
-                onImageClick={(idx) =>
-                  setLightbox({ images, index: idx, roomName: room.name })
-                }
+                onImageClick={() => setGrid({ images, roomName: room.name })}
               />
               </div>
 
