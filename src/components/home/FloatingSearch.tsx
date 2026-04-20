@@ -148,6 +148,7 @@ export const FloatingSearch: React.FC = () => {
               className="!left-0 !right-auto w-[360px]"
             />
           </div>
+          <div className="px-6 py-3 rounded-xl">
             <label className="block text-xs font-bold uppercase tracking-wider mb-1 mx-[4px] text-[#944729]">
               District
             </label>
