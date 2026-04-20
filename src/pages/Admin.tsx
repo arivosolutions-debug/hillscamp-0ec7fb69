@@ -987,6 +987,18 @@ const PackageFormPage: React.FC<{
         )
       );
 
+      // Upload itinerary photos
+      const itineraryWithPhotos = await Promise.all(
+        form.itinerary.map(async (day) => {
+          const url = day.file
+            ? await uploadFile(day.file, 'package-images', 'itinerary/')
+            : day.image_url;
+          // strip file (non-serializable) before persisting
+          const { file, ...rest } = day;
+          return { ...rest, image_url: url || null };
+        })
+      );
+
       const payload = {
         name: form.name, slug: form.slug, location: form.location || null, region: form.region || null,
         price_inr: form.price_inr ? parseFloat(form.price_inr) : null,
@@ -1001,7 +1013,7 @@ const PackageFormPage: React.FC<{
         is_featured: form.is_featured, is_published: form.is_published,
         sort_order: form.sort_order,
         tags: form.tags.length ? form.tags : null,
-        itinerary: form.itinerary.length ? form.itinerary : null,
+        itinerary: itineraryWithPhotos.length ? itineraryWithPhotos : null,
         whats_not_included: form.whats_not_included.length ? form.whats_not_included : null,
         terms_conditions: form.terms_conditions.length ? form.terms_conditions : null,
       };
