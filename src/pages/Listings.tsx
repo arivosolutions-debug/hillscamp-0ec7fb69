@@ -84,10 +84,10 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
               <div className="absolute bottom-[70px] left-0 right-0 translate-y-1/2 z-30 px-5 md:px-8">
                 <div className="max-w-[1280px] mx-auto opacity-80">
                   <FilterBar
-                    district={district}
+                    location={location}
                     propertyType={propertyType}
                     guests={guests}
-                    onDistrict={(v) => { setDistrict(v); setPage(0); }}
+                    onLocation={(v) => { setLocation(v); setPage(0); }}
                     onPropertyType={(v) => { setPropertyType(v); setPage(0); }}
                     onGuests={(v) => { setGuests(v); setPage(0); }}
                     totalCount={properties?.length}
@@ -102,10 +102,10 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
             <div className="sticky top-[72px] z-40 px-5 md:px-8">
               <div className="max-w-[1280px] mx-auto">
                 <FilterBar
-                  district={district}
+                  location={location}
                   propertyType={propertyType}
                   guests={guests}
-                  onDistrict={(v) => { setDistrict(v); setPage(0); }}
+                  onLocation={(v) => { setLocation(v); setPage(0); }}
                   onPropertyType={(v) => { setPropertyType(v); setPage(0); }}
                   onGuests={(v) => { setGuests(v); setPage(0); }}
                   totalCount={properties?.length}
