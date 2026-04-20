@@ -99,8 +99,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               className="w-full appearance-none bg-white/15 text-xs md:text-sm rounded-full px-3 md:px-4 py-2 md:py-2.5 pr-8 border-none focus:ring-0 font-body cursor-pointer text-white opacity-100"
             >
               <option value="" className="text-black">All Types</option>
-              {TYPES.map((t) => (
-                <option key={t.value} value={t.value} className="text-black">{t.label}</option>
+              {typeOptions.map((t) => (
+                <option key={t.slug} value={t.slug} className="text-black">{t.name}</option>
               ))}
             </select>
             <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
