@@ -133,7 +133,7 @@ export const MobileGalleryButton: React.FC<MobileGalleryButtonProps> = ({
       {/* ── Fullscreen Single Photo View ────────────────────── */}
       {fullscreenIndex !== null && (
         <div
-          className="fixed inset-0 z-[210] bg-black/95 flex flex-col"
+          className="fixed inset-0 z-[210] bg-black/20 backdrop-blur-md flex flex-col"
           style={{ height: '100dvh' }}
           onClick={() => setFullscreenIndex(null)}
           onTouchStart={(e) => {
