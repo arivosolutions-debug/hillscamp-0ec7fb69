@@ -1442,7 +1442,6 @@ const ReviewsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') =
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <Input label="Guest Name *" value={editing.guest_name} onChange={e => setEditing(p => p ? { ...p, guest_name: e.target.value } : p)} />
             <Input label="Guest Title" value={editing.guest_title} onChange={e => setEditing(p => p ? { ...p, guest_title: e.target.value } : p)} placeholder="e.g. Architect, Mumbai" />
-            <Input label="Initials (auto-generated if blank)" value={editing.initials} onChange={e => setEditing(p => p ? { ...p, initials: e.target.value } : p)} placeholder="e.g. RM" />
             <Input label="Stayed At" value={editing.stayed_at} onChange={e => setEditing(p => p ? { ...p, stayed_at: e.target.value } : p)} placeholder="e.g. Canopy at Vythiri" />
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">Linked Property</label>

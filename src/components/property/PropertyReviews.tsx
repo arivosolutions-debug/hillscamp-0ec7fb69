@@ -8,17 +8,6 @@ interface PropertyReviewsProps {
   title?: string;
 }
 
-const getInitials = (name: string) =>
-  name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-
-const Avatar: React.FC<{ review: Review }> = ({ review }) => (
-  <div className="w-12 h-12 rounded-full bg-hc-secondary/20 flex items-center justify-center shrink-0">
-    <span className="font-body font-bold text-hc-primary text-sm">
-      {review.initials ?? getInitials(review.guest_name)}
-    </span>
-  </div>
-);
-
 export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
   propertyId,
   packageId,
@@ -29,41 +18,38 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
   if (!reviews.length) return null;
 
   return (
-    <section className="mb-12 px-5 md:px-0">
-      <h2 className="font-headline text-hc-primary text-3xl mb-6">{title}</h2>
+    <section className="mb-8 px-5 md:px-0">
+      <h2 className="font-headline text-hc-primary text-2xl mb-4">{title}</h2>
 
-      {/* Desktop grid */}
-      <div className="hidden md:grid grid-cols-2 gap-6">
+      {/* Desktop grid - compact */}
+      <div className="hidden md:grid grid-cols-2 gap-4">
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="bg-white rounded-2xl p-8 shadow-card flex flex-col"
+            className="bg-white rounded-xl p-5 shadow-card flex flex-col"
           >
-            <Quote size={28} className="text-hc-secondary/30 mb-3" />
-            <blockquote className="font-headline text-hc-primary text-lg italic leading-relaxed mb-6 flex-1">
+            <Quote size={20} className="text-hc-secondary/30 mb-2" />
+            <blockquote className="font-headline text-hc-primary text-sm italic leading-relaxed mb-4 flex-1">
               "{review.quote}"
             </blockquote>
-            <div className="flex items-center gap-4">
-              <Avatar review={review} />
-              <div>
-                <div className="font-body font-bold text-hc-primary text-sm">
-                  {review.guest_name}
-                </div>
-                {review.guest_title && (
-                  <div className="font-body text-xs text-hc-text-light">
-                    {review.guest_title}
-                  </div>
-                )}
+            <div>
+              <div className="font-body font-bold text-hc-primary text-xs">
+                {review.guest_name}
               </div>
+              {review.guest_title && (
+                <div className="font-body text-[10px] text-hc-text-light">
+                  {review.guest_title}
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Mobile carousel */}
+      {/* Mobile carousel - compact */}
       <div className="md:hidden -mr-5">
         <div
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4"
+          className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3"
           style={{ scrollbarWidth: 'none' }}
         >
           {reviews.map((review) => (
@@ -71,19 +57,16 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
               key={review.id}
               className="min-w-[85vw] snap-start"
             >
-              <div className="bg-white rounded-2xl p-6 relative shadow-card">
-                <div className="absolute -top-4 right-4">
-                  <Avatar review={review} />
-                </div>
-                <Quote size={24} className="text-hc-secondary/30 mb-3" />
-                <blockquote className="font-headline text-hc-primary text-base italic leading-relaxed mb-4">
+              <div className="bg-white rounded-xl p-4 relative shadow-card">
+                <Quote size={18} className="text-hc-secondary/30 mb-2" />
+                <blockquote className="font-headline text-hc-primary text-sm italic leading-relaxed mb-3">
                   "{review.quote}"
                 </blockquote>
-                <div className="font-body font-bold text-hc-primary text-sm">
+                <div className="font-body font-bold text-hc-primary text-xs">
                   {review.guest_name}
                 </div>
                 {review.guest_title && (
-                  <div className="font-body text-xs text-hc-text-light">
+                  <div className="font-body text-[10px] text-hc-text-light">
                     {review.guest_title}
                   </div>
                 )}
