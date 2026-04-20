@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { MapPin, Loader2 } from 'lucide-react';
 import { usePropertySearch } from '@/hooks/usePropertySearch';
@@ -6,24 +7,48 @@ import { DISTRICT_LABELS } from '@/lib/types';
 
 interface SearchSuggestionsProps {
   query: string;
+  anchorRef: React.RefObject<HTMLElement>;
   onSelect?: () => void;
-  variant?: 'light' | 'dark'; // dark = on hero (light text), light = on white bg
-  className?: string;
+  width?: number; // optional fixed width; defaults to anchor width
 }
 
 export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   query,
+  anchorRef,
   onSelect,
-  variant = 'light',
-  className = '',
+  width,
 }) => {
   const { data, isLoading } = usePropertySearch(query);
+  const [rect, setRect] = useState<DOMRect | null>(null);
 
-  if (!query.trim()) return null;
+  useEffect(() => {
+    if (!query.trim()) return;
+    const update = () => {
+      if (anchorRef.current) setRect(anchorRef.current.getBoundingClientRect());
+    };
+    update();
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [query, anchorRef]);
 
-  return (
+  if (!query.trim() || !rect) return null;
+
+  const style: React.CSSProperties = {
+    position: 'fixed',
+    top: rect.bottom + 8,
+    left: rect.left,
+    width: width ?? rect.width,
+    zIndex: 9999,
+  };
+
+  return createPortal(
     <div
-      className={`absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl shadow-xl overflow-hidden bg-white border border-black/5 ${className}`}
+      style={style}
+      className="rounded-2xl shadow-xl overflow-hidden bg-white border border-black/5"
     >
       {isLoading && (
         <div className="flex items-center gap-2 px-4 py-3 text-sm text-hc-text font-body">
@@ -67,6 +92,7 @@ export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
           ))}
         </ul>
       )}
-    </div>
+    </div>,
+    document.body
   );
 };
