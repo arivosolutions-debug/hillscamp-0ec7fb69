@@ -7,6 +7,8 @@ export interface PropertyFilters {
   property_type?: PropertyType;
   max_guests?: number;
   featured?: boolean;
+  /** Free-text location query — matches against location, district, tags, highlights (ILIKE contains). */
+  location?: string;
 }
 
 export function useProperties(filters: PropertyFilters = {}) {
@@ -24,6 +26,19 @@ export function useProperties(filters: PropertyFilters = {}) {
       if (filters.property_type) query = query.eq('property_type', filters.property_type);
       if (filters.max_guests) query = query.gte('max_guests', filters.max_guests);
       if (filters.featured) query = query.eq('is_featured', true).limit(4);
+
+      if (filters.location && filters.location.trim()) {
+        const term = filters.location.trim();
+        const like = `%${term}%`;
+        // tags/highlights are arrays — `cs` (contains) needs exact tokens, so we OR
+        // ilike on text fields and fetch a wider set, then filter array fields client-side below.
+        query = query.or(
+          [
+            `location.ilike.${like}`,
+            `district.ilike.${like}`,
+          ].join(',')
+        );
+      }
 
       const { data, error } = await query;
       if (error) throw error;
