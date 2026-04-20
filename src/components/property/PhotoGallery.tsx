@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Images } from 'lucide-react';
 import type { PropertyImage } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
+import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
 interface PhotoGalleryProps {
   coverImage:   string | null;
@@ -11,6 +12,7 @@ interface PhotoGalleryProps {
 
 export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, propertyName }) => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [gridOpen, setGridOpen] = useState(false);
 
   const allImages: string[] = [
     coverImage ?? '/placeholder.svg',
@@ -86,7 +88,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, 
           {/* Bottom-right — "View all" overlay */}
           <div
             className="relative overflow-hidden rounded-none cursor-pointer group"
-            onClick={() => openLightbox(4)}
+            onClick={() => allImages.length > 5 ? setGridOpen(true) : openLightbox(4)}
           >
             <img
               src={mosaic[4]}
@@ -111,7 +113,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, 
         {/* Mobile: show 2nd image as strip below hero */}
         <div
           className="md:hidden col-span-12 h-32 relative overflow-hidden cursor-pointer group"
-          onClick={() => openLightbox(1)}
+          onClick={() => allImages.length > 2 ? setGridOpen(true) : openLightbox(1)}
         >
           <img
             src={mosaic[1]}
@@ -128,13 +130,22 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, 
         </div>
       </div>
 
+      {gridOpen && lightboxIndex === null && (
+        <RoomGalleryGrid
+          images={allImages}
+          roomName={propertyName}
+          onClose={() => setGridOpen(false)}
+          onSelect={(idx) => setLightboxIndex(idx)}
+        />
+      )}
+
       {/* ── Lightbox ───────────────────────────────────────────────── */}
       {lightboxIndex !== null && (
         <ImageLightbox
           images={allImages}
           index={lightboxIndex}
           title={propertyName}
-          onClose={closeLightbox}
+          onClose={() => { setLightboxIndex(null); setGridOpen(false); }}
           onNavigate={setLightboxIndex}
         />
       )}

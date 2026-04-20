@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BedDouble, Users, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { RoomType } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
+import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
 
 interface RoomTypesListProps {
   rooms:      RoomType[];
@@ -64,6 +65,7 @@ const RoomCarousel: React.FC<{
 };
 
 export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage }) => {
+  const [grid, setGrid] = useState<{ images: string[]; roomName: string } | null>(null);
   const [lightbox, setLightbox] = useState<{
     images: string[];
     index: number;
@@ -91,9 +93,7 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
                 <RoomCarousel
                 images={images}
                 alt={room.name}
-                onImageClick={(idx) =>
-                  setLightbox({ images, index: idx, roomName: room.name })
-                }
+                onImageClick={() => setGrid({ images, roomName: room.name })}
               />
               </div>
 
@@ -133,7 +133,15 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
           );
         })}
       </div>
-    {lightbox && (
+      {grid && !lightbox && (
+        <RoomGalleryGrid
+          images={grid.images}
+          roomName={grid.roomName}
+          onClose={() => setGrid(null)}
+          onSelect={(idx) => setLightbox({ images: grid.images, index: idx, roomName: grid.roomName })}
+        />
+      )}
+      {lightbox && (
         <ImageLightbox
           images={lightbox.images}
           index={lightbox.index}
