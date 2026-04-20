@@ -29,6 +29,7 @@ const WHATSAPP_PHONE = '919847012345';
 const PropertyDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: property, isLoading, error } = useProperty(slug);
+  const [mobileGalleryOpen, setMobileGalleryOpen] = React.useState(false);
 
   if (isLoading) {
     return (
