@@ -88,7 +88,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({ coverImage, images, 
           {/* Bottom-right — "View all" overlay */}
           <div
             className="relative overflow-hidden rounded-none cursor-pointer group"
-            onClick={() => openLightbox(4)}
+            onClick={() => allImages.length > 5 ? setGridOpen(true) : openLightbox(4)}
           >
             <img
               src={mosaic[4]}
