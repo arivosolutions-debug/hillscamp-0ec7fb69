@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Search } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
+import { SearchSuggestions } from '@/components/home/SearchSuggestions';
 
 const SEARCH_KEYWORDS = [
   'for Wayanad...',
@@ -44,6 +45,7 @@ const MobileHeroSearch: React.FC<{ onSubmit: (value: string) => void }> = ({ onS
   return (
     <form onSubmit={handleSubmit} className="mt-4 md:hidden">
       <div className="relative">
+        <SearchSuggestions query={inputValue} onSelect={() => setInputValue('')} />
         <input
           ref={inputRef}
           type="text"
