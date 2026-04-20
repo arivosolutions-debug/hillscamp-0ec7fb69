@@ -13,6 +13,7 @@ import { ShareSheet } from '@/components/shared/ShareSheet';
 import { usePackages } from '@/hooks/usePackages';
 import type { PropertyImage } from '@/lib/types';
 import { PropertyReviews } from '@/components/property/PropertyReviews';
+import { ImageLightbox } from '@/components/property/ImageLightbox';
 
 const WHATSAPP_PHONE = '919847012345';
 
@@ -342,6 +343,7 @@ const BookNowSection: React.FC<{ packageName: string }> = ({ packageName }) => {
 /* ── Itinerary Accordion ── */
 const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
   const [open, setOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   return (
     <div className="border-t border-hc-text-light/15">
@@ -358,16 +360,32 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
       <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '900px' : '0px' }}>
         <div className="pl-16 pr-4 pb-5">
           {day.image && (
-            <img
-              src={day.image}
-              alt={`Day ${day.day} — ${day.title}`}
-              className="w-full max-w-2xl rounded-xl object-cover aspect-[16/9] mb-4"
-              loading="lazy"
-            />
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="block w-full max-w-2xl mb-4 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-hc-secondary"
+              aria-label={`View Day ${day.day} photo fullscreen`}
+            >
+              <img
+                src={day.image}
+                alt={`Day ${day.day} — ${day.title}`}
+                className="w-full object-cover aspect-[16/9] cursor-zoom-in"
+                loading="lazy"
+              />
+            </button>
           )}
           <p className="text-sm text-hc-text font-body leading-relaxed">{day.description}</p>
         </div>
       </div>
+      {lightboxOpen && day.image && (
+        <ImageLightbox
+          images={[day.image]}
+          index={0}
+          title={`Day ${day.day} — ${day.title}`}
+          onClose={() => setLightboxOpen(false)}
+          onNavigate={() => {}}
+        />
+      )}
     </div>
   );
 };
