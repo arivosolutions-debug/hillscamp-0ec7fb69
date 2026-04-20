@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { X, ArrowLeft } from 'lucide-react';
 
 interface RoomGalleryGridProps {
