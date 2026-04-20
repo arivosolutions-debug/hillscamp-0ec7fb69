@@ -6,6 +6,8 @@ interface MobileGalleryButtonProps {
   coverImage: string | null;
   images: PropertyImage[];
   propertyName: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 // Tile size pattern that repeats for varied mosaic look
@@ -22,14 +24,19 @@ const TILE_PATTERNS = [
 ];
 
 export const MobileGalleryButton: React.FC<MobileGalleryButtonProps> = ({
-  coverImage, images, propertyName,
+  coverImage, images, propertyName, open: openProp, onOpenChange,
 }) => {
   const allImages: string[] = [
     coverImage ?? '/placeholder.svg',
     ...images.map(i => i.image_url),
   ].filter(Boolean);
 
-  const [open, setOpen] = useState(false);
+  const [openState, setOpenState] = useState(false);
+  const open = openProp ?? openState;
+  const setOpen = (v: boolean) => {
+    if (openProp === undefined) setOpenState(v);
+    onOpenChange?.(v);
+  };
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
   const touchStartX = React.useRef<number | null>(null);
   const touchStartY = React.useRef<number | null>(null);

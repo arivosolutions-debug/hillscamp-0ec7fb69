@@ -29,6 +29,7 @@ const WHATSAPP_PHONE = '919847012345';
 const PropertyDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: property, isLoading, error } = useProperty(slug);
+  const [mobileGalleryOpen, setMobileGalleryOpen] = React.useState(false);
 
   if (isLoading) {
     return (
@@ -89,6 +90,7 @@ const PropertyDetail = () => {
             location={property.location}
             maxGuests={property.max_guests}
             amenityNames={amenityNames}
+            onImageClick={() => setMobileGalleryOpen(true)}
           />
 
           {/* 2. Gallery Icon Button */}
@@ -96,6 +98,8 @@ const PropertyDetail = () => {
             coverImage={property.cover_image}
             images={property.property_images}
             propertyName={property.name}
+            open={mobileGalleryOpen}
+            onOpenChange={setMobileGalleryOpen}
           />
 
           {/* 3. Mobile Share Row */}
