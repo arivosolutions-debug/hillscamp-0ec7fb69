@@ -72,9 +72,10 @@ export const MobileHeroSlideshow: React.FC<MobileHeroSlideshowProps> = ({
           key={src + i}
           src={src}
           alt={`${propertyName} — ${i + 1}`}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[600ms] ease-in-out"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[600ms] ease-in-out ${onImageClick ? 'cursor-pointer' : ''}`}
           style={{ opacity: i === current ? 1 : 0 }}
           draggable={false}
+          onClick={onImageClick}
         />
       ))}
 
