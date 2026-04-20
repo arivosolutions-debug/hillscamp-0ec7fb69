@@ -67,6 +67,8 @@ interface ItineraryDay {
   title: string;
   subtitle: string;
   description: string;
+  image_url?: string;
+  file?: File;
 }
 
 interface PackageGalleryForm {
