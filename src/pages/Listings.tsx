@@ -13,7 +13,7 @@ const PAGE_SIZE = 6;
 
 const Listings = () => {
   const [searchParams] = useSearchParams();
-  const [district, setDistrict] = useState<District | ''>((searchParams.get('district') as District) ?? '');
+  const [location, setLocation] = useState<string>(searchParams.get('location') ?? searchParams.get('district') ?? '');
   const [propertyType, setPropertyType] = useState<PropertyType | ''>((searchParams.get('type') as PropertyType) ?? '');
   const [guests, setGuests] = useState<number>(Number(searchParams.get('guests')) || 2);
   const [page, setPage] = useState(0);
@@ -22,7 +22,7 @@ const Listings = () => {
   const filterSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setDistrict((searchParams.get('district') as District) ?? '');
+    setLocation(searchParams.get('location') ?? searchParams.get('district') ?? '');
     setPropertyType((searchParams.get('type') as PropertyType) ?? '');
     setGuests(Number(searchParams.get('guests')) || 2);
     setPage(0);
@@ -41,7 +41,7 @@ const Listings = () => {
   }, []);
 
   const { data: properties, isLoading } = useProperties({
-    district: district || undefined,
+    location: location || undefined,
     property_type: propertyType || undefined,
     max_guests: guests > 1 ? guests : undefined,
   });
