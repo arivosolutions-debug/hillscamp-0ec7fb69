@@ -66,9 +66,15 @@ export interface RoomType {
   bed_type: string | null;
   max_guests: number;
   description: string | null;
+  price_per_night: number | null;
   created_at: string;
   room_type_images?: RoomTypeImage[];
 }
+
+export const formatRoomPrice = (price: number | null | undefined): string | null => {
+  if (price == null || price <= 0) return null;
+  return `Price starting from ₹${new Intl.NumberFormat('en-IN').format(price)}/-`;
+};
 
 export interface Amenity {
   id: string;
