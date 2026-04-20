@@ -784,8 +784,8 @@ const PropertyFormPage: React.FC<{
   const handleSubmit = async () => {
     if (!form.name || !form.slug) { onToast('Name and slug are required', 'error'); return; }
     if (form.is_featured) {
-      const cap = await checkFeaturedCap('properties', true, form.id);
-      if (!cap.ok) { onToast(cap.message, 'error'); return; }
+      const capError = await checkFeaturedCap('properties', true, form.id);
+      if (capError) { onToast(capError, 'error'); return; }
     }
     setSaving(true);
     try {
@@ -1004,8 +1004,8 @@ const PackageFormPage: React.FC<{
   const handleSubmit = async () => {
     if (!form.name || !form.slug) { onToast('Name and slug are required', 'error'); return; }
     if (form.is_featured) {
-      const cap = await checkFeaturedCap('packages', true, form.id);
-      if (!cap.ok) { onToast(cap.message, 'error'); return; }
+      const capError = await checkFeaturedCap('packages', true, form.id);
+      if (capError) { onToast(capError, 'error'); return; }
     }
     setSaving(true);
     try {
