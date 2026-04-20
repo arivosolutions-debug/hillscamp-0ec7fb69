@@ -1974,6 +1974,7 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
         <p className="text-sm text-hc-text-light font-body">Manage dropdown options used across properties and packages</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <LookupManager title="Locations" table="locations" />
         <LookupManager title="Districts" table="districts" />
         <CollectionEditor />
         <LookupManager title="Regions" table="regions" />
