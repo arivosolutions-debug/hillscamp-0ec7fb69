@@ -13,6 +13,7 @@ import { ShareSheet } from '@/components/shared/ShareSheet';
 import { usePackages } from '@/hooks/usePackages';
 import type { PropertyImage } from '@/lib/types';
 import { PropertyReviews } from '@/components/property/PropertyReviews';
+import { ImageLightbox } from '@/components/property/ImageLightbox';
 
 const WHATSAPP_PHONE = '919847012345';
 
