@@ -5,14 +5,15 @@ import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
 import type { Property } from '@/lib/types';
 
 interface PropertyCardProps {
-  property: Property & { amenity_names?: string[] };
+  property: Property & { amenity_names?: string[]; tags?: string[] | null };
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  // Use amenities if available, otherwise fallback to property_type
-  const tags = property.amenity_names && property.amenity_names.length > 0
-    ? property.amenity_names.slice(0, 3)
-    : [PROPERTY_TYPE_LABELS[property.property_type]];
+  // Show tags first; fallback to property_type label so card never looks empty
+  const tags =
+    property.tags && property.tags.length > 0
+      ? property.tags.slice(0, 3)
+      : [PROPERTY_TYPE_LABELS[property.property_type] ?? property.property_type];
 
   return (
     <Link to={`/property/${property.slug}`} className="group block">
