@@ -7,6 +7,8 @@ export interface PropertyFilters {
   property_type?: PropertyType;
   max_guests?: number;
   featured?: boolean;
+  /** Free-text location — partial (case-insensitive) match across location, district, tags, highlights. */
+  location?: string;
 }
 
 export function useProperties(filters: PropertyFilters = {}) {
@@ -28,8 +30,23 @@ export function useProperties(filters: PropertyFilters = {}) {
       const { data, error } = await query;
       if (error) throw error;
 
-      // Flatten amenity names onto each property
-      return (data as any[]).map((p) => {
+      // Client-side location filter across location, district, tags[], highlights[]
+      let rows = (data ?? []) as any[];
+      if (filters.location && filters.location.trim()) {
+        const term = filters.location.trim().toLowerCase();
+        rows = rows.filter((p) => {
+          const fields: string[] = [p.location, p.district].filter(Boolean);
+          if (fields.some((f) => String(f).toLowerCase().includes(term))) return true;
+          const tags: string[] = p.tags ?? [];
+          const highlights: string[] = p.highlights ?? [];
+          return (
+            tags.some((t) => t?.toLowerCase().includes(term)) ||
+            highlights.some((h) => h?.toLowerCase().includes(term))
+          );
+        });
+      }
+
+      return rows.map((p) => {
         const amenity_names: string[] = (p.property_amenities ?? [])
           .map((pa: any) => pa.amenities?.name)
           .filter(Boolean);
