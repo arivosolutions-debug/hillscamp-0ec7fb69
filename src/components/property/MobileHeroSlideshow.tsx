@@ -12,10 +12,11 @@ interface MobileHeroSlideshowProps {
   amenityNames?: string[];
   backLink?: string;
   backLabel?: string;
+  onImageClick?: () => void;
 }
 
 export const MobileHeroSlideshow: React.FC<MobileHeroSlideshowProps> = ({
-  coverImage, images, propertyName, location, maxGuests, amenityNames = [], backLink = '/listings', backLabel = 'All Stays',
+  coverImage, images, propertyName, location, maxGuests, amenityNames = [], backLink = '/listings', backLabel = 'All Stays', onImageClick,
 }) => {
   const allImages: string[] = [
     coverImage ?? '/placeholder.svg',
