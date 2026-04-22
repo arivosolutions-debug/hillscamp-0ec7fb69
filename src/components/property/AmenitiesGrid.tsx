@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Waves, ChefHat, Flame, Sparkles, TreePine, Wifi,
+  Waves, ChefHat, Flame, Sparkles, TreePine, Wifi, Droplet,
   Dumbbell, Coffee, Car, Leaf, ShieldCheck, Star,
   Wind, Umbrella, Fish, Bike, Camera, Music,
   Bath, UtensilsCrossed, Sunrise, Tent,
@@ -14,13 +14,14 @@ import type { Amenity } from '@/lib/types';
 const ICON_MAP: Record<string, LucideIcon> = {
   pool: Waves, 'private chef': ChefHat, chef: ChefHat,
   'fire pit': Flame, fireplace: Flame, spa: Sparkles,
-  massage: Sparkles, 'nature walks': TreePine, hiking: TreePine,
+  bonfire: Flame,
+  massage: Sparkles, 'nature walk': TreePine, hiking: TreePine,
   wifi: Wifi, 'high-speed': Wifi, gym: Dumbbell, fitness: Dumbbell,
   coffee: Coffee, parking: Car, garden: Leaf, organic: Leaf,
   security: ShieldCheck, premium: Star, ac: Wind,
   'air conditioning': Wind, 'pool deck': Umbrella, fishing: Fish,
   cycling: Bike, photography: Camera, music: Music,
-  bath: Bath, jacuzzi: Bath, dining: UtensilsCrossed,
+  'hot water': Droplet, bath: Bath, jacuzzi: Bath, dining: UtensilsCrossed,
   restaurant: UtensilsCrossed, sunrise: Sunrise,
   glamping: Tent, camping: Tent,
   lunch: UtensilsCrossed, dinner: UtensilsCrossed,
