@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Waves, ChefHat, Flame, Sparkles, TreePine, Wifi,
+  Waves, ChefHat, Flame, Sparkles, TreePine, Wifi, Droplet,
   Dumbbell, Coffee, Car, Leaf, ShieldCheck, Star,
   Wind, Umbrella, Fish, Bike, Camera, Music,
   Bath, UtensilsCrossed, Sunrise, Tent,
@@ -17,9 +17,10 @@ const ICON_MAP: Record<string, LucideIcon> = {
   chef:           ChefHat,
   'fire pit':     Flame,
   fireplace:      Flame,
+  bonfire:        Flame,
   spa:            Sparkles,
   massage:        Sparkles,
-  'nature walks': TreePine,
+  'nature walk':  TreePine,
   hiking:         TreePine,
   wifi:           Wifi,
   'high-speed':   Wifi,
@@ -39,6 +40,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   photography:    Camera,
   music:          Music,
   bath:           Bath,
+  'hot water':    Droplet,
   jacuzzi:        Bath,
   dining:         UtensilsCrossed,
   restaurant:     UtensilsCrossed,
