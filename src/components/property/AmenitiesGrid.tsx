@@ -4,6 +4,9 @@ import {
   Dumbbell, Coffee, Car, Leaf, ShieldCheck, Star,
   Wind, Umbrella, Fish, Bike, Camera, Music,
   Bath, UtensilsCrossed, Sunrise, Tent,
+  Tv, Thermometer, Shirt, BedDouble, DoorOpen, Wine, GlassWater,
+  Mountain, MountainSnow, Sailboat, Flower2, HandHeart, Droplets,
+  ConciergeBell, Plane, PawPrint, Baby, Trees, Gamepad2,
   type LucideIcon,
 } from 'lucide-react';
 import type { Amenity } from '@/lib/types';
@@ -20,6 +23,17 @@ const ICON_MAP: Record<string, LucideIcon> = {
   bath: Bath, jacuzzi: Bath, dining: UtensilsCrossed,
   restaurant: UtensilsCrossed, sunrise: Sunrise,
   glamping: Tent, camping: Tent,
+  lunch: UtensilsCrossed, dinner: UtensilsCrossed,
+  'mini bar': Wine, bar: Wine, 'welcome drink': GlassWater,
+  tv: Tv, heater: Thermometer, laundry: Shirt,
+  'king size': BedDouble, bed: BedDouble, safe: ShieldCheck,
+  balcony: DoorOpen, veranda: DoorOpen,
+  trekking: Mountain, 'mountain view': MountainSnow,
+  kayak: Sailboat, yoga: Flower2,
+  'hand massage': HandHeart, sauna: Droplets, steam: Droplets,
+  ayurveda: Leaf, concierge: ConciergeBell,
+  airport: Plane, pet: PawPrint, child: Baby, baby: Baby,
+  lawn: Trees, 'indoor game': Gamepad2, game: Gamepad2,
 };
 
 function getIcon(name: string): LucideIcon {
