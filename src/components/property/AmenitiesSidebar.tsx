@@ -67,7 +67,6 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'mountain view':MountainSnow,
   kayak:          Sailboat,
   yoga:           Flower2,
-  'hand massage': HandHeart,
   sauna:          Droplets,
   steam:          Droplets,
   ayurveda:       Leaf,

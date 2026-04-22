@@ -33,7 +33,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   balcony: DoorOpen, veranda: DoorOpen,
   trekking: Mountain, 'mountain view': MountainSnow,
   kayak: Sailboat, yoga: Flower2,
-  'hand massage': HandHeart, sauna: Droplets, steam: Droplets,
+  sauna: Droplets, steam: Droplets,
   ayurveda: Leaf, concierge: ConciergeBell,
   airport: Plane, pet: PawPrint, child: Baby, baby: Baby,
   'indoor game': Gamepad2, game: Gamepad2,
