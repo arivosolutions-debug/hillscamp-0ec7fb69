@@ -15,9 +15,11 @@ const ICON_MAP: Record<string, LucideIcon> = {
   pool: Waves, 'private chef': ChefHat, chef: ChefHat,
   'fire pit': Flame, fireplace: Flame, spa: Sparkles,
   bonfire: Flame,
-  massage: Sparkles, 'nature walk': TreePine, hiking: TreePine,
+  'hand massage': HandHeart, massage: HandHeart,
+  'nature walk': TreePine, hiking: TreePine,
   wifi: Wifi, 'high-speed': Wifi, gym: Dumbbell, fitness: Dumbbell,
-  coffee: Coffee, parking: Car, garden: Leaf, organic: Leaf,
+  breakfast: Coffee, coffee: Coffee, parking: Car,
+  lawn: Trees, garden: Leaf, organic: Leaf,
   security: ShieldCheck, premium: Star, ac: Wind,
   'air conditioning': Wind, 'pool deck': Umbrella, fishing: Fish,
   cycling: Bike, photography: Camera, music: Music,
@@ -34,7 +36,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'hand massage': HandHeart, sauna: Droplets, steam: Droplets,
   ayurveda: Leaf, concierge: ConciergeBell,
   airport: Plane, pet: PawPrint, child: Baby, baby: Baby,
-  lawn: Trees, 'indoor game': Gamepad2, game: Gamepad2,
+  'indoor game': Gamepad2, game: Gamepad2,
 };
 
 function getIcon(name: string): LucideIcon {
