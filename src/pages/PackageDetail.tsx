@@ -1,21 +1,35 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { MapPin, Clock, IndianRupee, Route, Plus, X, ChevronLeft, ChevronRight, Images, MessageCircle, Instagram, ArrowRight, ArrowLeft } from 'lucide-react';
-import { Navbar } from '@/components/layout/Navbar';
-import { Helmet } from 'react-helmet-async';
-import { Footer } from '@/components/layout/Footer';
-import { PageTransition } from '@/components/layout/PageTransition';
-import { MobileHeroSlideshow } from '@/components/property/MobileHeroSlideshow';
-import { MobileGalleryButton } from '@/components/property/MobileGalleryButton';
-import { PhotoGallery } from '@/components/property/PhotoGallery';
-import { usePackage } from '@/hooks/usePackage';
-import { ShareSheet } from '@/components/shared/ShareSheet';
-import { usePackages } from '@/hooks/usePackages';
-import type { PropertyImage } from '@/lib/types';
-import { PropertyReviews } from '@/components/property/PropertyReviews';
-import { ImageLightbox } from '@/components/property/ImageLightbox';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useParams, Link } from "react-router-dom";
+import {
+  MapPin,
+  Clock,
+  IndianRupee,
+  Route,
+  Plus,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Images,
+  MessageCircle,
+  Instagram,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react";
+import { Navbar } from "@/components/layout/Navbar";
+import { Helmet } from "react-helmet-async";
+import { Footer } from "@/components/layout/Footer";
+import { PageTransition } from "@/components/layout/PageTransition";
+import { MobileHeroSlideshow } from "@/components/property/MobileHeroSlideshow";
+import { MobileGalleryButton } from "@/components/property/MobileGalleryButton";
+import { PhotoGallery } from "@/components/property/PhotoGallery";
+import { usePackage } from "@/hooks/usePackage";
+import { ShareSheet } from "@/components/shared/ShareSheet";
+import { usePackages } from "@/hooks/usePackages";
+import type { PropertyImage } from "@/lib/types";
+import { PropertyReviews } from "@/components/property/PropertyReviews";
+import { ImageLightbox } from "@/components/property/ImageLightbox";
 
-const WHATSAPP_PHONE = '919847012345';
+const WHATSAPP_PHONE = "917510810961";
 
 /* ─── Itinerary Day type ─── */
 interface ItineraryDay {
@@ -53,16 +67,15 @@ const PackageDetail: React.FC = () => {
         <Navbar />
         <div className="min-h-screen bg-hc-bg flex flex-col items-center justify-center gap-4">
           <h1 className="font-headline text-4xl text-hc-primary">Experience not found</h1>
-          <Link to="/packages" className="font-body text-hc-secondary hover:underline">← Back to all experiences</Link>
+          <Link to="/packages" className="font-body text-hc-secondary hover:underline">
+            ← Back to all experiences
+          </Link>
         </div>
       </>
     );
   }
 
-  const allImages = [
-    ...(pkg.hero_images ?? []),
-    ...(pkg.gallery ?? []).map(g => g.image_url),
-  ].filter(Boolean);
+  const allImages = [...(pkg.hero_images ?? []), ...(pkg.gallery ?? []).map((g) => g.image_url)].filter(Boolean);
 
   // Adapt images for property components: first image as cover, rest as PropertyImage[]
   const coverImage = allImages[0] ?? null;
@@ -82,39 +95,30 @@ const PackageDetail: React.FC = () => {
 
   return (
     <>
-        <Helmet>
-          <title>{pkg.name} — Hills Camp Kerala</title>
-          <meta property="og:title" content={`${pkg.name} — Hills Camp Kerala`} />
-          {pkg.hero_images?.[0] && (
-            <meta property="og:image" content={pkg.hero_images[0]} />
-          )}
-          <meta property="og:type" content="website" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={`${pkg.name} — Hills Camp Kerala`} />
-          {pkg.hero_images?.[0] && (
-            <meta name="twitter:image" content={pkg.hero_images[0]} />
-          )}
-        </Helmet>
+      <Helmet>
+        <title>{pkg.name} — Hills Camp Kerala</title>
+        <meta property="og:title" content={`${pkg.name} — Hills Camp Kerala`} />
+        {pkg.hero_images?.[0] && <meta property="og:image" content={pkg.hero_images[0]} />}
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${pkg.name} — Hills Camp Kerala`} />
+        {pkg.hero_images?.[0] && <meta name="twitter:image" content={pkg.hero_images[0]} />}
+      </Helmet>
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg">
-
           {/* ═══ MOBILE LAYOUT ═══ */}
           <MobileHeroSlideshow
             coverImage={coverImage}
             images={propertyImages}
             propertyName={pkg.name}
-            location={pkg.location ?? ''}
+            location={pkg.location ?? ""}
             maxGuests={0}
             amenityNames={pkg.tags ?? []}
             backLink="/packages"
             backLabel="All Experiences"
           />
-          <MobileGalleryButton
-            coverImage={coverImage}
-            images={propertyImages}
-            propertyName={pkg.name}
-          />
+          <MobileGalleryButton coverImage={coverImage} images={propertyImages} propertyName={pkg.name} />
 
           {/* Mobile Share Row */}
           <div className="md:hidden flex items-center justify-between px-5 pt-3 pb-1">
@@ -134,13 +138,13 @@ const PackageDetail: React.FC = () => {
               <ArrowLeft size={14} /> All Experiences
             </Link>
             <div className="flex items-start gap-4">
-            <h1 className="font-headline text-hc-primary text-4xl md:text-6xl tracking-tight mb-3 flex-1">
-              {pkg.name}
-            </h1>
-            <div className="pt-2 shrink-0">
-              <ShareSheet title={pkg.name} variant="icon" />
+              <h1 className="font-headline text-hc-primary text-4xl md:text-6xl tracking-tight mb-3 flex-1">
+                {pkg.name}
+              </h1>
+              <div className="pt-2 shrink-0">
+                <ShareSheet title={pkg.name} variant="icon" />
+              </div>
             </div>
-          </div>
             <div className="flex flex-wrap items-center gap-6 text-sm text-hc-text font-body">
               {pkg.location && (
                 <span className="flex items-center gap-1.5">
@@ -148,20 +152,17 @@ const PackageDetail: React.FC = () => {
                 </span>
               )}
               {pkg.duration_days && pkg.duration_nights && (
-                <span>{pkg.duration_days} Days / {pkg.duration_nights} Nights</span>
+                <span>
+                  {pkg.duration_days} Days / {pkg.duration_nights} Nights
+                </span>
               )}
             </div>
           </section>
 
           {/* Desktop Photo Gallery */}
           <section className="hidden md:block px-8 max-w-[1280px] mx-auto mb-12">
-            <PhotoGallery
-              coverImage={coverImage}
-              images={propertyImages}
-              propertyName={pkg.name}
-            />
+            <PhotoGallery coverImage={coverImage} images={propertyImages} propertyName={pkg.name} />
           </section>
-
 
           {/* Stats Section */}
           <section className="px-5 md:px-8 max-w-[1280px] mx-auto py-8">
@@ -169,17 +170,21 @@ const PackageDetail: React.FC = () => {
               <StatCard
                 icon={<Clock size={20} className="text-hc-secondary" />}
                 label="Duration"
-                value={pkg.duration_days && pkg.duration_nights ? `${pkg.duration_days} Days & ${pkg.duration_nights} Nights` : '—'}
+                value={
+                  pkg.duration_days && pkg.duration_nights
+                    ? `${pkg.duration_days} Days & ${pkg.duration_nights} Nights`
+                    : "—"
+                }
               />
               <StatCard
                 icon={<IndianRupee size={20} className="text-hc-secondary" />}
                 label="Cost"
-                value={pkg.price_inr ? `₹${pkg.price_inr.toLocaleString('en-IN')} per person` : 'Contact us'}
+                value={pkg.price_inr ? `₹${pkg.price_inr.toLocaleString("en-IN")} per person` : "Contact us"}
               />
               <StatCard
                 icon={<Route size={20} className="text-hc-secondary" />}
                 label="Distance Covered"
-                value={pkg.distance_km ? `${pkg.distance_km} km` : '—'}
+                value={pkg.distance_km ? `${pkg.distance_km} km` : "—"}
               />
             </div>
           </section>
@@ -224,7 +229,7 @@ const PackageDetail: React.FC = () => {
               <p className="font-headline text-hc-primary text-2xl mb-1">#{pkg.instagram_hashtag}</p>
               <p className="text-sm text-hc-text-light font-body">tag us to get featured</p>
               <div className="mt-6 grid grid-cols-3 gap-3 max-w-md mx-auto">
-                {[1, 2, 3].map(i => (
+                {[1, 2, 3].map((i) => (
                   <div key={i} className="aspect-square rounded-xl bg-hc-bg-alt flex items-center justify-center">
                     <Instagram size={20} className="text-hc-text-light/30" />
                   </div>
@@ -262,7 +267,6 @@ const PackageDetail: React.FC = () => {
 /*  Sub-Components                                                */
 /* ═══════════════════════════════════════════════════════════════ */
 
-
 /* ── Stat Card ── */
 const StatCard: React.FC<{ icon: React.ReactNode; label: string; value: string }> = ({ icon, label, value }) => (
   <div className="bg-hc-bg-alt rounded-2xl p-6 flex items-start gap-4">
@@ -277,15 +281,15 @@ const StatCard: React.FC<{ icon: React.ReactNode; label: string; value: string }
 /* ── Book Now Section ── */
 const BookNowSection: React.FC<{ packageName: string }> = ({ packageName }) => {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(2);
 
   const handleSubmit = () => {
     const msg = encodeURIComponent(
-      `Hi, I'm interested in the "${packageName}" experience.\nName: ${name}\nPhone: ${phone}\nGuests: ${guests}`
+      `Hi, I'm interested in the "${packageName}" experience.\nName: ${name}\nPhone: ${phone}\nGuests: ${guests}`,
     );
-    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${msg}`, "_blank");
     setOpen(false);
   };
 
@@ -308,22 +312,32 @@ const BookNowSection: React.FC<{ packageName: string }> = ({ packageName }) => {
               type="text"
               placeholder="Your Name"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 outline-none focus:ring-2 focus:ring-hc-primary/20"
             />
             <input
               type="tel"
               placeholder="Phone Number"
               value={phone}
-              onChange={e => setPhone(e.target.value)}
+              onChange={(e) => setPhone(e.target.value)}
               className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 outline-none focus:ring-2 focus:ring-hc-primary/20"
             />
             <div className="bg-white rounded-xl px-4 py-3 flex items-center justify-between">
               <span className="text-sm font-body text-hc-text/50">Number of Guests</span>
               <div className="flex items-center gap-3">
-                <button onClick={() => setGuests(g => Math.max(1, g - 1))} className="w-8 h-8 rounded-full bg-hc-bg-alt flex items-center justify-center text-hc-primary font-bold">−</button>
+                <button
+                  onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                  className="w-8 h-8 rounded-full bg-hc-bg-alt flex items-center justify-center text-hc-primary font-bold"
+                >
+                  −
+                </button>
                 <span className="font-body font-bold text-hc-text w-6 text-center">{guests}</span>
-                <button onClick={() => setGuests(g => g + 1)} className="w-8 h-8 rounded-full bg-hc-bg-alt flex items-center justify-center text-hc-primary font-bold">+</button>
+                <button
+                  onClick={() => setGuests((g) => g + 1)}
+                  className="w-8 h-8 rounded-full bg-hc-bg-alt flex items-center justify-center text-hc-primary font-bold"
+                >
+                  +
+                </button>
               </div>
             </div>
           </div>
@@ -347,17 +361,23 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
 
   return (
     <div className="border-t border-hc-text-light/15">
-      <button onClick={() => setOpen(v => !v)} className="flex items-center gap-4 w-full py-5 text-left">
+      <button onClick={() => setOpen((v) => !v)} className="flex items-center gap-4 w-full py-5 text-left">
         <span className="font-headline text-3xl text-hc-secondary/30 w-12 shrink-0 tabular-nums">
-          {String(day.day).padStart(2, '0')}
+          {String(day.day).padStart(2, "0")}
         </span>
         <div className="flex-1 min-w-0">
           <p className="font-headline text-hc-primary text-lg leading-snug">{day.title}</p>
           <p className="text-[10px] uppercase tracking-[0.2em] text-hc-text-light font-body mt-0.5">{day.subtitle}</p>
         </div>
-        <Plus size={20} className={`text-hc-primary shrink-0 transition-transform duration-300 ${open ? 'rotate-45' : ''}`} />
+        <Plus
+          size={20}
+          className={`text-hc-primary shrink-0 transition-transform duration-300 ${open ? "rotate-45" : ""}`}
+        />
       </button>
-      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '900px' : '0px' }}>
+      <div
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ maxHeight: open ? "900px" : "0px" }}
+      >
         <div className="pl-16 pr-4 pb-5">
           {day.image && (
             <button
@@ -396,11 +416,14 @@ const CollapsibleList: React.FC<{ title: string; items: string[] }> = ({ title, 
 
   return (
     <div className="border-t border-hc-text-light/15">
-      <button onClick={() => setOpen(v => !v)} className="flex items-center justify-between w-full py-4">
+      <button onClick={() => setOpen((v) => !v)} className="flex items-center justify-between w-full py-4">
         <span className="font-headline text-hc-primary text-lg">{title}</span>
-        <Plus size={20} className={`text-hc-primary transition-transform duration-300 ${open ? 'rotate-45' : ''}`} />
+        <Plus size={20} className={`text-hc-primary transition-transform duration-300 ${open ? "rotate-45" : ""}`} />
       </button>
-      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? '600px' : '0px' }}>
+      <div
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ maxHeight: open ? "600px" : "0px" }}
+      >
         <ul className="pb-5 space-y-2">
           {items.map((item, i) => (
             <li key={i} className="flex items-start gap-2 text-sm text-hc-text font-body">
@@ -415,15 +438,21 @@ const CollapsibleList: React.FC<{ title: string; items: string[] }> = ({ title, 
 };
 
 /* ── Similar Packages ── */
-const SimilarPackages: React.FC<{ currentSlug: string; region: string | null; tags: string[] | null }> = ({ currentSlug, region, tags }) => {
+const SimilarPackages: React.FC<{ currentSlug: string; region: string | null; tags: string[] | null }> = ({
+  currentSlug,
+  region,
+  tags,
+}) => {
   const { data: allPackages } = usePackages();
 
-  const similar = (allPackages ?? []).filter(p => {
-    if (p.slug === currentSlug) return false;
-    if (region && p.region === region) return true;
-    if (tags && p.tags) return tags.some(t => p.tags!.includes(t));
-    return false;
-  }).slice(0, 4);
+  const similar = (allPackages ?? [])
+    .filter((p) => {
+      if (p.slug === currentSlug) return false;
+      if (region && p.region === region) return true;
+      if (tags && p.tags) return tags.some((t) => p.tags!.includes(t));
+      return false;
+    })
+    .slice(0, 4);
 
   if (!similar.length) return null;
 
@@ -433,22 +462,28 @@ const SimilarPackages: React.FC<{ currentSlug: string; region: string | null; ta
 
       {/* Mobile carousel */}
       <div className="md:hidden overflow-x-auto snap-x snap-mandatory hide-scrollbar px-5 flex gap-3">
-        {similar.map(p => (
+        {similar.map((p) => (
           <Link
             key={p.slug}
             to={`/packages/${p.slug}`}
             className="flex-shrink-0 snap-start snap-always rounded-2xl overflow-hidden relative"
-            style={{ width: 'calc(50vw - 28px)' }}
+            style={{ width: "calc(50vw - 28px)" }}
           >
             <div className="aspect-[3/4] relative">
-              <img src={p.hero_images?.[0] ?? '/placeholder.svg'} alt={p.name} className="absolute inset-0 w-full h-full object-cover" />
+              <img
+                src={p.hero_images?.[0] ?? "/placeholder.svg"}
+                alt={p.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               {p.region && (
                 <span className="absolute top-3 left-3 bg-[#17341e]/80 text-white text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-body">
                   {p.region}
                 </span>
               )}
-              <p className="absolute bottom-3 left-3 right-3 font-headline text-white text-sm font-bold leading-tight">{p.name}</p>
+              <p className="absolute bottom-3 left-3 right-3 font-headline text-white text-sm font-bold leading-tight">
+                {p.name}
+              </p>
             </div>
           </Link>
         ))}
@@ -456,15 +491,23 @@ const SimilarPackages: React.FC<{ currentSlug: string; region: string | null; ta
 
       {/* Desktop grid */}
       <div className="hidden md:grid grid-cols-4 gap-4 px-8 max-w-[1280px] mx-auto">
-        {similar.map(p => (
+        {similar.map((p) => (
           <Link key={p.slug} to={`/packages/${p.slug}`} className="rounded-2xl overflow-hidden relative group">
             <div className="aspect-[3/4] relative">
-              <img src={p.hero_images?.[0] ?? '/placeholder.svg'} alt={p.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
+              <img
+                src={p.hero_images?.[0] ?? "/placeholder.svg"}
+                alt={p.name}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               {p.region && (
-                <span className="absolute top-3 left-3 bg-[#17341e]/80 text-white text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-body">{p.region}</span>
+                <span className="absolute top-3 left-3 bg-[#17341e]/80 text-white text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-body">
+                  {p.region}
+                </span>
               )}
-              <p className="absolute bottom-3 left-3 right-3 font-headline text-white text-sm font-bold leading-tight">{p.name}</p>
+              <p className="absolute bottom-3 left-3 right-3 font-headline text-white text-sm font-bold leading-tight">
+                {p.name}
+              </p>
             </div>
           </Link>
         ))}
