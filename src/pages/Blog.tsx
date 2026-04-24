@@ -8,6 +8,7 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { BlogCard, FeaturedPost } from '@/components/blog/BlogCard';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
 import { useBlogPost } from '@/hooks/useBlogPost';
+import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
 const CATEGORIES = ['All', 'Wayanad', 'Alleppey', 'Munnar', 'Travel Tips', 'Sustainability'];
 
@@ -162,9 +163,6 @@ export const BlogPost = () => {
   const wordCount = (post.content ?? '').split(/\s+/).length;
   const readMins  = Math.max(1, Math.ceil(wordCount / 200));
 
-  // Parse content into paragraphs and h2s
-  const paragraphs = (post.content ?? '').split('\n\n').filter(Boolean);
-
   return (
     <>
       <Navbar />
@@ -221,33 +219,7 @@ export const BlogPost = () => {
             )}
 
             {/* ── Body Content ─────────────────────────────────── */}
-            <div className="space-y-6">
-              {paragraphs.map((para, i) => {
-                // Detect markdown h2
-                if (para.startsWith('## ')) {
-                  return (
-                    <h2 key={i} className="font-headline text-hc-primary text-3xl mt-12 mb-4">
-                      {para.replace(/^## /, '')}
-                    </h2>
-                  );
-                }
-                // Detect blockquote
-                if (para.startsWith('> ')) {
-                  return (
-                    <blockquote key={i} className="border-l-2 border-hc-secondary pl-6 my-8">
-                      <p className="font-headline text-hc-primary text-lg italic leading-relaxed">
-                        {para.replace(/^> /, '')}
-                      </p>
-                    </blockquote>
-                  );
-                }
-                return (
-                  <p key={i} className="text-hc-text text-lg leading-[1.8] font-body">
-                    {para.replace(/^#+\s/, '').replace(/\*\*/g, '')}
-                  </p>
-                );
-              })}
-            </div>
+            <MarkdownContent source={post.content} size="lg" />
 
             {/* ── CTA Block ────────────────────────────────────── */}
             <div className="bg-hc-primary rounded-3xl p-12 mt-16 relative overflow-hidden">
