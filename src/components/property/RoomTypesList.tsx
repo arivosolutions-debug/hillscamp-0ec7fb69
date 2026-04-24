@@ -3,6 +3,7 @@ import { BedDouble, Users, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-
 import { type RoomType, formatRoomPrice } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
 import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
+import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
 interface RoomTypesListProps {
   rooms:      RoomType[];

@@ -3,6 +3,7 @@ import { BedDouble, Users } from 'lucide-react';
 import { type RoomType, formatRoomPrice } from '@/lib/types';
 import { ImageLightbox } from '@/components/property/ImageLightbox';
 import { RoomGalleryGrid } from '@/components/property/RoomGalleryGrid';
+import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
 interface MobileRoomCardsProps {
   rooms: RoomType[];
