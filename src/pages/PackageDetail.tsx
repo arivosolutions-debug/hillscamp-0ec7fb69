@@ -28,6 +28,7 @@ import { usePackages } from "@/hooks/usePackages";
 import type { PropertyImage } from "@/lib/types";
 import { PropertyReviews } from "@/components/property/PropertyReviews";
 import { ImageLightbox } from "@/components/property/ImageLightbox";
+import { MarkdownContent } from "@/components/shared/MarkdownContent";
 
 const WHATSAPP_PHONE = "917510810961";
 
@@ -394,7 +395,7 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
               />
             </button>
           )}
-          <p className="text-sm text-hc-text font-body leading-relaxed">{day.description}</p>
+          <MarkdownContent source={day.description} size="sm" className="text-hc-text" />
         </div>
       </div>
       {lightboxOpen && day.image && (

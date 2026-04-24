@@ -23,6 +23,7 @@ import { useProperty } from '@/hooks/useProperty';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
 import { Helmet } from 'react-helmet-async';
 import { ShareSheet } from '@/components/shared/ShareSheet';
+import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
 const WHATSAPP_PHONE = '919847012345';
 
@@ -112,11 +113,7 @@ const PropertyDetail = () => {
 
           {/* 3. Description (mobile) */}
           <div className="md:hidden px-5 mt-6">
-            {property.description && (
-              <p className="text-base text-[#424842] leading-relaxed font-body">
-                {property.description}
-              </p>
-            )}
+            <MarkdownContent source={property.description} size="base" className="text-[#424842]" />
           </div>
 
           {/* 4. Rooms (mobile) */}
@@ -200,11 +197,7 @@ const PropertyDetail = () => {
 
           {/* Desktop Description */}
           <section className="hidden md:block px-8 max-w-[1280px] mx-auto mb-10">
-            {property.description && (
-              <p className="text-hc-text text-lg leading-relaxed font-body">
-                {property.description}
-              </p>
-            )}
+            <MarkdownContent source={property.description} size="lg" />
           </section>
 
           {/* Desktop Rooms */}
