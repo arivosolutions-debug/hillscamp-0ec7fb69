@@ -15,6 +15,8 @@ export interface Package {
   tags: string[] | null;
   hero_images: string[] | null;
   itinerary: any;
+  min_participants: number | null;
+  max_participants: number | null;
   whats_not_included: string[] | null;
   terms_conditions: string[] | null;
   instagram_hashtag: string | null;
