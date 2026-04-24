@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Logo } from '@/components/shared/Logo';
 import { Switch } from '@/components/ui/switch';
+import { MarkdownEditor } from '@/components/admin/MarkdownEditor';
 import {
   Plus, Trash2, Edit2, Eye, EyeOff, X, Save, LogOut,
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
@@ -563,8 +564,12 @@ const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTy
                 <input type="number" placeholder="Price / night (₹)" value={room.price_per_night} onChange={e => update(i, 'price_per_night', e.target.value)}
                   className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
               </div>
-              <textarea placeholder="Short description (shown under bed type & guests)" value={room.description} onChange={e => update(i, 'description', e.target.value)} rows={2}
-                className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
+              <MarkdownEditor
+                value={room.description}
+                onChange={(v) => update(i, 'description', v)}
+                placeholder="Short description (shown under bed type & guests)"
+                rows={3}
+              />
             </div>
             <button onClick={() => onChange(rooms.filter((_, j) => j !== i))} className="text-hc-text-light hover:text-red-500 shrink-0">
               <Trash2 size={16} />
@@ -643,8 +648,12 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
             </div>
             <button onClick={() => onChange(days.filter((_, j) => j !== i))} className="text-hc-text-light hover:text-red-500 shrink-0"><Trash2 size={16} /></button>
           </div>
-          <textarea placeholder="Day description" value={day.description} onChange={e => update(i, 'description', e.target.value)} rows={3}
-            className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none resize-none" />
+          <MarkdownEditor
+            value={day.description}
+            onChange={(v) => update(i, 'description', v)}
+            placeholder="Day description"
+            rows={4}
+          />
           <div className="flex items-center gap-3">
             {day.image ? (
               <div className="relative">
@@ -915,7 +924,7 @@ const PropertyFormPage: React.FC<{
             <Input label="Sort Order" type="number" value={form.sort_order} onChange={e => set('sort_order', parseInt(e.target.value) || 0)} />
           </div>
           <div className="mt-4">
-            <Textarea label="Description" value={form.description} onChange={e => set('description', e.target.value)} placeholder="Describe this property..." />
+            <MarkdownEditor label="Description" value={form.description} onChange={(v) => set('description', v)} placeholder="Describe this property..." />
           </div>
         </SectionCard>
 
@@ -1703,8 +1712,8 @@ const BlogTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') => v
             <ImageUpload label="Cover Image" value={editing.cover_image}
               onChange={(url, file) => setEditing(p => p ? { ...p, cover_image: url, cover_image_file: file } : p)}
               bucket="blog-images" />
-            <Textarea label="Excerpt" value={editing.excerpt} onChange={e => set('excerpt', e.target.value)} placeholder="Short description shown in blog listing..." />
-            <Textarea label="Content" value={editing.content} onChange={e => set('content', e.target.value)} placeholder="Full blog post content..." />
+            <MarkdownEditor label="Excerpt" value={editing.excerpt} onChange={(v) => set('excerpt', v)} placeholder="Short description shown in blog listing..." rows={3} />
+            <MarkdownEditor label="Content" value={editing.content} onChange={(v) => set('content', v)} placeholder="Full blog post content..." rows={12} />
             <StringList label="Tags" placeholder="e.g. wayanad, wildlife, travel" items={editing.tags} onChange={t => set('tags', t)} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <Toggle label="Published (visible on site)" checked={editing.is_published} onChange={v => set('is_published', v)} />
