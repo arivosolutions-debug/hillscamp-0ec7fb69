@@ -117,9 +117,7 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
 
                   {room.description && (
                     <div className="max-h-24 overflow-y-auto pr-1 mt-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-hc-text-light/30 [&::-webkit-scrollbar-thumb]:rounded-full">
-                      <p className="text-sm text-hc-text leading-relaxed font-body">
-                        {room.description}
-                      </p>
+                      <MarkdownContent source={room.description} size="sm" />
                     </div>
                   )}
                 </div>

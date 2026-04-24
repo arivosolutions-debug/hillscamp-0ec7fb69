@@ -143,9 +143,9 @@ export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverIm
                     )}
                   </div>
                   {room.description && (
-                    <p className="text-sm text-hc-text leading-relaxed font-body line-clamp-3">
-                      {room.description}
-                    </p>
+                    <div className="line-clamp-3">
+                      <MarkdownContent source={room.description} size="sm" />
+                    </div>
                   )}
                   <div className="border-t border-hc-text-light/10 mt-1 pt-2">
                     <span className="font-bold text-hc-primary font-body text-xs uppercase tracking-wider">

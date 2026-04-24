@@ -23,6 +23,7 @@ import { useProperty } from '@/hooks/useProperty';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
 import { Helmet } from 'react-helmet-async';
 import { ShareSheet } from '@/components/shared/ShareSheet';
+import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
 const WHATSAPP_PHONE = '919847012345';
 
