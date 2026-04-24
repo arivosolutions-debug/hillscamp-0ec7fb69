@@ -112,11 +112,7 @@ const PropertyDetail = () => {
 
           {/* 3. Description (mobile) */}
           <div className="md:hidden px-5 mt-6">
-            {property.description && (
-              <p className="text-base text-[#424842] leading-relaxed font-body">
-                {property.description}
-              </p>
-            )}
+            <MarkdownContent source={property.description} size="base" className="text-[#424842]" />
           </div>
 
           {/* 4. Rooms (mobile) */}
@@ -200,11 +196,7 @@ const PropertyDetail = () => {
 
           {/* Desktop Description */}
           <section className="hidden md:block px-8 max-w-[1280px] mx-auto mb-10">
-            {property.description && (
-              <p className="text-hc-text text-lg leading-relaxed font-body">
-                {property.description}
-              </p>
-            )}
+            <MarkdownContent source={property.description} size="lg" />
           </section>
 
           {/* Desktop Rooms */}
