@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Users } from "lucide-react";
 import { usePackages, type Package } from "@/hooks/usePackages";
 
 export const FeaturedExperiences: React.FC = () => {
@@ -39,7 +39,16 @@ export const FeaturedExperiences: React.FC = () => {
 
   if (cards.length === 0) return null;
 
-  const CardContent = ({ card }: { card: Package }) => (
+  const CardContent = ({ card }: { card: Package }) => {
+    const participants =
+      card.min_participants != null && card.max_participants != null
+        ? `${card.min_participants} to ${card.max_participants}`
+        : card.max_participants != null
+        ? `Up to ${card.max_participants}`
+        : card.min_participants != null
+        ? `${card.min_participants}+`
+        : null;
+    return (
     <Link
       to={`/packages/${card.slug}`}
       className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group block flex flex-col"
@@ -65,6 +74,12 @@ export const FeaturedExperiences: React.FC = () => {
         <h3 className="font-headline text-hc-primary text-lg md:text-xl mb-3 group-hover:text-hc-secondary transition-colors duration-200 leading-snug">
           {card.name}
         </h3>
+        {participants && (
+          <div className="flex items-center gap-1 text-hc-text-light text-xs font-body mb-3">
+            <Users size={12} />
+            <span>{participants}</span>
+          </div>
+        )}
         {card.tags && card.tags.length > 0 && (
           <div className="flex items-center gap-2 flex-wrap mb-4">
             {card.tags.slice(0, 2).map((tag) => (
@@ -86,7 +101,8 @@ export const FeaturedExperiences: React.FC = () => {
         </div>
       </div>
     </Link>
-  );
+    );
+  };
 
   return (
     <section ref={ref} className="bg-hc-bg px-5 md:px-8 pt-4 pb-8 md:pt-10 md:pb-10">

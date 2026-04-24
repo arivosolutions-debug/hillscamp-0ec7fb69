@@ -178,11 +178,21 @@ interface PackageCardProps {
     duration_nights: number | null;
     tags: string[] | null;
     hero_images: string[] | null;
+    min_participants: number | null;
+    max_participants: number | null;
   };
 }
 
 const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
   const image = pkg.hero_images?.[0] ?? '/placeholder.svg';
+  const participants =
+    pkg.min_participants != null && pkg.max_participants != null
+      ? `${pkg.min_participants} to ${pkg.max_participants}`
+      : pkg.max_participants != null
+      ? `Up to ${pkg.max_participants}`
+      : pkg.min_participants != null
+      ? `${pkg.min_participants}+`
+      : null;
 
   return (
     <Link
@@ -214,10 +224,12 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
               {pkg.location}
             </span>
           )}
-          <span className="flex items-center gap-1">
-            <Users size={12} />
-            4 to 5
-          </span>
+          {participants && (
+            <span className="flex items-center gap-1">
+              <Users size={12} />
+              {participants}
+            </span>
+          )}
         </div>
 
         {/* Tags */}
