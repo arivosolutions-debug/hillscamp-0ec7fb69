@@ -37,16 +37,18 @@ export const FeaturedExperiences: React.FC = () => {
     if (window.matchMedia("(min-width: 768px)").matches) return;
     const el = scrollRef.current;
     if (!el) return;
+    // Nudge ~10% of viewport width (min 40, max 80) so peek scales with screen
+    const nudgeDistance = Math.max(40, Math.min(80, Math.round(window.innerWidth * 0.1)));
     const nudge = window.setTimeout(() => {
       setShowSwipeHint(true);
-      el.scrollTo({ left: 60, behavior: "smooth" });
+      el.scrollTo({ left: nudgeDistance, behavior: "smooth" });
       window.setTimeout(() => {
         el.scrollTo({ left: 0, behavior: "smooth" });
-      }, 550);
+      }, 650);
       window.setTimeout(() => {
         setShowSwipeHint(false);
-      }, 1800);
-    }, 700);
+      }, 2000);
+    }, 600);
     return () => window.clearTimeout(nudge);
   }, [packages]);
 
