@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 export const BlogTeaser: React.FC = () => {
-  const { data: posts, isLoading } = useBlogPosts(undefined, 3);
+  const { data: posts, isLoading } = useBlogPosts(undefined, 4, true);
   const ref = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -25,6 +25,9 @@ export const BlogTeaser: React.FC = () => {
     });
     return () => observer.disconnect();
   }, [posts, isLoading]);
+
+  // Hide entire section when no featured posts are available
+  if (!isLoading && (!posts || posts.length === 0)) return null;
 
   const handleScroll = () => {
     const el = scrollRef.current;
@@ -115,7 +118,11 @@ export const BlogTeaser: React.FC = () => {
       ) : (
         <>
           {/* Desktop grid */}
-          <div className="hidden md:grid grid-cols-3 gap-12">
+          <div className={`hidden md:grid gap-12 ${
+            posts && posts.length >= 3 ? 'grid-cols-3' :
+            posts && posts.length === 2 ? 'grid-cols-2 max-w-4xl mx-auto' :
+            'grid-cols-1 max-w-xl mx-auto'
+          }`}>
             {posts?.map((post) => (
               <CardContent key={post.id} post={post} />
             ))}
