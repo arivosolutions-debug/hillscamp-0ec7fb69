@@ -180,6 +180,7 @@ interface PackageCardProps {
     hero_images: string[] | null;
     min_participants: number | null;
     max_participants: number | null;
+    price_inr: number | null;
   };
 }
 
@@ -248,7 +249,11 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
 
         {/* Learn More */}
         <div className="flex items-center justify-between mt-1">
-          <span className="text-hc-text text-xs font-body font-medium">Learn More</span>
+          <span className="font-bold text-hc-primary text-sm font-body">
+            {pkg.price_inr != null
+              ? `Price Starting from ₹${Number(pkg.price_inr).toLocaleString('en-IN')}`
+              : 'Contact for Pricing'}
+          </span>
           <ArrowRight size={14} className="text-hc-secondary" />
         </div>
       </div>
