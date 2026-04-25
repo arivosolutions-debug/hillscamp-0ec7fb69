@@ -96,29 +96,24 @@ function absoluteImage(image: string | null | undefined): string | null {
 }
 
 // Optimize an image URL for OG/social scrapers (WhatsApp ≤300KB, 1200x630, JPG).
-// Supabase Storage supports on-the-fly transforms via the /render/image/public/ path
-// with width/height/resize/quality query params. For non-Supabase URLs we return as-is.
+// Proxies through images.weserv.nl — a free image CDN that resizes, re-encodes
+// to JPG, strips metadata, and serves with proper image/jpeg Content-Type.
+// This keeps us under WhatsApp's 300KB cap without needing Supabase Pro.
 function ogOptimize(url: string | null): string | null {
   if (!url) return null;
   try {
-    const u = new URL(url);
-    // Match Supabase storage public object URLs and rewrite to the render endpoint.
-    // /storage/v1/object/public/<bucket>/<path>  ->  /storage/v1/render/image/public/<bucket>/<path>
-    if (u.pathname.includes("/storage/v1/object/public/")) {
-      u.pathname = u.pathname.replace(
-        "/storage/v1/object/public/",
-        "/storage/v1/render/image/public/",
-      );
-    }
-    // Only attach transform params if this is a Supabase render URL.
-    if (u.pathname.includes("/storage/v1/render/image/public/")) {
-      u.searchParams.set("width", "1200");
-      u.searchParams.set("height", "630");
-      u.searchParams.set("resize", "cover");
-      u.searchParams.set("quality", "75");
-      u.searchParams.set("format", "origin");
-    }
-    return u.toString();
+    // wsrv.nl expects the source URL without the protocol in the `url` param.
+    const stripped = url.replace(/^https?:\/\//, "");
+    const params = new URLSearchParams({
+      url: stripped,
+      w: "1200",
+      h: "630",
+      fit: "cover",
+      output: "jpg",
+      q: "78",
+      il: "", // interlaced/progressive jpg
+    });
+    return `https://wsrv.nl/?${params.toString()}`;
   } catch {
     return url;
   }
