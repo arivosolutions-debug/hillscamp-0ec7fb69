@@ -8,6 +8,31 @@ interface ShareSheetProps {
   variant?: 'icon' | 'pill';
 }
 
+/**
+ * Build a crawler-friendly share URL that routes through the og-meta edge
+ * function. WhatsApp / Facebook / iMessage etc. don't run JS, so they need
+ * a server-rendered HTML response with OG tags. The function will
+ * meta-refresh real visitors to the canonical SPA route.
+ */
+const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined;
+
+function buildShareUrl(rawUrl: string): string {
+  try {
+    const u = new URL(rawUrl);
+    const m = u.pathname.match(/^\/(property|packages?|blog|journal)\/([^/]+)\/?$/);
+    if (!m || !SUPABASE_PROJECT_ID) return rawUrl;
+    const typeRaw = m[1];
+    const slug = m[2];
+    const type =
+      typeRaw === 'property' ? 'property'
+      : typeRaw === 'blog' || typeRaw === 'journal' ? 'blog'
+      : 'package';
+    return `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/og-meta/${type}/${slug}`;
+  } catch {
+    return rawUrl;
+  }
+}
+
 export const ShareSheet: React.FC<ShareSheetProps> = ({
   title,
   url,
@@ -15,7 +40,8 @@ export const ShareSheet: React.FC<ShareSheetProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const shareUrl = url ?? (typeof window !== 'undefined' ? window.location.href : '');
+  const rawUrl = url ?? (typeof window !== 'undefined' ? window.location.href : '');
+  const shareUrl = buildShareUrl(rawUrl);
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 
