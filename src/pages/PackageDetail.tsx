@@ -98,11 +98,14 @@ const PackageDetail: React.FC = () => {
     <>
       <Helmet>
         <title>{pkg.name} — Hills Camp Kerala</title>
+        <meta name="description" content={`Discover ${pkg.name} — a curated experience by Hills Camp Kerala.`} />
         <meta property="og:title" content={`${pkg.name} — Hills Camp Kerala`} />
+        <meta property="og:description" content={`Discover ${pkg.name} — a curated experience by Hills Camp Kerala.`} />
         {pkg.hero_images?.[0] && <meta property="og:image" content={pkg.hero_images[0]} />}
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${pkg.name} — Hills Camp Kerala`} />
+        <meta name="twitter:description" content={`Discover ${pkg.name} — a curated experience by Hills Camp Kerala.`} />
         {pkg.hero_images?.[0] && <meta name="twitter:image" content={pkg.hero_images[0]} />}
       </Helmet>
       <Navbar />
