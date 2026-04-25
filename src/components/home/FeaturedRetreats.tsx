@@ -162,10 +162,10 @@ export const FeaturedRetreats: React.FC = () => {
   );
 
   return (
-    <section ref={ref} className="bg-hc-bg px-5 md:px-2 pb-0 md:pt-1 md:pb-10 pt-[5px]">
-      <div className="max-w-content mx-auto">
+    <section ref={ref} className="bg-hc-bg pl-5 pr-0 md:px-2 pb-0 md:pt-1 md:pb-10 pt-[5px]">
+      <div className="max-w-content mx-auto md:pr-0">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6 mb-6 md:mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6 mb-6 md:mb-16 pr-5 md:pr-0">
           <div>
             <h2 className="font-headline text-hc-primary text-3xl md:text-5xl mb-1 md:mb-4">Featured Retreats</h2>
             <p className="text-hc-text text-base md:text-lg max-w-xl hidden md:block">
@@ -194,7 +194,7 @@ export const FeaturedRetreats: React.FC = () => {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain pr-10"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain"
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {cards.map((card) => (
