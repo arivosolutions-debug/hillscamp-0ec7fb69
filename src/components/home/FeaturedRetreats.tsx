@@ -124,6 +124,8 @@ export const FeaturedRetreats: React.FC = () => {
           <CardSlideshow
             images={card.images && card.images.length > 0 ? card.images : [card.image]}
             alt={card.name}
+            autoplay={false}
+            showDots={false}
           />
         </div>
         <span className="absolute top-3 left-4 z-20 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-xs font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
