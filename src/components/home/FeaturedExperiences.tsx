@@ -165,13 +165,18 @@ export const FeaturedExperiences: React.FC = () => {
                 <CardContent card={card} />
               </div>
             ))}
-            <div className="shrink-0 flex items-center justify-center pr-5">
+            <div className="shrink-0 flex items-center pr-5" style={{ height: 280 }}>
               <Link
                 to="/experiences"
                 aria-label="View more experiences"
-                className="flex items-center justify-center w-14 h-14 rounded-full bg-hc-primary text-hc-bg hover:bg-hc-secondary transition-colors group"
+                className="flex flex-col items-center gap-2 group"
               >
-                <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                <span className="flex items-center justify-center w-14 h-14 rounded-full bg-hc-primary text-hc-bg group-hover:bg-hc-secondary transition-colors">
+                  <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                </span>
+                <span className="text-hc-primary text-xs font-bold uppercase tracking-wider font-body">
+                  View More
+                </span>
               </Link>
             </div>
           </div>
