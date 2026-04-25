@@ -13,7 +13,50 @@ const DEFAULT_DESCRIPTION =
 
 // In-memory cache (per edge instance) — 5 minutes per slug
 const CACHE_TTL_MS = 5 * 60 * 1000;
+// Cache bot vs human variants separately
 const cache = new Map<string, { html: string; expiresAt: number }>();
+
+// Known link-preview / social crawler user-agents.
+// Matched case-insensitively as substrings.
+const BOT_UA_PATTERNS = [
+  "whatsapp",
+  "facebookexternalhit",
+  "facebot",
+  "twitterbot",
+  "slackbot",
+  "linkedinbot",
+  "telegrambot",
+  "discordbot",
+  "pinterest",
+  "redditbot",
+  "skypeuripreview",
+  "applebot",
+  "googlebot",
+  "bingbot",
+  "yandexbot",
+  "duckduckbot",
+  "baiduspider",
+  "embedly",
+  "quora link preview",
+  "vkshare",
+  "w3c_validator",
+  "iframely",
+  "outbrain",
+  "nuzzel",
+  "bitlybot",
+  "tumblr",
+  "viber",
+  "line/",
+  "snapchat",
+  "preview",
+  "fetch", // generic node/python "fetch" libs sometimes used by previewers
+];
+
+function isBot(userAgent: string | null): boolean {
+  if (!userAgent) return true; // no UA = treat as bot (safer for previews)
+  const ua = userAgent.toLowerCase();
+  return BOT_UA_PATTERNS.some((p) => ua.includes(p));
+}
 
 function escapeHtml(s: string): string {
   return s
@@ -44,6 +87,7 @@ function renderHtml(opts: {
   redirectUrl: string;
   type: "product" | "article" | "website";
   jsonLd: Record<string, unknown>;
+  isBot: boolean;
 }): string {
   const fullTitle = `${opts.title} — ${SITE_NAME}`;
   const desc = truncate(opts.description || DEFAULT_DESCRIPTION);
@@ -54,6 +98,18 @@ function renderHtml(opts: {
   const canonical = escapeHtml(opts.canonicalUrl);
   const redirect = escapeHtml(opts.redirectUrl);
   const jsonLdStr = JSON.stringify(opts.jsonLd).replace(/</g, "\\u003c");
+
+  // Bots: serve clean OG HTML with NO meta-refresh and NO JS redirect.
+  // iOS WhatsApp in particular bails on the preview if it sees a refresh/redirect.
+  // Humans: instant client-side replace + meta-refresh fallback.
+  const redirectMarkup = opts.isBot
+    ? ""
+    : `<meta http-equiv="refresh" content="0;url=${redirect}" />
+<script>window.location.replace(${JSON.stringify(opts.redirectUrl)});</script>`;
+
+  const bodyMarkup = opts.isBot
+    ? `<h1>${ft}</h1>${img ? `\n<img src="${escapeHtml(img)}" alt="${t}" width="1200" height="630" />` : ""}\n<p>${d}</p>\n<p><a href="${redirect}">View on ${escapeHtml(SITE_NAME)}</a></p>`
+    : `<p>Redirecting to <a href="${redirect}">${ft}</a>…</p>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -82,12 +138,10 @@ ${img ? `<meta name="twitter:image" content="${escapeHtml(img)}" />` : ""}
 ${img ? `<meta itemProp="image" content="${escapeHtml(img)}" />` : ""}
 
 <script type="application/ld+json">${jsonLdStr}</script>
-
-<meta http-equiv="refresh" content="0;url=${redirect}" />
-<script>window.location.replace(${JSON.stringify(opts.redirectUrl)});</script>
+${redirectMarkup}
 </head>
 <body>
-<p>Redirecting to <a href="${redirect}">${ft}</a>…</p>
+${bodyMarkup}
 </body>
 </html>`;
 }
@@ -101,7 +155,7 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
-async function buildPropertyHtml(slug: string): Promise<string | null> {
+async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<string | null> {
   const { data: property, error } = await supabase
     .from("properties")
     .select(
@@ -152,10 +206,11 @@ async function buildPropertyHtml(slug: string): Promise<string | null> {
     redirectUrl: canonicalUrl,
     type: "product",
     jsonLd,
+    isBot: isBotReq,
   });
 }
 
-async function buildPackageHtml(slug: string): Promise<string | null> {
+async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string | null> {
   const { data: pkg, error } = await supabase
     .from("packages")
     .select(
@@ -213,6 +268,7 @@ async function buildPackageHtml(slug: string): Promise<string | null> {
     redirectUrl: canonicalUrl,
     type: "product",
     jsonLd,
+    isBot: isBotReq,
   });
 }
 
@@ -236,7 +292,9 @@ Deno.serve(async (req) => {
   const type = parts[idx];
   const slug = decodeURIComponent(parts[idx + 1]);
 
-  const cacheKey = `${type}:${slug}`;
+  const userAgent = req.headers.get("user-agent");
+  const botRequest = isBot(userAgent);
+  const cacheKey = `${type}:${slug}:${botRequest ? "bot" : "human"}`;
   const now = Date.now();
   const cached = cache.get(cacheKey);
   if (cached && cached.expiresAt > now) {
@@ -246,15 +304,17 @@ Deno.serve(async (req) => {
         ...corsHeaders,
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "public, max-age=300, s-maxage=300",
+        Vary: "User-Agent",
         "X-Cache": "HIT",
+        "X-Bot": botRequest ? "1" : "0",
       },
     });
   }
 
   let html: string | null = null;
   try {
-    if (type === "property") html = await buildPropertyHtml(slug);
-    else if (type === "package") html = await buildPackageHtml(slug);
+    if (type === "property") html = await buildPropertyHtml(slug, botRequest);
+    else if (type === "package") html = await buildPackageHtml(slug, botRequest);
   } catch (err) {
     console.error("share-meta error:", err);
     return new Response(notFoundHtml("Server error"), {
@@ -278,7 +338,9 @@ Deno.serve(async (req) => {
       ...corsHeaders,
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "public, max-age=300, s-maxage=300",
+      Vary: "User-Agent",
       "X-Cache": "MISS",
+      "X-Bot": botRequest ? "1" : "0",
     },
   });
 });
