@@ -30,6 +30,21 @@ export const FeaturedExperiences: React.FC = () => {
     return () => observer.disconnect();
   }, [packages]);
 
+  // One-time mobile peek nudge: scroll right then return so users see there's more
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(min-width: 768px)").matches) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const nudge = window.setTimeout(() => {
+      el.scrollTo({ left: 60, behavior: "smooth" });
+      window.setTimeout(() => {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      }, 550);
+    }, 700);
+    return () => window.clearTimeout(nudge);
+  }, [packages]);
+
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
