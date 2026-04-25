@@ -32,7 +32,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
     <Link to={`/property/${property.slug}`} className="group block">
       {/* Image */}
       <div className="relative rounded-2xl overflow-hidden mb-3 aspect-[4/3] md:aspect-[4/5]">
-        <CardSlideshow images={finalImages} alt={property.name} />
+        <CardSlideshow images={finalImages} alt={property.name} autoplay={false} showDots={false} />
         {/* Property type chip — matches Featured Retreats badge style */}
         <span className="absolute top-3 left-3 z-20 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-[10px] font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
           {propertyTypeLabel}
