@@ -9,7 +9,7 @@ import { useProperties } from '@/hooks/useProperties';
 import type { PropertyType } from '@/lib/types';
 import listingsHeroBg from '@/assets/listings-hero-bg.jpg';
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 12;
 
 const Listings = () => {
   const [searchParams] = useSearchParams();
