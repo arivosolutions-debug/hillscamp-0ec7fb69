@@ -129,10 +129,10 @@ export const FeaturedExperiences: React.FC = () => {
   };
 
   return (
-    <section ref={ref} className="bg-hc-bg px-5 md:px-8 pt-4 pb-8 md:pt-10 md:pb-10">
+    <section ref={ref} className="bg-hc-bg pl-5 pr-0 md:px-8 pt-4 pb-8 md:pt-10 md:pb-10">
       <div className="max-w-content mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6 mb-6 md:mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-6 mb-6 md:mb-16 pr-5 md:pr-0">
           <div>
             <h2 className="font-headline text-hc-primary text-3xl md:text-5xl mb-1 md:mb-4">Featured Experiences</h2>
             <p className="text-hc-text text-base md:text-lg max-w-xl hidden md:block">
@@ -161,7 +161,7 @@ export const FeaturedExperiences: React.FC = () => {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain pr-10"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain"
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {cards.map((card) => (
