@@ -6,6 +6,22 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+function htmlHeaders(extra: Record<string, string> = {}): Headers {
+  const h = new Headers();
+  for (const [k, v] of Object.entries(corsHeaders)) h.set(k, v);
+  for (const [k, v] of Object.entries(extra)) h.set(k, v);
+  h.set("Content-Type", "text/html; charset=utf-8");
+  // Prevent Supabase/CF gateway from sniffing and downgrading to text/plain
+  h.set("X-Content-Type-Options", "nosniff");
+  return h;
+}
+
+function htmlResponse(html: string, status: number, extra: Record<string, string> = {}): Response {
+  // Wrap body in a Blob with explicit type so the runtime cannot override Content-Type.
+  const blob = new Blob([html], { type: "text/html; charset=utf-8" });
+  return new Response(blob, { status, headers: htmlHeaders(extra) });
+}
+
 const SITE_NAME = "Hills Camp Kerala";
 const SITE_URL = "https://hillscamp.com";
 const DEFAULT_DESCRIPTION =
@@ -284,10 +300,7 @@ Deno.serve(async (req) => {
   // Drop the leading function name segment if present
   const idx = parts.findIndex((p) => p === "property" || p === "package");
   if (idx === -1 || !parts[idx + 1]) {
-    return new Response(notFoundHtml("Missing type or slug"), {
-      status: 404,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
+    return htmlResponse(notFoundHtml("Missing type or slug"), 404);
   }
   const type = parts[idx];
   const slug = decodeURIComponent(parts[idx + 1]);
@@ -298,16 +311,11 @@ Deno.serve(async (req) => {
   const now = Date.now();
   const cached = cache.get(cacheKey);
   if (cached && cached.expiresAt > now) {
-    return new Response(cached.html, {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=300, s-maxage=300",
-        Vary: "User-Agent",
-        "X-Cache": "HIT",
-        "X-Bot": botRequest ? "1" : "0",
-      },
+    return htmlResponse(cached.html, 200, {
+      "Cache-Control": "public, max-age=300, s-maxage=300",
+      Vary: "User-Agent",
+      "X-Cache": "HIT",
+      "X-Bot": botRequest ? "1" : "0",
     });
   }
 
@@ -317,30 +325,19 @@ Deno.serve(async (req) => {
     else if (type === "package") html = await buildPackageHtml(slug, botRequest);
   } catch (err) {
     console.error("share-meta error:", err);
-    return new Response(notFoundHtml("Server error"), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
+    return htmlResponse(notFoundHtml("Server error"), 500);
   }
 
   if (!html) {
-    return new Response(notFoundHtml("Not found"), {
-      status: 404,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
+    return htmlResponse(notFoundHtml("Not found"), 404);
   }
 
   cache.set(cacheKey, { html, expiresAt: now + CACHE_TTL_MS });
 
-  return new Response(html, {
-    status: 200,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=300, s-maxage=300",
-      Vary: "User-Agent",
-      "X-Cache": "MISS",
-      "X-Bot": botRequest ? "1" : "0",
-    },
+  return htmlResponse(html, 200, {
+    "Cache-Control": "public, max-age=300, s-maxage=300",
+    Vary: "User-Agent",
+    "X-Cache": "MISS",
+    "X-Bot": botRequest ? "1" : "0",
   });
 });
