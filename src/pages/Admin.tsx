@@ -12,7 +12,7 @@ import {
 const MAX_FEATURED = 4;
 
 async function checkFeaturedCap(
-  table: 'properties' | 'packages',
+  table: 'properties' | 'packages' | 'blog_posts',
   willBeFeatured: boolean,
   currentId?: string,
 ): Promise<string | null> {
@@ -1691,6 +1691,8 @@ const BlogTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') => v
     if (!editing || !editing.title || !editing.slug) { onToast('Title and slug are required', 'error'); return; }
     setSaving(true);
     try {
+      const capError = await checkFeaturedCap('blog_posts', !!editing.is_featured, editing.id);
+      if (capError) { onToast(capError, 'error'); setSaving(false); return; }
       let coverUrl = editing.cover_image;
       if (editing.cover_image_file) {
         coverUrl = await uploadFile(editing.cover_image_file, 'blog-images', 'covers/');
