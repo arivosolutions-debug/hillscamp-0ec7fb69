@@ -16,7 +16,6 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
-import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { MobileHeroSlideshow } from "@/components/property/MobileHeroSlideshow";
@@ -29,6 +28,7 @@ import type { PropertyImage } from "@/lib/types";
 import { PropertyReviews } from "@/components/property/PropertyReviews";
 import { ImageLightbox } from "@/components/property/ImageLightbox";
 import { MarkdownContent } from "@/components/shared/MarkdownContent";
+import { SeoHead } from "@/components/shared/SeoHead";
 
 const WHATSAPP_PHONE = "917510810961";
 
@@ -94,17 +94,46 @@ const PackageDetail: React.FC = () => {
   const lng = coords?.lng ?? 76.5;
   const itinerary: ItineraryDay[] = Array.isArray(pkg.itinerary) ? pkg.itinerary : [];
 
+  const ogImage =
+    pkg.hero_images?.[0] ||
+    pkg.gallery?.[0]?.image_url ||
+    null;
+  const ogDescription =
+    (pkg as { tagline?: string | null }).tagline ||
+    (pkg as { description?: string | null }).description ||
+    (itinerary[0]?.description ?? null);
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristTrip',
+    name: pkg.name,
+    description: ogDescription ?? undefined,
+    image: ogImage ?? undefined,
+    touristType: pkg.tags ?? undefined,
+    itinerary: itinerary.map((d) => ({
+      '@type': 'ListItem',
+      position: d.day,
+      name: d.title,
+    })),
+    ...(pkg.price_inr
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price: pkg.price_inr,
+            priceCurrency: 'INR',
+          },
+        }
+      : {}),
+  };
+
   return (
     <>
-      <Helmet>
-        <title>{pkg.name} — Hills Camp Kerala</title>
-        <meta property="og:title" content={`${pkg.name} — Hills Camp Kerala`} />
-        {pkg.hero_images?.[0] && <meta property="og:image" content={pkg.hero_images[0]} />}
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${pkg.name} — Hills Camp Kerala`} />
-        {pkg.hero_images?.[0] && <meta name="twitter:image" content={pkg.hero_images[0]} />}
-      </Helmet>
+      <SeoHead
+        title={pkg.name}
+        description={ogDescription}
+        image={ogImage}
+        type="product"
+        jsonLd={jsonLd}
+      />
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg">
