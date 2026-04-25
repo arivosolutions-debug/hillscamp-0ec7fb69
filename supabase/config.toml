@@ -1,4 +1,1 @@
 project_id = "amlhmlfzvqdghbbuluio"
-
-[functions.og-meta]
-verify_jwt = false

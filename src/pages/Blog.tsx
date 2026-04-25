@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { Helmet } from 'react-helmet-async';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -164,24 +163,8 @@ export const BlogPost = () => {
   const wordCount = (post.content ?? '').split(/\s+/).length;
   const readMins  = Math.max(1, Math.ceil(wordCount / 200));
 
-  const ogTitle = `${post.title} — Hills Camp Kerala`;
-  const ogDesc = (post.excerpt ?? '').trim() ||
-    'A story from the Western Ghats by Hills Camp Kerala.';
-
   return (
     <>
-      <Helmet>
-        <title>{ogTitle}</title>
-        <meta name="description" content={ogDesc} />
-        <meta property="og:title" content={ogTitle} />
-        <meta property="og:description" content={ogDesc} />
-        <meta property="og:type" content="article" />
-        {post.cover_image && <meta property="og:image" content={post.cover_image} />}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={ogTitle} />
-        <meta name="twitter:description" content={ogDesc} />
-        {post.cover_image && <meta name="twitter:image" content={post.cover_image} />}
-      </Helmet>
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg">
