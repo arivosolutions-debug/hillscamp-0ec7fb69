@@ -150,6 +150,13 @@ export const FeaturedExperiences: React.FC = () => {
           {cards.map((card) => (
             <CardContent key={card.slug} card={card} />
           ))}
+          <Link
+            to="/experiences"
+            aria-label="View more experiences"
+            className="hidden lg:flex items-center justify-center self-center justify-self-center w-16 h-16 rounded-full bg-hc-primary text-hc-bg hover:bg-hc-secondary transition-colors group"
+          >
+            <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
 
         {/* Mobile Carousel */}
@@ -165,6 +172,15 @@ export const FeaturedExperiences: React.FC = () => {
                 <CardContent card={card} />
               </div>
             ))}
+            <div className="shrink-0 flex items-center justify-center pr-5">
+              <Link
+                to="/experiences"
+                aria-label="View more experiences"
+                className="flex items-center justify-center w-14 h-14 rounded-full bg-hc-primary text-hc-bg hover:bg-hc-secondary transition-colors group"
+              >
+                <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
