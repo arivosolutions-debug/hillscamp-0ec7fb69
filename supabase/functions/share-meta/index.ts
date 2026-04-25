@@ -95,6 +95,35 @@ function absoluteImage(image: string | null | undefined): string | null {
   return `${SITE_URL}${image.startsWith("/") ? "" : "/"}${image}`;
 }
 
+// Optimize an image URL for OG/social scrapers (WhatsApp ≤300KB, 1200x630, JPG).
+// Supabase Storage supports on-the-fly transforms via the /render/image/public/ path
+// with width/height/resize/quality query params. For non-Supabase URLs we return as-is.
+function ogOptimize(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    // Match Supabase storage public object URLs and rewrite to the render endpoint.
+    // /storage/v1/object/public/<bucket>/<path>  ->  /storage/v1/render/image/public/<bucket>/<path>
+    if (u.pathname.includes("/storage/v1/object/public/")) {
+      u.pathname = u.pathname.replace(
+        "/storage/v1/object/public/",
+        "/storage/v1/render/image/public/",
+      );
+    }
+    // Only attach transform params if this is a Supabase render URL.
+    if (u.pathname.includes("/storage/v1/render/image/public/")) {
+      u.searchParams.set("width", "1200");
+      u.searchParams.set("height", "630");
+      u.searchParams.set("resize", "cover");
+      u.searchParams.set("quality", "75");
+      u.searchParams.set("format", "origin");
+    }
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 function renderHtml(opts: {
   title: string;
   description: string;
