@@ -218,6 +218,7 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
   const image = absoluteImage(
     property.cover_image || images[0]?.image_url || null,
   );
+  const optimizedImage = ogOptimize(image);
   const description = property.tagline || property.description || DEFAULT_DESCRIPTION;
   const canonicalUrl = `${SITE_URL}/property/${property.slug}`;
 
@@ -226,7 +227,7 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
     "@type": "LodgingBusiness",
     name: property.name,
     description: description ?? undefined,
-    image: image ?? undefined,
+    image: optimizedImage ?? undefined,
     url: canonicalUrl,
     address: {
       "@type": "PostalAddress",
@@ -246,7 +247,7 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
   return renderHtml({
     title: property.name,
     description,
-    image,
+    image: optimizedImage,
     canonicalUrl,
     redirectUrl: canonicalUrl,
     type: "product",
@@ -273,6 +274,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
   const image = absoluteImage(
     (pkg.hero_images && pkg.hero_images[0]) || gallery[0]?.image_url || null,
   );
+  const optimizedImage = ogOptimize(image);
   const description =
     [pkg.location, pkg.region].filter(Boolean).join(" · ") ||
     DEFAULT_DESCRIPTION;
@@ -283,7 +285,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
     "@type": "TouristTrip",
     name: pkg.name,
     description,
-    image: image ?? undefined,
+    image: optimizedImage ?? undefined,
     url: canonicalUrl,
     touristType: pkg.tags ?? undefined,
   };
@@ -308,7 +310,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
   return renderHtml({
     title: pkg.name,
     description,
-    image,
+    image: optimizedImage,
     canonicalUrl,
     redirectUrl: canonicalUrl,
     type: "product",
