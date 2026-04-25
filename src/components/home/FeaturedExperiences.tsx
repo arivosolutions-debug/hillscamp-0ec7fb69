@@ -136,11 +136,11 @@ export const FeaturedExperiences: React.FC = () => {
         </div>
 
         {/* Mobile Carousel */}
-        <div className="md:hidden -mr-5">
+        <div className="md:hidden">
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain pr-10"
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {cards.map((card) => (
