@@ -20,8 +20,8 @@ export const WhatsAppWidget: React.FC<WhatsAppWidgetProps> = ({
     return () => clearTimeout(t);
   }, []);
 
-  // Hide on listings and property detail pages
-  if (pathname === '/listings' || pathname.startsWith('/property/')) return null;
+  // Hide on listings, property detail, and admin pages
+  if (pathname === '/listings' || pathname.startsWith('/property/') || pathname.startsWith('/admin')) return null;
 
   const msg = encodeURIComponent(
     propertyName
