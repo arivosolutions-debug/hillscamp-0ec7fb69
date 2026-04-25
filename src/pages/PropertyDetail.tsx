@@ -21,9 +21,9 @@ import { SimilarStays } from '@/components/property/SimilarStays';
 import { PropertyReviews } from '@/components/property/PropertyReviews';
 import { useProperty } from '@/hooks/useProperty';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
-import { Helmet } from 'react-helmet-async';
 import { ShareSheet } from '@/components/shared/ShareSheet';
 import { MarkdownContent } from '@/components/shared/MarkdownContent';
+import { SeoHead } from '@/components/shared/SeoHead';
 
 const WHATSAPP_PHONE = '919847012345';
 
@@ -60,23 +60,44 @@ const PropertyDetail = () => {
   const districtLabel = DISTRICT_LABELS[property.district];
   const amenityNames = property.amenities.map(a => a.name);
 
+  const ogImage =
+    property.cover_image ||
+    property.property_images?.[0]?.image_url ||
+    null;
+  const ogDescription =
+    property.tagline || property.description || null;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LodgingBusiness',
+    name: property.name,
+    description: ogDescription ?? undefined,
+    image: ogImage ?? undefined,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: property.location || districtLabel,
+      addressRegion: 'Kerala',
+      addressCountry: 'IN',
+    },
+    ...(property.latitude && property.longitude
+      ? {
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: property.latitude,
+            longitude: property.longitude,
+          },
+        }
+      : {}),
+  };
+
   return (
     <>
-        <Helmet>
-          <title>{property.name} — Hills Camp Kerala</title>
-          <meta property="og:title" content={`${property.name} — Hills Camp Kerala`} />
-          <meta property="og:description" content={property.description ?? 'A luxury wilderness retreat in Kerala\'s Western Ghats.'} />
-          {property.cover_image && (
-            <meta property="og:image" content={property.cover_image} />
-          )}
-          <meta property="og:type" content="website" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={`${property.name} — Hills Camp Kerala`} />
-          <meta name="twitter:description" content={property.description ?? 'A luxury wilderness retreat in Kerala\'s Western Ghats.'} />
-          {property.cover_image && (
-            <meta name="twitter:image" content={property.cover_image} />
-          )}
-        </Helmet>
+      <SeoHead
+        title={property.name}
+        description={ogDescription}
+        image={ogImage}
+        type="product"
+        jsonLd={jsonLd}
+      />
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg">
