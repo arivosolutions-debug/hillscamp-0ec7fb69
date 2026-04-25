@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Leaf, Plus } from 'lucide-react';
 import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
@@ -9,6 +9,22 @@ interface PropertyAccordionProps {
 
 export const PropertyAccordion: React.FC<PropertyAccordionProps> = ({ title, children }) => {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [maxH, setMaxH] = useState(0);
+
+  useEffect(() => {
+    if (!open) {
+      setMaxH(0);
+      return;
+    }
+    const el = contentRef.current;
+    if (!el) return;
+    const update = () => setMaxH(el.scrollHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open]);
 
   return (
     <div className="border-t border-[#c2c8bf]/20">
@@ -24,9 +40,9 @@ export const PropertyAccordion: React.FC<PropertyAccordionProps> = ({ title, chi
       </button>
       <div
         className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: open ? '600px' : '0px' }}
+        style={{ maxHeight: `${maxH}px` }}
       >
-        <div className="px-5 pb-5">{children}</div>
+        <div ref={contentRef} className="px-5 pb-5">{children}</div>
       </div>
     </div>
   );
