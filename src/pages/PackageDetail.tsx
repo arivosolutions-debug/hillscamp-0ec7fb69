@@ -444,6 +444,22 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
 const CollapsibleList: React.FC<{ title: string; items: string[]; renderAsMarkdown?: boolean }> = ({ title, items, renderAsMarkdown }) => {
   const [open, setOpen] = useState(false);
   const asMarkdown = renderAsMarkdown && items.length === 1;
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [maxH, setMaxH] = useState(0);
+
+  useEffect(() => {
+    if (!open) {
+      setMaxH(0);
+      return;
+    }
+    const el = contentRef.current;
+    if (!el) return;
+    const update = () => setMaxH(el.scrollHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open]);
 
   return (
     <div className="border-t border-hc-text-light/15">
@@ -453,22 +469,24 @@ const CollapsibleList: React.FC<{ title: string; items: string[]; renderAsMarkdo
       </button>
       <div
         className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: open ? "1200px" : "0px" }}
+        style={{ maxHeight: `${maxH}px` }}
       >
-        {asMarkdown ? (
-          <div className="pb-5">
-            <MarkdownContent source={items[0]} size="sm" />
-          </div>
-        ) : (
-          <ul className="pb-5 space-y-2">
-            {items.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-hc-text font-body">
-                <span className="text-hc-secondary mt-0.5">•</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div ref={contentRef}>
+          {asMarkdown ? (
+            <div className="pb-5">
+              <MarkdownContent source={items[0]} size="sm" />
+            </div>
+          ) : (
+            <ul className="pb-5 space-y-2">
+              {items.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-hc-text font-body">
+                  <span className="text-hc-secondary mt-0.5">•</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
