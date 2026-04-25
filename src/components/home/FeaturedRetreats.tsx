@@ -93,6 +93,7 @@ export const FeaturedRetreats: React.FC = () => {
           guests: `${p.max_guests} Guests`,
           amenity: p.highlights?.[0] ?? "Luxury Stay",
           slug: p.slug,
+          min_price: (p as any).min_price ?? null,
         }))
       : FALLBACK_CARDS;
 
@@ -126,7 +127,11 @@ export const FeaturedRetreats: React.FC = () => {
           </span>
         </div>
         <div className="mt-auto pt-3 flex items-center justify-between">
-          <span className="text-hc-primary font-bold tracking-tight text-sm font-body">Contact for Pricing</span>
+          <span className="text-hc-primary font-bold tracking-tight text-sm font-body">
+            {(card as any).min_price != null
+              ? `Price Starting from ₹${(card as any).min_price.toLocaleString("en-IN")}`
+              : "Contact for Pricing"}
+          </span>
           <ArrowRight
             size={14}
             className="text-hc-primary group-hover:translate-x-1 transition-transform duration-200"
