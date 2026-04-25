@@ -275,7 +275,7 @@ const PackageDetail: React.FC = () => {
               <CollapsibleList title="What's Not Included" items={pkg.whats_not_included} />
             )}
             {pkg.terms_conditions && pkg.terms_conditions.length > 0 && (
-              <CollapsibleList title="Terms & Conditions" items={pkg.terms_conditions} />
+              <CollapsibleList title="Terms & Conditions" items={pkg.terms_conditions} renderAsMarkdown />
             )}
           </section>
 
@@ -441,8 +441,9 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
 };
 
 /* ── Collapsible List ── */
-const CollapsibleList: React.FC<{ title: string; items: string[] }> = ({ title, items }) => {
+const CollapsibleList: React.FC<{ title: string; items: string[]; renderAsMarkdown?: boolean }> = ({ title, items, renderAsMarkdown }) => {
   const [open, setOpen] = useState(false);
+  const asMarkdown = renderAsMarkdown && items.length === 1;
 
   return (
     <div className="border-t border-hc-text-light/15">
@@ -452,16 +453,22 @@ const CollapsibleList: React.FC<{ title: string; items: string[] }> = ({ title, 
       </button>
       <div
         className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: open ? "600px" : "0px" }}
+        style={{ maxHeight: open ? "1200px" : "0px" }}
       >
-        <ul className="pb-5 space-y-2">
-          {items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-hc-text font-body">
-              <span className="text-hc-secondary mt-0.5">•</span>
-              {item}
-            </li>
-          ))}
-        </ul>
+        {asMarkdown ? (
+          <div className="pb-5">
+            <MarkdownContent source={items[0]} size="sm" />
+          </div>
+        ) : (
+          <ul className="pb-5 space-y-2">
+            {items.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-hc-text font-body">
+                <span className="text-hc-secondary mt-0.5">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
