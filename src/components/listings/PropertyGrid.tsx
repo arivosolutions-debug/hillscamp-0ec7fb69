@@ -3,7 +3,7 @@ import { PropertyCard } from './PropertyCard';
 import type { Property } from '@/lib/types';
 
 interface PropertyGridProps {
-  properties: (Property & { amenity_names?: string[] })[];
+  properties: (Property & { amenity_names?: string[]; min_price?: number | null })[];
   isLoading: boolean;
 }
 
