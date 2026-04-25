@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Leaf, Plus } from 'lucide-react';
+import { MarkdownContent } from '@/components/shared/MarkdownContent';
 
 interface PropertyAccordionProps {
   title: string;
@@ -57,6 +58,14 @@ interface TermsAccordionProps {
 
 export const TermsAccordion: React.FC<TermsAccordionProps> = ({ terms }) => {
   if (!terms?.length) return null;
+  // Single-item arrays are treated as a Markdown document (new admin format).
+  if (terms.length === 1) {
+    return (
+      <PropertyAccordion title="Terms & Conditions">
+        <MarkdownContent source={terms[0]} size="sm" />
+      </PropertyAccordion>
+    );
+  }
   return (
     <PropertyAccordion title="Terms & Conditions">
       <div className="space-y-3 text-sm text-[#424842] font-body">
