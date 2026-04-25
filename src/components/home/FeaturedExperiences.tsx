@@ -144,7 +144,7 @@ export const FeaturedExperiences: React.FC = () => {
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {cards.map((card) => (
-              <div key={card.slug} className="min-w-[85vw] snap-start" style={{ scrollSnapStop: "always" }}>
+              <div key={card.slug} className="w-[80vw] shrink-0 snap-start" style={{ scrollSnapStop: "always" }}>
                 <CardContent card={card} />
               </div>
             ))}
