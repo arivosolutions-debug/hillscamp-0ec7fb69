@@ -50,9 +50,29 @@ export function usePropertySearch(query: string) {
         );
       });
 
+      // Match by room type name → include the parent property
+      const { data: roomMatches } = await supabase
+        .from('room_types')
+        .select('property_id, name')
+        .ilike('name', like);
+
+      const matchedPropertyIds = Array.from(
+        new Set((roomMatches ?? []).map((r: any) => r.property_id).filter(Boolean))
+      );
+
+      let roomProperties: any[] = [];
+      if (matchedPropertyIds.length > 0) {
+        const { data: roomProps } = await supabase
+          .from('properties')
+          .select('*')
+          .eq('is_published', true)
+          .in('id', matchedPropertyIds);
+        roomProperties = roomProps ?? [];
+      }
+
       // Merge & dedupe
       const map = new Map<string, Property>();
-      [...(data ?? []), ...extras].forEach((p: any) => map.set(p.id, p));
+      [...(data ?? []), ...extras, ...roomProperties].forEach((p: any) => map.set(p.id, p));
       return Array.from(map.values()).slice(0, 8) as Property[];
     },
     staleTime: 30_000,
