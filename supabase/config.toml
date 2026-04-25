@@ -1,1 +1,4 @@
 project_id = "amlhmlfzvqdghbbuluio"
+
+[functions.share-meta]
+verify_jwt = false
