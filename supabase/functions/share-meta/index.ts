@@ -6,6 +6,16 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+function htmlHeaders(extra: Record<string, string> = {}): Headers {
+  const h = new Headers();
+  // CORS first
+  for (const [k, v] of Object.entries(corsHeaders)) h.set(k, v);
+  // Then content-type and caching — set last so nothing overrides them
+  for (const [k, v] of Object.entries(extra)) h.set(k, v);
+  h.set("Content-Type", "text/html; charset=utf-8");
+  return h;
+}
+
 const SITE_NAME = "Hills Camp Kerala";
 const SITE_URL = "https://hillscamp.com";
 const DEFAULT_DESCRIPTION =
@@ -286,7 +296,7 @@ Deno.serve(async (req) => {
   if (idx === -1 || !parts[idx + 1]) {
     return new Response(notFoundHtml("Missing type or slug"), {
       status: 404,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+      headers: htmlHeaders(),
     });
   }
   const type = parts[idx];
@@ -300,14 +310,12 @@ Deno.serve(async (req) => {
   if (cached && cached.expiresAt > now) {
     return new Response(cached.html, {
       status: 200,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/html; charset=utf-8",
+      headers: htmlHeaders({
         "Cache-Control": "public, max-age=300, s-maxage=300",
         Vary: "User-Agent",
         "X-Cache": "HIT",
         "X-Bot": botRequest ? "1" : "0",
-      },
+      }),
     });
   }
 
@@ -319,14 +327,14 @@ Deno.serve(async (req) => {
     console.error("share-meta error:", err);
     return new Response(notFoundHtml("Server error"), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+      headers: htmlHeaders(),
     });
   }
 
   if (!html) {
     return new Response(notFoundHtml("Not found"), {
       status: 404,
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+      headers: htmlHeaders(),
     });
   }
 
@@ -334,13 +342,11 @@ Deno.serve(async (req) => {
 
   return new Response(html, {
     status: 200,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "text/html; charset=utf-8",
+    headers: htmlHeaders({
       "Cache-Control": "public, max-age=300, s-maxage=300",
       Vary: "User-Agent",
       "X-Cache": "MISS",
       "X-Bot": botRequest ? "1" : "0",
-    },
+    }),
   });
 });
