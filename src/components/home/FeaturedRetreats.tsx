@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Users, ChevronRight } from "lucide-react";
+import { ArrowRight, Users } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
 import { CardSlideshow } from "@/components/shared/CardSlideshow";
 
@@ -52,7 +52,6 @@ export const FeaturedRetreats: React.FC = () => {
   const ref = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [showSwipeHint, setShowSwipeHint] = useState(false);
 
   useEffect(() => {
     const section = ref.current;
@@ -82,14 +81,10 @@ export const FeaturedRetreats: React.FC = () => {
     // Nudge ~10% of viewport width (min 40, max 80) so peek scales with screen
     const nudgeDistance = Math.max(40, Math.min(80, Math.round(window.innerWidth * 0.1)));
     const nudge = window.setTimeout(() => {
-      setShowSwipeHint(true);
       el.scrollTo({ left: nudgeDistance, behavior: "smooth" });
       window.setTimeout(() => {
         el.scrollTo({ left: 0, behavior: "smooth" });
       }, 650);
-      window.setTimeout(() => {
-        setShowSwipeHint(false);
-      }, 2000);
     }, 600);
     return () => window.clearTimeout(nudge);
   }, [properties]);
@@ -192,7 +187,6 @@ export const FeaturedRetreats: React.FC = () => {
 
         {/* Mobile Carousel */}
         <div className="md:hidden">
-          <div className="relative">
           <div
             ref={scrollRef}
             onScroll={handleScroll}
@@ -204,15 +198,6 @@ export const FeaturedRetreats: React.FC = () => {
                 <CardContent card={card} />
               </div>
             ))}
-          </div>
-            <div
-              className={`pointer-events-none absolute top-[120px] right-3 flex items-center gap-1 bg-hc-primary/85 backdrop-blur-sm text-hc-bg text-[10px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-full font-body transition-opacity duration-500 ${
-                showSwipeHint ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              Swipe
-              <ChevronRight size={12} strokeWidth={2.5} />
-            </div>
           </div>
         </div>
       </div>
