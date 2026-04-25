@@ -9,6 +9,7 @@ interface CardSlideshowProps {
   intervalMs?: number;
   showDots?: boolean;
   rounded?: string;
+  autoplay?: boolean;
 }
 
 /**
@@ -25,6 +26,7 @@ export const CardSlideshow: React.FC<CardSlideshowProps> = ({
   imgClassName = '',
   intervalMs = 3000,
   showDots = true,
+  autoplay = true,
 }) => {
   const slides = images.filter(Boolean);
   const [current, setCurrent] = useState(0);
@@ -32,12 +34,12 @@ export const CardSlideshow: React.FC<CardSlideshowProps> = ({
   const resumeTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    if (slides.length <= 1 || paused) return;
+    if (!autoplay || slides.length <= 1 || paused) return;
     const t = window.setInterval(() => {
       setCurrent((p) => (p + 1) % slides.length);
     }, intervalMs);
     return () => window.clearInterval(t);
-  }, [slides.length, paused, intervalMs]);
+  }, [slides.length, paused, intervalMs, autoplay]);
 
   const pauseTemporarily = () => {
     setPaused(true);
