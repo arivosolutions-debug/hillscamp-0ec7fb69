@@ -968,7 +968,13 @@ const PropertyFormPage: React.FC<{
         </SectionCard>
 
         <SectionCard title="Terms & Conditions">
-          <StringList label="Terms" placeholder="e.g. Check-in at 2PM, Check-out at 11AM" items={form.terms_conditions} onChange={t => set('terms_conditions', t)} />
+          <MarkdownEditor
+            label="Terms"
+            value={form.terms_conditions[0] ?? ''}
+            onChange={(v) => set('terms_conditions', v ? [v] : [])}
+            placeholder={"e.g.\n**Check-in:** 2PM\n**Check-out:** 11AM\n\n- No outside food\n- Pets not allowed"}
+            rows={8}
+          />
         </SectionCard>
 
         <SectionCard title="Amenities">
@@ -1185,7 +1191,13 @@ const PackageFormPage: React.FC<{
         </SectionCard>
 
         <SectionCard title="Terms & Conditions">
-          <StringList label="Terms" placeholder="e.g. 50% advance required at booking" items={form.terms_conditions} onChange={t => set('terms_conditions', t)} />
+          <MarkdownEditor
+            label="Terms"
+            value={form.terms_conditions[0] ?? ''}
+            onChange={(v) => set('terms_conditions', v ? [v] : [])}
+            placeholder={"e.g.\n**Booking:** 50% advance required\n\n- Cancellation 7 days prior\n- Non-refundable after"}
+            rows={8}
+          />
         </SectionCard>
 
         <SectionCard title="Visibility">
@@ -1236,7 +1248,11 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
       location: prop.location ?? '',
       highlights: prop.highlights ?? [],
       tags: prop.tags ?? [],
-      terms_conditions: prop.terms_conditions ?? [],
+      terms_conditions: prop.terms_conditions
+        ? (prop.terms_conditions.length > 1
+            ? [prop.terms_conditions.join('\n\n')]
+            : prop.terms_conditions)
+        : [],
       property_images: (imagesRes.data ?? []).map((img: any) => ({
         id: img.id, image_url: img.image_url, alt_text: img.alt_text ?? '', sort_order: img.sort_order,
       })),
@@ -1379,7 +1395,11 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
       tags: pkg.tags ?? [],
       itinerary: Array.isArray(pkg.itinerary) ? pkg.itinerary : [],
       whats_not_included: pkg.whats_not_included ?? [],
-      terms_conditions: pkg.terms_conditions ?? [],
+      terms_conditions: pkg.terms_conditions
+        ? (pkg.terms_conditions.length > 1
+            ? [pkg.terms_conditions.join('\n\n')]
+            : pkg.terms_conditions)
+        : [],
       instagram_hashtag: pkg.instagram_hashtag ?? '',
       is_featured: pkg.is_featured ?? false,
       is_published: pkg.is_published ?? true,
