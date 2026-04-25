@@ -95,6 +95,35 @@ function absoluteImage(image: string | null | undefined): string | null {
   return `${SITE_URL}${image.startsWith("/") ? "" : "/"}${image}`;
 }
 
+// Optimize an image URL for OG/social scrapers (WhatsApp ≤300KB, 1200x630, JPG).
+// Supabase Storage supports on-the-fly transforms via the /render/image/public/ path
+// with width/height/resize/quality query params. For non-Supabase URLs we return as-is.
+function ogOptimize(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    // Match Supabase storage public object URLs and rewrite to the render endpoint.
+    // /storage/v1/object/public/<bucket>/<path>  ->  /storage/v1/render/image/public/<bucket>/<path>
+    if (u.pathname.includes("/storage/v1/object/public/")) {
+      u.pathname = u.pathname.replace(
+        "/storage/v1/object/public/",
+        "/storage/v1/render/image/public/",
+      );
+    }
+    // Only attach transform params if this is a Supabase render URL.
+    if (u.pathname.includes("/storage/v1/render/image/public/")) {
+      u.searchParams.set("width", "1200");
+      u.searchParams.set("height", "630");
+      u.searchParams.set("resize", "cover");
+      u.searchParams.set("quality", "75");
+      u.searchParams.set("format", "origin");
+    }
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 function renderHtml(opts: {
   title: string;
   description: string;
@@ -189,6 +218,7 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
   const image = absoluteImage(
     property.cover_image || images[0]?.image_url || null,
   );
+  const optimizedImage = ogOptimize(image);
   const description = property.tagline || property.description || DEFAULT_DESCRIPTION;
   const canonicalUrl = `${SITE_URL}/property/${property.slug}`;
 
@@ -197,7 +227,7 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
     "@type": "LodgingBusiness",
     name: property.name,
     description: description ?? undefined,
-    image: image ?? undefined,
+    image: optimizedImage ?? undefined,
     url: canonicalUrl,
     address: {
       "@type": "PostalAddress",
@@ -217,7 +247,7 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
   return renderHtml({
     title: property.name,
     description,
-    image,
+    image: optimizedImage,
     canonicalUrl,
     redirectUrl: canonicalUrl,
     type: "product",
@@ -244,6 +274,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
   const image = absoluteImage(
     (pkg.hero_images && pkg.hero_images[0]) || gallery[0]?.image_url || null,
   );
+  const optimizedImage = ogOptimize(image);
   const description =
     [pkg.location, pkg.region].filter(Boolean).join(" · ") ||
     DEFAULT_DESCRIPTION;
@@ -254,7 +285,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
     "@type": "TouristTrip",
     name: pkg.name,
     description,
-    image: image ?? undefined,
+    image: optimizedImage ?? undefined,
     url: canonicalUrl,
     touristType: pkg.tags ?? undefined,
   };
@@ -279,7 +310,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
   return renderHtml({
     title: pkg.name,
     description,
-    image,
+    image: optimizedImage,
     canonicalUrl,
     redirectUrl: canonicalUrl,
     type: "product",
