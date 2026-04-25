@@ -17,7 +17,7 @@ export function useProperties(filters: PropertyFilters = {}) {
     queryFn: async () => {
       let query = supabase
         .from('properties')
-        .select('*, property_amenities(amenity_id, amenities(name)), property_images(image_url, sort_order)')
+        .select('*, property_amenities(amenity_id, amenities(name)), property_images(image_url, sort_order), room_types(price_per_night)')
         .eq('is_published', true)
         .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false });
@@ -55,10 +55,20 @@ export function useProperties(filters: PropertyFilters = {}) {
           .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
           .map((pi: any) => pi.image_url)
           .filter(Boolean);
-        const { property_amenities, property_images, ...rest } = p;
-        return { ...rest, amenity_names, gallery_images } as Property & {
+        const roomPrices: number[] = ((p.room_types ?? []) as any[])
+          .map((r: any) => (r.price_per_night != null ? Number(r.price_per_night) : null))
+          .filter((n: number | null): n is number => n != null && !isNaN(n) && n > 0);
+        const min_price: number | null =
+          roomPrices.length > 0
+            ? Math.min(...roomPrices)
+            : p.price_per_night != null
+            ? Number(p.price_per_night)
+            : null;
+        const { property_amenities, property_images, room_types, ...rest } = p;
+        return { ...rest, amenity_names, gallery_images, min_price } as Property & {
           amenity_names: string[];
           gallery_images: string[];
+          min_price: number | null;
         };
       });
     },

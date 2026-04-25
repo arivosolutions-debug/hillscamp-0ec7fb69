@@ -59,7 +59,7 @@ export const SimilarStays: React.FC<SimilarStaysProps> = ({ currentSlug, distric
       </div>
 
       {/* Desktop grid */}
-      <div className="hidden md:grid grid-cols-2 gap-4 px-5">
+      <div className="hidden md:grid grid-cols-4 gap-4 px-8 max-w-[1280px] mx-auto">
         {similar.map(p => (
           <Link
             key={p.slug}

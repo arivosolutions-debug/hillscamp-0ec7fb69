@@ -825,7 +825,22 @@ const PropertyFormPage: React.FC<{
         const { error } = await supabase.from('properties').update(payload).eq('id', form.id!);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase.from('properties').insert(payload).select().single();
+        // Auto-assign next highest sort_order if not explicitly set
+        let nextSortOrder = payload.sort_order;
+        if (!nextSortOrder || nextSortOrder === 0) {
+          const { data: maxRow } = await supabase
+            .from('properties')
+            .select('sort_order')
+            .order('sort_order', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          nextSortOrder = ((maxRow?.sort_order ?? 0) as number) + 1;
+        }
+        const { data, error } = await supabase
+          .from('properties')
+          .insert({ ...payload, sort_order: nextSortOrder })
+          .select()
+          .single();
         if (error) throw error;
         propertyId = (data as any).id;
       }
@@ -1068,7 +1083,19 @@ const PackageFormPage: React.FC<{
         const { error } = await (supabase.from('packages' as any) as any).update(payload).eq('id', form.id!);
         if (error) throw error;
       } else {
-        const { data, error } = await (supabase.from('packages' as any) as any).insert(payload).select().single();
+        let nextSortOrder = payload.sort_order;
+        if (!nextSortOrder || nextSortOrder === 0) {
+          const { data: maxRow } = await (supabase.from('packages' as any) as any)
+            .select('sort_order')
+            .order('sort_order', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          nextSortOrder = ((maxRow?.sort_order ?? 0) as number) + 1;
+        }
+        const { data, error } = await (supabase.from('packages' as any) as any)
+          .insert({ ...payload, sort_order: nextSortOrder })
+          .select()
+          .single();
         if (error) throw error;
         packageId = (data as any).id;
       }

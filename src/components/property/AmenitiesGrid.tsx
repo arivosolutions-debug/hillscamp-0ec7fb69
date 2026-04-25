@@ -12,7 +12,7 @@ import {
 import type { Amenity } from '@/lib/types';
 
 const ICON_MAP: Record<string, LucideIcon> = {
-  pool: Waves, 'private chef': ChefHat, chef: ChefHat,
+  pool: Waves, 'private chef': ChefHat, chef: ChefHat, kitchen: ChefHat, kitchenette: ChefHat,
   'fire pit': Flame, fireplace: Flame, spa: Sparkles,
   bonfire: Flame,
   'hand massage': HandHeart, massage: HandHeart,

@@ -7,7 +7,7 @@ import type { Property } from '@/lib/types';
 import { CardSlideshow } from '@/components/shared/CardSlideshow';
 
 interface PropertyCardProps {
-  property: Property & { amenity_names?: string[]; tags?: string[] | null; gallery_images?: string[] };
+  property: Property & { amenity_names?: string[]; tags?: string[] | null; gallery_images?: string[]; min_price?: number | null };
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
@@ -60,7 +60,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-hc-accent-light text-hc-primary border border-hc-primary/10 text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full font-body"
+                className="shrink-0 bg-hc-secondary text-white text-[10px] font-body px-2.5 py-1 rounded-full capitalize"
               >
                 {tag}
               </span>
@@ -70,7 +70,9 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="font-bold text-hc-primary text-sm font-body">
-            Contact for Pricing
+            {property.min_price != null
+              ? `Price Starting from ₹${property.min_price.toLocaleString('en-IN')}`
+              : 'Contact for Pricing'}
           </span>
           <ArrowRight size={16} className="text-hc-primary group-hover:translate-x-1 transition-transform duration-200" />
         </div>

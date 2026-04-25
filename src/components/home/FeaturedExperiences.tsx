@@ -93,7 +93,11 @@ export const FeaturedExperiences: React.FC = () => {
           </div>
         )}
         <div className="mt-auto pt-3 flex items-center justify-between">
-          <span className="text-hc-primary font-bold tracking-tight text-sm font-body">View Experience</span>
+          <span className="font-bold text-hc-primary text-sm font-body">
+            {card.price_inr != null
+              ? `Price Starting from ₹${Number(card.price_inr).toLocaleString('en-IN')}`
+              : 'Contact for Pricing'}
+          </span>
           <ArrowRight
             size={14}
             className="text-hc-primary group-hover:translate-x-1 transition-transform duration-200"
