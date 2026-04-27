@@ -118,7 +118,7 @@ export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverIm
             return (
               <div
                 key={room.id}
-                className="min-w-[85vw] snap-start bg-hc-bg-alt rounded-2xl overflow-hidden flex flex-col"
+                className="min-w-[85vw] snap-start bg-hc-bg-alt rounded-2xl overflow-hidden flex flex-col h-[460px]"
                 style={{ scrollSnapStop: 'always' }}
               >
                 <RoomImageCarouselClickable
@@ -126,7 +126,7 @@ export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverIm
                   alt={room.name}
                   onImageClick={() => setGrid({ images, roomName: room.name })}
                 />
-                <div className="p-4 flex flex-col gap-2">
+                <div className="p-4 flex flex-col gap-2 flex-1 min-h-0">
                   <h3 className="font-headline text-hc-primary text-lg leading-snug">{room.name}</h3>
                   <div className="flex items-center gap-3 text-xs text-hc-secondary font-bold uppercase tracking-wider font-body">
                     {room.bed_type && (
@@ -144,7 +144,7 @@ export const MobileRoomCards: React.FC<MobileRoomCardsProps> = ({ rooms, coverIm
                     )}
                   </div>
                   {room.description && (
-                    <div className="line-clamp-3">
+                    <div className="flex-1 min-h-0 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-hc-text-light/30 [&::-webkit-scrollbar-thumb]:rounded-full">
                       <MarkdownContent source={room.description} size="sm" />
                     </div>
                   )}
