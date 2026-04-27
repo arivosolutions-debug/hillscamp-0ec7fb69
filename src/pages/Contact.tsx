@@ -125,7 +125,7 @@ const Contact = () => {
                       The fastest way to reach us. Typical reply time is under 30 minutes during business hours.
                     </p>
                     <a
-                      href="https://wa.me/919847012345?text=Hi%2C%20I'd%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat."
+                      href="https://wa.me/917510810961?text=Hi%2C%20I'd%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold inline-flex items-center gap-2 hover:brightness-105 transition-all active:scale-[0.97] shadow-lg shadow-[#25D366]/20 font-body"

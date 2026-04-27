@@ -4,7 +4,7 @@ import { Search, Menu, X, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 
 const WHATSAPP_URL =
-  "https://wa.me/919847012345?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat.";
+  "https://wa.me/917510810961?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat.";
 
 const NAV_LINKS = [
   { label: "Stays", to: "/listings", exact: ["/listings"] },

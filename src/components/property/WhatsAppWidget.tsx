@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const DEFAULT_PHONE = '919847012345';
+const DEFAULT_PHONE = '917510810961';
 
 interface WhatsAppWidgetProps {
   propertyName?: string;

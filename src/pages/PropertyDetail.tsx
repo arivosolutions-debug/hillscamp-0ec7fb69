@@ -25,7 +25,7 @@ import { ShareSheet } from '@/components/shared/ShareSheet';
 import { MarkdownContent } from '@/components/shared/MarkdownContent';
 import { SeoHead } from '@/components/shared/SeoHead';
 
-const WHATSAPP_PHONE = '919847012345';
+const WHATSAPP_PHONE = '917510810961';
 
 const PropertyDetail = () => {
   const { slug } = useParams<{ slug: string }>();
