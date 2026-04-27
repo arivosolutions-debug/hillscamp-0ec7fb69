@@ -9,7 +9,6 @@ const WHATSAPP_URL =
 const NAV_LINKS = [
   { label: "Stays", to: "/listings", exact: ["/listings"] },
   { label: "Experiences", to: "/experiences", exact: ["/experiences"] },
-  { label: "Discover", to: "/about", exact: ["/about"] },
   { label: "Journal", to: "/blog", exact: ["/blog", "/journal"] },
 ];
 
