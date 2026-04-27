@@ -78,7 +78,7 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
   return (
     <div className="mb-12">
       <h2 className="font-headline text-hc-primary text-3xl mb-8">Accommodation Options</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:auto-rows-fr">
         {rooms.map(room => {
           const roomImages = (room.room_type_images ?? [])
             .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
@@ -88,7 +88,7 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
           return (
             <div
               key={room.id}
-              className="bg-hc-bg-alt rounded-2xl overflow-hidden flex group hover:shadow-card transition-shadow duration-300"
+              className="bg-hc-bg-alt rounded-2xl overflow-hidden flex group hover:shadow-card transition-shadow duration-300 h-full md:min-h-[320px]"
             >
               <div className="w-[45%] shrink-0 relative overflow-hidden">
                 <RoomCarousel
@@ -98,8 +98,8 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
               />
               </div>
 
-              <div className="flex-1 p-5 flex flex-col justify-between min-h-[180px]">
-                <div>
+              <div className="flex-1 p-5 flex flex-col justify-between min-h-[180px] min-w-0">
+                <div className="flex-1 min-h-0 flex flex-col">
                   <div className="flex items-start justify-between mb-1 gap-2">
                     <h3 className="font-headline text-hc-primary text-lg leading-snug">{room.name}</h3>
                     <BedDouble size={15} strokeWidth={1.5} className="text-hc-text-light mt-1 shrink-0" />
@@ -117,7 +117,7 @@ export const RoomTypesList: React.FC<RoomTypesListProps> = ({ rooms, coverImage 
                   </div>
 
                   {room.description && (
-                    <div className="max-h-24 overflow-y-auto pr-1 mt-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-hc-text-light/30 [&::-webkit-scrollbar-thumb]:rounded-full">
+                    <div className="flex-1 min-h-0 overflow-y-auto pr-1 mt-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-hc-text-light/30 [&::-webkit-scrollbar-thumb]:rounded-full">
                       <MarkdownContent source={room.description} size="sm" />
                     </div>
                   )}
