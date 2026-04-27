@@ -9,7 +9,6 @@ const WHATSAPP_URL =
 const EXPLORE_LINKS = [
   { label: 'All Stays',        to: '/listings' },
   { label: 'Experiences',      to: '/experiences' },
-  { label: 'About Hills Camp', to: '/about' },
   { label: 'The Journal',      to: '/blog' },
   { label: 'Contact Us',       to: '/contact' },
 ];
@@ -137,8 +136,8 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} Hills Camp Kerala. A Curated Wilderness Experience.
           </p>
           <div className="flex gap-6">
-            <Link to="/about" className="text-emerald-50/30 text-xs hover:text-emerald-50/60 transition-colors font-body">Privacy Policy</Link>
-            <Link to="/about" className="text-emerald-50/30 text-xs hover:text-emerald-50/60 transition-colors font-body">Terms of Service</Link>
+            <span className="text-emerald-50/30 text-xs font-body cursor-default">Privacy Policy</span>
+            <span className="text-emerald-50/30 text-xs font-body cursor-default">Terms of Service</span>
           </div>
         </div>
       </div>
