@@ -57,7 +57,7 @@ const About = () => {
         <main className="bg-hc-bg text-hc-text font-body antialiased">
 
           {/* ── Hero ──────────────────────────────────────────────────────── */}
-          <section className="relative min-h-[calc(85vh-150px)] flex flex-col items-center justify-center text-center overflow-hidden rounded-b-[32px]">
+          <section className="relative min-h-[calc(85vh-170px)] flex flex-col items-center justify-center text-center overflow-hidden rounded-b-[32px]">
             <div className="absolute inset-0 rounded-b-[32px] overflow-hidden">
               <img
                 src={aboutHero}
