@@ -110,7 +110,6 @@ const About = () => {
               {WHY_CARDS.map((card) => (
                 <div
                   key={card.title}
-                  className="relative rounded-[2rem] overflow-hidden aspect-[3/4] md:aspect-[3/4] group"
                   className="relative rounded-[2rem] overflow-hidden aspect-[1/1] md:aspect-[3/4] group"
                 >
                   <img
