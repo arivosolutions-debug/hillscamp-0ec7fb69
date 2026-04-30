@@ -8,6 +8,7 @@ import {
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
   FileText, Upload, GripVertical
 } from 'lucide-react';
+import { compressImage } from '@/lib/compressImage';
 
 const MAX_FEATURED = 4;
 
@@ -243,12 +244,13 @@ const ImageUpload: React.FC<{
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState(value);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const localUrl = URL.createObjectURL(file);
+    const compressed = await compressImage(file);
+    const localUrl = URL.createObjectURL(compressed);
     setPreview(localUrl);
-    onChange(localUrl, file);
+    onChange(localUrl, compressed);
   };
 
   useEffect(() => { setPreview(value); }, [value]);
@@ -281,9 +283,10 @@ const MultiImageUpload: React.FC<{
 }> = ({ label, items, onChange, bucket = 'property-images' }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    const newItems = files.map((file, i) => ({
+    const compressed = await Promise.all(files.map(compressImage));
+    const newItems = compressed.map((file, i) => ({
       image_url: URL.createObjectURL(file),
       alt_text: '',
       sort_order: items.length + i,
