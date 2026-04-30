@@ -6,7 +6,7 @@ import { MarkdownEditor } from '@/components/admin/MarkdownEditor';
 import {
   Plus, Trash2, Edit2, Eye, EyeOff, X, Save, LogOut,
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
-  FileText, Upload, GripVertical
+  FileText, Upload, GripVertical, Loader2
 } from 'lucide-react';
 import { compressImage } from '@/lib/compressImage';
 
@@ -243,14 +243,17 @@ const ImageUpload: React.FC<{
 }> = ({ label, value, onChange, bucket = 'property-images' }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState(value);
+  const [compressing, setCompressing] = useState(false);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setCompressing(true);
     const compressed = await compressImage(file);
     const localUrl = URL.createObjectURL(compressed);
     setPreview(localUrl);
     onChange(localUrl, compressed);
+    setCompressing(false);
   };
 
   useEffect(() => { setPreview(value); }, [value]);
@@ -259,9 +262,9 @@ const ImageUpload: React.FC<{
     <div className="flex flex-col gap-2">
       <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">{label}</label>
       <div className="flex gap-3 items-start">
-        <button type="button" onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-hc-text-light/40 rounded-xl text-sm font-body text-hc-text-light hover:border-hc-primary hover:text-hc-primary transition-colors">
-          <Upload size={15} /> Choose Image
+        <button type="button" onClick={() => inputRef.current?.click()} disabled={compressing}
+          className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-hc-text-light/40 rounded-xl text-sm font-body text-hc-text-light hover:border-hc-primary hover:text-hc-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {compressing ? <><Loader2 size={15} className="animate-spin" /> Compressing...</> : <><Upload size={15} /> Choose Image</>}
         </button>
         {preview && (
           <img src={preview} alt="" className="w-16 h-16 object-cover rounded-xl"
@@ -282,10 +285,18 @@ const MultiImageUpload: React.FC<{
   bucket?: string;
 }> = ({ label, items, onChange, bucket = 'property-images' }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [compressing, setCompressing] = useState(false);
+  const [compressProgress, setCompressProgress] = useState('');
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    const compressed = await Promise.all(files.map(compressImage));
+    if (!files.length) return;
+    setCompressing(true);
+    const compressed: File[] = [];
+    for (let i = 0; i < files.length; i++) {
+      setCompressProgress(`Compressing ${i + 1} of ${files.length}...`);
+      compressed.push(await compressImage(files[i]));
+    }
     const newItems = compressed.map((file, i) => ({
       image_url: URL.createObjectURL(file),
       alt_text: '',
@@ -293,6 +304,8 @@ const MultiImageUpload: React.FC<{
       file,
     }));
     onChange([...items, ...newItems]);
+    setCompressing(false);
+    setCompressProgress('');
   };
 
   const move = (i: number, dir: -1 | 1) => {
@@ -307,8 +320,8 @@ const MultiImageUpload: React.FC<{
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">{label}</label>
-        <Btn onClick={() => inputRef.current?.click()} size="sm" variant="secondary">
-          <Upload size={13} /> Upload Images
+        <Btn onClick={() => inputRef.current?.click()} size="sm" variant="secondary" disabled={compressing}>
+          {compressing ? <><Loader2 size={13} className="animate-spin" /> {compressProgress}</> : <><Upload size={13} /> Upload Images</>}
         </Btn>
       </div>
       <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleFiles} className="hidden" />
