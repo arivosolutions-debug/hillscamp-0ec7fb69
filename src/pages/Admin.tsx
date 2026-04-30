@@ -9,6 +9,7 @@ import {
   FileText, Upload, GripVertical, Loader2
 } from 'lucide-react';
 import { compressImage } from '@/lib/compressImage';
+import { toast } from 'sonner';
 
 const MAX_FEATURED = 4;
 
@@ -249,7 +250,13 @@ const ImageUpload: React.FC<{
     const file = e.target.files?.[0];
     if (!file) return;
     setCompressing(true);
-    const compressed = await compressImage(file);
+    let compressed: File;
+    try {
+      compressed = await compressImage(file);
+    } catch {
+      toast.error('Image compression failed — uploading original');
+      compressed = file;
+    }
     const localUrl = URL.createObjectURL(compressed);
     setPreview(localUrl);
     onChange(localUrl, compressed);
@@ -295,7 +302,12 @@ const MultiImageUpload: React.FC<{
     const compressed: File[] = [];
     for (let i = 0; i < files.length; i++) {
       setCompressProgress(`Compressing ${i + 1} of ${files.length}...`);
-      compressed.push(await compressImage(files[i]));
+      try {
+        compressed.push(await compressImage(files[i]));
+      } catch {
+        toast.error(`Compression failed for image ${i + 1} — using original`);
+        compressed.push(files[i]);
+      }
     }
     const newItems = compressed.map((file, i) => ({
       image_url: URL.createObjectURL(file),
