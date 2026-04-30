@@ -57,12 +57,12 @@ const About = () => {
         <main className="bg-hc-bg text-hc-text font-body antialiased">
 
           {/* ── Hero ──────────────────────────────────────────────────────── */}
-          <section className="relative min-h-[calc(85vh-75px)] flex flex-col items-center justify-center text-center overflow-hidden rounded-b-[32px]">
+          <section className="relative min-h-[calc(85vh-150px)] flex flex-col items-center justify-center text-center overflow-hidden rounded-b-[32px]">
             <div className="absolute inset-0 rounded-b-[32px] overflow-hidden">
               <img
                 src={aboutHero}
                 alt="Mountain camp in the hills"
-                className="w-full h-full object-cover brightness-[0.4]"
+                className="w-full h-full object-cover object-[center_calc(50%-75px)]"
                 loading="eager"
               />
             </div>
@@ -84,7 +84,7 @@ const About = () => {
                 </Link>
                 <Link
                   to="/experiences"
-                  className="bg-white/15 backdrop-blur-sm border border-white/30 text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-white/25 transition-colors font-body"
+                   className="bg-white text-hc-primary px-8 py-3 rounded-full font-bold text-sm hover:bg-white/90 transition-colors font-body"
                 >
                   Experiences
                 </Link>
