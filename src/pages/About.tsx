@@ -62,7 +62,7 @@ const About = () => {
               <img
                 src={aboutHero}
                 alt="Mountain camp in the hills"
-                className="w-full h-full object-cover object-bottom"
+                className="w-full h-full object-cover object-[center_calc(50%+100px)]"
                 loading="eager"
               />
             </div>
