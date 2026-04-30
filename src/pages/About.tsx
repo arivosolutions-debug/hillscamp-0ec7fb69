@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Heart, Compass, Headphones, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import aboutHero from '@/assets/about-hero.jpg';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -56,15 +57,14 @@ const About = () => {
         <main className="bg-hc-bg text-hc-text font-body antialiased">
 
           {/* ── Hero ──────────────────────────────────────────────────────── */}
-          <section className="relative min-h-[85vh] flex flex-col items-center justify-center text-center overflow-hidden">
-            <div className="absolute inset-0">
+          <section className="relative min-h-[calc(85vh-75px)] flex flex-col items-center justify-center text-center overflow-hidden rounded-b-[32px]">
+            <div className="absolute inset-0 rounded-b-[32px] overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=1600&q=80"
-                alt="Misty Western Ghats"
+                src={aboutHero}
+                alt="Mountain camp in the hills"
                 className="w-full h-full object-cover brightness-[0.4]"
                 loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-hc-bg via-transparent to-transparent" />
             </div>
             <div className="relative z-10 px-6 max-w-3xl mx-auto">
               <h1 className="font-headline text-white text-4xl md:text-7xl lg:text-8xl leading-[0.95] mb-6">
