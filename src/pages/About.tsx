@@ -75,7 +75,7 @@ const About = () => {
               <p className="text-white/70 text-base md:text-xl max-w-lg mx-auto leading-relaxed font-body italic mb-10">
                 It's about the morning mist on a trek!
               </p>
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-4 mb-[-20px]">
                 <Link
                   to="/listings"
                   className="bg-white text-hc-primary px-8 py-3 rounded-full font-bold text-sm hover:bg-white/90 transition-colors font-body"
@@ -110,7 +110,7 @@ const About = () => {
               {WHY_CARDS.map((card) => (
                 <div
                   key={card.title}
-                  className="relative rounded-[2rem] overflow-hidden aspect-[3/4] md:aspect-[3/4] group"
+                  className="relative rounded-[2rem] overflow-hidden aspect-[1/1] md:aspect-[3/4] group"
                 >
                   <img
                     src={card.image}
