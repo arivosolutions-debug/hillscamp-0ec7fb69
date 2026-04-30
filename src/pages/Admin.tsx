@@ -6,7 +6,7 @@ import { MarkdownEditor } from '@/components/admin/MarkdownEditor';
 import {
   Plus, Trash2, Edit2, Eye, EyeOff, X, Save, LogOut,
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
-  FileText, Upload, GripVertical, Loader2
+  FileText, Upload, GripVertical, Loader2, Users
 } from 'lucide-react';
 import { compressImage } from '@/lib/compressImage';
 import { toast } from 'sonner';
@@ -2070,6 +2070,140 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
   );
 };
 
+// ─── Team Tab ─────────────────────────────────────────────────────
+
+interface TeamMemberForm {
+  id?: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo_url: string;
+  photo_file?: File;
+  sort_order: number;
+}
+
+const emptyTeamMember = (): TeamMemberForm => ({
+  name: '', role: '', bio: '', photo_url: '', sort_order: 0,
+});
+
+const TeamTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') => void }> = ({ onToast }) => {
+  const [members, setMembers] = useState<TeamMemberForm[]>([]);
+  const [editing, setEditing] = useState<TeamMemberForm | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const load = useCallback(async () => {
+    const { data } = await supabase.from('team_members').select('*').order('sort_order');
+    setMembers((data ?? []) as TeamMemberForm[]);
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const save = async () => {
+    if (!editing) return;
+    setSaving(true);
+    try {
+      let photoUrl = editing.photo_url;
+      if (editing.photo_file) {
+        photoUrl = await uploadFile(editing.photo_file, 'team-photos');
+      }
+      const payload = {
+        name: editing.name,
+        role: editing.role,
+        bio: editing.bio || null,
+        photo_url: photoUrl || null,
+        sort_order: editing.sort_order,
+      };
+      if (editing.id) {
+        const { error } = await supabase.from('team_members').update(payload).eq('id', editing.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('team_members').insert(payload);
+        if (error) throw error;
+      }
+      onToast('Team member saved', 'success');
+      setEditing(null);
+      await load();
+    } catch (e: any) {
+      onToast(e.message || 'Error saving', 'error');
+    }
+    setSaving(false);
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm('Delete this team member?')) return;
+    await supabase.from('team_members').delete().eq('id', id);
+    onToast('Deleted', 'success');
+    load();
+  };
+
+  if (editing) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-headline text-hc-primary text-2xl">{editing.id ? 'Edit' : 'Add'} Team Member</h2>
+          <Btn variant="ghost" onClick={() => setEditing(null)}><X size={15} /> Cancel</Btn>
+        </div>
+        <div className="bg-white border border-hc-text-light/15 rounded-2xl p-6 space-y-5 max-w-xl">
+          <Input label="Name" value={editing.name} onChange={e => setEditing({ ...editing, name: e.target.value })} required />
+          <Input label="Role / Title" value={editing.role} onChange={e => setEditing({ ...editing, role: e.target.value })} />
+          <Textarea label="Bio" value={editing.bio} onChange={e => setEditing({ ...editing, bio: e.target.value })} />
+          <Input label="Sort Order" type="number" value={editing.sort_order} onChange={e => setEditing({ ...editing, sort_order: Number(e.target.value) })} />
+          <ImageUpload label="Photo" value={editing.photo_url} bucket="team-photos"
+            onChange={(url, file) => setEditing({ ...editing, photo_url: url, photo_file: file })} />
+          <div className="flex gap-3 pt-2">
+            <Btn onClick={save} disabled={saving || !editing.name.trim()}>
+              {saving ? <><Loader2 size={15} className="animate-spin" /> Saving...</> : <><Save size={15} /> Save</>}
+            </Btn>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="font-headline text-hc-primary text-2xl">Team Members</h2>
+          <p className="text-sm text-hc-text-light font-body">Manage your team displayed on the About page</p>
+        </div>
+        <Btn onClick={() => setEditing(emptyTeamMember())}><Plus size={15} /> Add Member</Btn>
+      </div>
+      {members.length === 0 ? (
+        <p className="text-hc-text-light font-body text-sm py-12 text-center">No team members yet. Click "Add Member" to get started.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {members.map(m => (
+            <div key={m.id} className="bg-white border border-hc-text-light/15 rounded-2xl p-4 flex gap-4 items-center">
+              <div className="w-16 h-16 rounded-xl overflow-hidden bg-hc-bg-alt shrink-0">
+                {m.photo_url ? (
+                  <img src={m.photo_url} alt={m.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="font-headline text-2xl text-hc-text-light">{m.name.charAt(0)}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-body font-bold text-hc-primary text-sm truncate">{m.name}</h3>
+                {m.role && <p className="text-xs text-hc-text-light font-body truncate">{m.role}</p>}
+              </div>
+              <div className="flex gap-1 shrink-0">
+                <button onClick={() => setEditing(m)} className="p-2 rounded-lg hover:bg-hc-bg-alt text-hc-text-light hover:text-hc-primary transition-colors">
+                  <Edit2 size={14} />
+                </button>
+                <button onClick={() => m.id && remove(m.id)} className="p-2 rounded-lg hover:bg-red-50 text-hc-text-light hover:text-red-500 transition-colors">
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── Password Gate ────────────────────────────────────────────────
 
 const PasswordGate: React.FC<{ onUnlock: () => void }> = ({ onUnlock }) => {
@@ -2117,7 +2251,7 @@ const PasswordGate: React.FC<{ onUnlock: () => void }> = ({ onUnlock }) => {
 
 const Admin: React.FC = () => {
   const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('hc_admin') === '1');
-  const [activeTab, setActiveTab] = useState<'properties' | 'packages' | 'reviews' | 'blog' | 'settings'>('properties');
+  const [activeTab, setActiveTab] = useState<'properties' | 'packages' | 'reviews' | 'blog' | 'team' | 'settings'>('properties');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const unlock = () => { sessionStorage.setItem('hc_admin', '1'); setUnlocked(true); };
@@ -2131,6 +2265,7 @@ const Admin: React.FC = () => {
     { key: 'packages'   as const, label: 'Packages',   icon: <Package size={15} /> },
     { key: 'reviews'    as const, label: 'Reviews',     icon: <Star size={15} /> },
     { key: 'blog'       as const, label: 'Blog',        icon: <FileText size={15} /> },
+    { key: 'team'       as const, label: 'Team',        icon: <Users size={15} /> },
     { key: 'settings'   as const, label: 'Settings',    icon: <Settings size={15} /> },
   ];
 
@@ -2177,6 +2312,7 @@ const Admin: React.FC = () => {
         {activeTab === 'packages'   && <PackagesTab onToast={showToast} />}
         {activeTab === 'reviews'    && <ReviewsTab onToast={showToast} />}
         {activeTab === 'blog'       && <BlogTab onToast={showToast} />}
+        {activeTab === 'team'       && <TeamTab onToast={showToast} />}
         {activeTab === 'settings'   && <SettingsTab onToast={showToast} />}
       </main>
 
