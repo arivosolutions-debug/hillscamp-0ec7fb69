@@ -1,16 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { usePropertyTypes } from '@/hooks/usePropertyTypes';
 
-const ROW_1 = [
+const FALLBACK_CARDS = [
   {
     label: 'Tree Houses',
     title: 'Canopy Retreats',
     subtitle: 'Sleep 40 feet above the forest floor.',
     image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1400&q=85',
     href: '/listings?type=tree_house',
-    cols: 'lg:col-span-8',
-    aspect: 'aspect-[16/9] lg:aspect-auto',
   },
   {
     label: 'Backwater',
@@ -18,20 +17,13 @@ const ROW_1 = [
     subtitle: 'Drift through liquid mirrors of Kerala.',
     image: 'https://images.unsplash.com/photo-1587922546307-776227941871?w=900&q=85',
     href: '/listings?type=backwater_villa',
-    cols: 'lg:col-span-4',
-    aspect: 'aspect-[3/4] lg:aspect-auto',
   },
-];
-
-const ROW_2 = [
   {
     label: 'Mountain',
     title: 'High Range',
     subtitle: 'Wake above the cloud line.',
     image: 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=900&q=85',
     href: '/listings?type=mountain_lookout',
-    cols: 'lg:col-span-4',
-    aspect: 'aspect-[3/4] lg:aspect-auto',
   },
   {
     label: 'Tea Plantation',
@@ -39,12 +31,16 @@ const ROW_2 = [
     subtitle: 'A century of stories steeped in your cup.',
     image: 'https://images.unsplash.com/photo-1759148539722-1bbcd7b32d1e?w=1400&q=85',
     href: '/listings?type=tea_estate_cabin',
-    cols: 'lg:col-span-8',
-    aspect: 'aspect-[16/9] lg:aspect-auto',
   },
 ];
 
-const ALL_CARDS = [...ROW_1, ...ROW_2];
+// Desktop layout: 8/4 then 4/8 to keep the asymmetric editorial rhythm
+const LAYOUT = [
+  { cols: 'lg:col-span-8', aspect: 'aspect-[16/9] lg:aspect-auto' },
+  { cols: 'lg:col-span-4', aspect: 'aspect-[3/4] lg:aspect-auto' },
+  { cols: 'lg:col-span-4', aspect: 'aspect-[3/4] lg:aspect-auto' },
+  { cols: 'lg:col-span-8', aspect: 'aspect-[16/9] lg:aspect-auto' },
+];
 
 interface CollectionCardProps {
   label: string;
@@ -87,6 +83,24 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
 
 export const CollectionsGrid: React.FC = () => {
   const ref = useRef<HTMLElement>(null);
+  const { data: types } = usePropertyTypes();
+
+  const cards = useMemo(() => {
+    const top4 = (types ?? []).slice(0, 4);
+    const base = top4.length
+      ? top4.map((t, i) => ({
+          label: t.collection || t.name,
+          title: t.name,
+          subtitle: t.subtitle ?? '',
+          image: t.cover_image || FALLBACK_CARDS[i]?.image || '',
+          href: `/listings?type=${t.slug}`,
+        }))
+      : FALLBACK_CARDS;
+    return base.map((c, i) => ({ ...c, ...LAYOUT[i] }));
+  }, [types]);
+
+  const row1 = cards.slice(0, 2);
+  const row2 = cards.slice(2, 4);
 
   useEffect(() => {
     const section = ref.current;
@@ -101,7 +115,7 @@ export const CollectionsGrid: React.FC = () => {
       observer.observe(item);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [cards.length]);
 
   return (
     <section ref={ref} className="bg-surface-low py-16 md:py-32 px-5 md:px-8">
@@ -129,12 +143,12 @@ export const CollectionsGrid: React.FC = () => {
         {/* Desktop: asymmetric rows */}
         <div className="hidden md:block">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-5 lg:h-[420px]">
-            {ROW_1.map((c, i) => (
+            {row1.map((c, i) => (
               <CollectionCard key={c.label} {...c} index={i} />
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:h-[420px]">
-            {ROW_2.map((c, i) => (
+            {row2.map((c, i) => (
               <CollectionCard key={c.label} {...c} index={i + 2} />
             ))}
           </div>
@@ -142,7 +156,7 @@ export const CollectionsGrid: React.FC = () => {
 
         {/* Mobile: 2x2 equal grid */}
         <div className="md:hidden grid grid-cols-2 gap-4">
-          {ALL_CARDS.map((c, i) => (
+          {cards.map((c) => (
             <Link
               key={c.label}
               to={c.href}
