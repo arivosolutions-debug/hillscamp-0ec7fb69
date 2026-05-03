@@ -1042,7 +1042,7 @@ const emptyPackage = (): PackageForm => ({
   duration_nights: '', distance_km: '', min_participants: '', max_participants: '',
   lat: '', lng: '', hero_images: [], instagram_hashtag: '', is_featured: false,
   is_published: false, sort_order: 0, tags: [], itinerary: [],
-  whats_not_included: [], terms_conditions: [], gallery: [],
+  whats_not_included: [], whats_included: [], highlights: [], terms_conditions: [], gallery: [],
 });
 
 const PackageFormPage: React.FC<{
