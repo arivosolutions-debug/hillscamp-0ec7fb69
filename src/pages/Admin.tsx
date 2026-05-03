@@ -1110,6 +1110,8 @@ const PackageFormPage: React.FC<{
         tags: form.tags.length ? form.tags : null,
         itinerary: uploadedItinerary.length ? uploadedItinerary : null,
         whats_not_included: form.whats_not_included.length ? form.whats_not_included : null,
+        whats_included: form.whats_included.length ? form.whats_included : null,
+        highlights: form.highlights.length ? form.highlights : null,
         terms_conditions: form.terms_conditions.length ? form.terms_conditions : null,
       };
 
