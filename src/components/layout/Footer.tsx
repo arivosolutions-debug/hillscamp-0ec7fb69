@@ -10,6 +10,7 @@ const EXPLORE_LINKS = [
   { label: 'All Stays',        to: '/listings' },
   { label: 'Experiences',      to: '/experiences' },
   { label: 'The Journal',      to: '/blog' },
+  { label: 'About Us',         to: '/about' },
   { label: 'Contact Us',       to: '/contact' },
 ];
 
