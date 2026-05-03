@@ -64,13 +64,12 @@ const About = () => {
               <img
                 src={aboutHero}
                 alt="Mountain camp in the hills"
-                className="w-full h-full object-cover object-[center_calc(50%+100px)]"
-                style={{ objectPosition: 'center calc(50% + 100px)' }}
+                className="w-full h-full object-cover object-[center_calc(50%+100px)] md:object-[center_calc(50%-30px)]"
                 loading="eager"
               />
             </div>
             <div className="relative z-10 px-6 max-w-3xl mx-auto">
-              <h1 className="font-headline text-white text-4xl md:text-7xl lg:text-8xl leading-[0.95] mb-6">
+              <h1 className="font-headline text-white text-4xl md:text-5xl lg:text-6xl leading-[0.95] mb-6">
                 A Better Way{' '}
                 <br className="md:hidden" />
                 to <em className="text-hc-accent not-italic">Wander!</em>
