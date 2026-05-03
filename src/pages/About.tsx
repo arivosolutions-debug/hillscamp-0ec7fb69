@@ -120,7 +120,7 @@ const About = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute inset-0 md:inset-auto md:bottom-0 md:left-0 md:right-0 flex flex-col justify-center md:block p-4 md:p-8 text-center md:text-left">
-                    <h3 className="font-headline text-white text-base md:text-2xl mb-1 md:mb-2 leading-tight">
+                    <h3 className="font-headline text-white text-base md:text-2xl mb-1 md:mb-2 leading-tight font-bold">
                       {card.title}
                     </h3>
                     <p className="text-white/75 text-xs md:text-sm leading-snug md:leading-relaxed font-body">
