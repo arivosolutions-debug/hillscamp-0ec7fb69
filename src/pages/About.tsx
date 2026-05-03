@@ -151,7 +151,7 @@ const About = () => {
                     {propertyCount != null ? propertyCount : '—'}
                   </span>
                   <p className="text-xs text-hc-text-light uppercase tracking-[0.2em] mt-2 font-bold font-body">
-                    Estates
+                    Properties
                   </p>
                 </div>
                 <div className="text-center">
