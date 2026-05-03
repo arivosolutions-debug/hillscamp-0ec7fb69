@@ -44,7 +44,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onChange={(e) => onLocation(e.target.value)}
               className="w-full appearance-none bg-white/15 text-xs md:text-sm rounded-full px-3 md:px-4 py-2 md:py-2.5 pr-8 border-none focus:ring-0 font-body cursor-pointer text-white opacity-100"
             >
-              <option value="" className="text-black">All Kerala</option>
+              <option value="" className="text-black">All Stays</option>
               {locationOptions.map((l) => (
                 <option key={l.id} value={l.name} className="text-black">{l.name}</option>
               ))}
