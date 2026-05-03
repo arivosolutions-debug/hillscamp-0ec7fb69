@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: "Stays", to: "/listings", exact: ["/listings"] },
   { label: "Experiences", to: "/experiences", exact: ["/experiences"] },
   { label: "Journal", to: "/blog", exact: ["/blog", "/journal"] },
+  { label: "About", to: "/about", exact: ["/about"] },
 ];
 
 const MOBILE_NAV_LINKS = [...NAV_LINKS, { label: "Contact Us", to: "/contact", exact: ["/contact"] }];
