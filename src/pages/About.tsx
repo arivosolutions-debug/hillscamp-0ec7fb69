@@ -110,7 +110,7 @@ const About = () => {
               {WHY_CARDS.map((card) => (
                 <div
                   key={card.title}
-                  className="relative rounded-[2rem] overflow-hidden aspect-[1/1] md:aspect-[3/4] group"
+                  className="relative rounded-[2rem] overflow-hidden aspect-[2/1] md:aspect-[3/4] group"
                 >
                   <img
                     src={card.image}
@@ -119,11 +119,11 @@ const About = () => {
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <h3 className="font-headline text-white text-xl md:text-2xl mb-2 leading-tight">
+                  <div className="absolute inset-0 md:inset-auto md:bottom-0 md:left-0 md:right-0 flex flex-col justify-center md:block p-4 md:p-8 text-center md:text-left">
+                    <h3 className="font-headline text-white text-base md:text-2xl mb-1 md:mb-2 leading-tight">
                       {card.title}
                     </h3>
-                    <p className="text-white/75 text-sm leading-relaxed font-body">
+                    <p className="text-white/75 text-xs md:text-sm leading-snug md:leading-relaxed font-body">
                       {card.body}
                     </p>
                   </div>
