@@ -65,6 +65,7 @@ const About = () => {
                 src={aboutHero}
                 alt="Mountain camp in the hills"
                 className="w-full h-full object-cover object-[center_calc(50%+100px)]"
+                style={{ objectPosition: 'center calc(50% + 100px)' }}
                 loading="eager"
               />
             </div>
