@@ -126,6 +126,8 @@ interface PackageForm {
   tags: string[];
   itinerary: ItineraryDay[];
   whats_not_included: string[];
+  whats_included: string[];
+  highlights: string[];
   terms_conditions: string[];
   gallery: PackageGalleryForm[];
 }
@@ -964,7 +966,6 @@ const PropertyFormPage: React.FC<{
             <Input label="Location" value={form.location} onChange={e => set('location', e.target.value)} placeholder="e.g. Vythiri Village, Wayanad" />
             <Input label="Max Guests" type="number" value={form.max_guests} onChange={e => set('max_guests', parseInt(e.target.value) || 1)} />
             <Input label="Price Per Night (₹)" type="number" value={form.price_per_night} onChange={e => set('price_per_night', e.target.value)} placeholder="Leave blank = Contact for Pricing" />
-            <Input label="Sort Order" type="number" value={form.sort_order} onChange={e => set('sort_order', parseInt(e.target.value) || 0)} />
           </div>
           <div className="mt-4">
             <MarkdownEditor label="Description" value={form.description} onChange={(v) => set('description', v)} placeholder="Describe this property..." />
@@ -1040,7 +1041,7 @@ const emptyPackage = (): PackageForm => ({
   duration_nights: '', distance_km: '', min_participants: '', max_participants: '',
   lat: '', lng: '', hero_images: [], instagram_hashtag: '', is_featured: false,
   is_published: false, sort_order: 0, tags: [], itinerary: [],
-  whats_not_included: [], terms_conditions: [], gallery: [],
+  whats_not_included: [], whats_included: [], highlights: [], terms_conditions: [], gallery: [],
 });
 
 const PackageFormPage: React.FC<{
@@ -1109,6 +1110,8 @@ const PackageFormPage: React.FC<{
         tags: form.tags.length ? form.tags : null,
         itinerary: uploadedItinerary.length ? uploadedItinerary : null,
         whats_not_included: form.whats_not_included.length ? form.whats_not_included : null,
+        whats_included: form.whats_included.length ? form.whats_included : null,
+        highlights: form.highlights.length ? form.highlights : null,
         terms_conditions: form.terms_conditions.length ? form.terms_conditions : null,
       };
 
@@ -1176,7 +1179,6 @@ const PackageFormPage: React.FC<{
             <DynamicSelect label="Region" value={form.region} onChange={v => set('region', v)} table="regions" valueField="name" orderField="sort_order" />
             <Input label="Price (₹ per person)" type="number" value={form.price_inr} onChange={e => set('price_inr', e.target.value)} />
             <Input label="Instagram Hashtag" value={form.instagram_hashtag} onChange={e => set('instagram_hashtag', e.target.value)} placeholder="hillscampwayanad (no #)" />
-            <Input label="Sort Order" type="number" value={form.sort_order} onChange={e => set('sort_order', parseInt(e.target.value) || 0)} />
           </div>
         </SectionCard>
 
@@ -1216,6 +1218,14 @@ const PackageFormPage: React.FC<{
 
         <SectionCard title="What's Not Included">
           <StringList label="Items" placeholder="e.g. Airfare not included" items={form.whats_not_included} onChange={w => set('whats_not_included', w)} />
+        </SectionCard>
+
+        <SectionCard title="What's Included">
+          <StringList label="Items" placeholder="e.g. All meals included" items={form.whats_included} onChange={w => set('whats_included', w)} />
+        </SectionCard>
+
+        <SectionCard title="Highlights">
+          <StringList label="Highlights" placeholder="e.g. Sunrise trek to Chembra Peak" items={form.highlights} onChange={h => set('highlights', h)} />
         </SectionCard>
 
         <SectionCard title="Terms & Conditions">
@@ -1423,6 +1433,8 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
       tags: pkg.tags ?? [],
       itinerary: Array.isArray(pkg.itinerary) ? pkg.itinerary : [],
       whats_not_included: pkg.whats_not_included ?? [],
+      whats_included: pkg.whats_included ?? [],
+      highlights: pkg.highlights ?? [],
       terms_conditions: pkg.terms_conditions
         ? (pkg.terms_conditions.length > 1
             ? [pkg.terms_conditions.join('\n\n')]

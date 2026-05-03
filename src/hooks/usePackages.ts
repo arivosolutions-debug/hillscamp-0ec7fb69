@@ -19,6 +19,8 @@ export interface Package {
   max_participants: number | null;
   whats_not_included: string[] | null;
   terms_conditions: string[] | null;
+  whats_included: string[] | null;
+  highlights: string[] | null;
   instagram_hashtag: string | null;
   is_featured: boolean | null;
   created_at: string | null;
