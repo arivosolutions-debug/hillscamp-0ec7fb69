@@ -8,6 +8,7 @@ export interface PropertyTypeRow {
   subtitle: string | null;
   collection: string | null;
   sort_order: number | null;
+  cover_image: string | null;
 }
 
 /**
@@ -20,7 +21,7 @@ export function usePropertyTypes() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('property_types')
-        .select('id, slug, name, subtitle, collection, sort_order')
+        .select('id, slug, name, subtitle, collection, sort_order, cover_image')
         .order('sort_order', { ascending: true })
         .order('name', { ascending: true });
       if (error) throw error;
