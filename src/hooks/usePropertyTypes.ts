@@ -23,7 +23,7 @@ export function usePropertyTypes() {
         .from('property_types')
         .select('id, slug, name, subtitle, collection, sort_order, cover_image')
         .order('sort_order', { ascending: true })
-        .order('name', { ascending: true });
+        .order('created_at', { ascending: true });
       if (error) throw error;
       return (data ?? []) as PropertyTypeRow[];
     },
