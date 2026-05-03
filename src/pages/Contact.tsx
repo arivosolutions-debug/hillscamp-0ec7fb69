@@ -142,10 +142,10 @@ const Contact = () => {
                       <Mail size={11} /> Email Enquiries
                     </h3>
                     <a
-                      href="mailto:stay@hillscampkerala.com"
-                      className="font-headline text-[#17341e] text-xl hover:text-[#924a29] transition-colors"
+                      href="mailto:hillscampbypovaam@gmail.com"
+                      className="font-headline text-[#17341e] text-lg hover:text-[#924a29] transition-colors break-words"
                     >
-                      stay@hillscampkerala.com
+                      hillscampbypovaam@gmail.com
                     </a>
                   </div>
                   <div className="border-t border-[#c2c8bf]/30 pt-8">
