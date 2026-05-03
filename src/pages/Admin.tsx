@@ -966,7 +966,6 @@ const PropertyFormPage: React.FC<{
             <Input label="Location" value={form.location} onChange={e => set('location', e.target.value)} placeholder="e.g. Vythiri Village, Wayanad" />
             <Input label="Max Guests" type="number" value={form.max_guests} onChange={e => set('max_guests', parseInt(e.target.value) || 1)} />
             <Input label="Price Per Night (₹)" type="number" value={form.price_per_night} onChange={e => set('price_per_night', e.target.value)} placeholder="Leave blank = Contact for Pricing" />
-            <Input label="Sort Order" type="number" value={form.sort_order} onChange={e => set('sort_order', parseInt(e.target.value) || 0)} />
           </div>
           <div className="mt-4">
             <MarkdownEditor label="Description" value={form.description} onChange={(v) => set('description', v)} placeholder="Describe this property..." />
