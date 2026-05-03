@@ -1433,6 +1433,8 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
       tags: pkg.tags ?? [],
       itinerary: Array.isArray(pkg.itinerary) ? pkg.itinerary : [],
       whats_not_included: pkg.whats_not_included ?? [],
+      whats_included: pkg.whats_included ?? [],
+      highlights: pkg.highlights ?? [],
       terms_conditions: pkg.terms_conditions
         ? (pkg.terms_conditions.length > 1
             ? [pkg.terms_conditions.join('\n\n')]
