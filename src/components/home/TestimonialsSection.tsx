@@ -17,7 +17,8 @@ export const TestimonialsSection: React.FC = () => {
   const ref = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const { data: reviews = [] } = useReviews(true);
+  const { data: allReviews = [] } = useReviews(true);
+  const reviews = allReviews.slice(0, 4);
 
   useEffect(() => {
     const section = ref.current;
@@ -59,17 +60,17 @@ export const TestimonialsSection: React.FC = () => {
           </h2>
         </div>
 
-        {/* Desktop grid */}
-        <div className="hidden md:grid grid-cols-2 gap-10">
-          {reviews.slice(0, 4).map((review) => (
-            <div key={review.id} className="testimonial-card group bg-white rounded-[2rem] p-10 flex flex-col shadow-card">
-              <div className="h-0.5 w-10 group-hover:w-20 bg-hc-secondary mb-8 transition-all duration-500 ease-out" />
-              <Quote size={36} className="text-hc-secondary/20 mb-4 group-hover:text-hc-secondary/40 transition-colors duration-500" />
-              <blockquote className="font-headline text-hc-primary text-xl italic leading-relaxed mb-10 flex-1">
+        {/* Desktop grid - single row, compact */}
+        <div className="hidden md:grid grid-cols-4 gap-6">
+          {reviews.map((review) => (
+            <div key={review.id} className="testimonial-card group bg-white rounded-2xl p-6 flex flex-col shadow-card">
+              <div className="h-0.5 w-8 group-hover:w-14 bg-hc-secondary mb-4 transition-all duration-500 ease-out" />
+              <Quote size={24} className="text-hc-secondary/20 mb-3 group-hover:text-hc-secondary/40 transition-colors duration-500" />
+              <blockquote className="font-headline text-hc-primary text-base italic leading-relaxed mb-6 flex-1">
                 "{review.quote}"
               </blockquote>
-              <div className="flex items-center gap-4">
-                <Avatar review={review} className="grayscale group-hover:grayscale-0 transition-all duration-700" />
+              <div className="flex items-center gap-3">
+                <Avatar review={review} className="w-10 h-10 grayscale group-hover:grayscale-0 transition-all duration-700" />
                 <div>
                   <div className="font-body font-bold text-hc-primary text-sm">{review.guest_name}</div>
                   <div className="font-body text-xs text-hc-text-light">{review.guest_title ?? ''}</div>
