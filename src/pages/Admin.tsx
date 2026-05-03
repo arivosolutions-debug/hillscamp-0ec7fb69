@@ -126,6 +126,8 @@ interface PackageForm {
   tags: string[];
   itinerary: ItineraryDay[];
   whats_not_included: string[];
+  whats_included: string[];
+  highlights: string[];
   terms_conditions: string[];
   gallery: PackageGalleryForm[];
 }
