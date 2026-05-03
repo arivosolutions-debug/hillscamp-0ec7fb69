@@ -271,8 +271,14 @@ const PackageDetail: React.FC = () => {
 
           {/* What's Not Included & Terms */}
           <section className="px-5 md:px-8 max-w-[1280px] mx-auto pb-6">
+            {pkg.whats_included && pkg.whats_included.length > 0 && (
+              <CollapsibleList title="What's Included" items={pkg.whats_included} />
+            )}
             {pkg.whats_not_included && pkg.whats_not_included.length > 0 && (
               <CollapsibleList title="What's Not Included" items={pkg.whats_not_included} />
+            )}
+            {pkg.highlights && pkg.highlights.length > 0 && (
+              <CollapsibleList title="Highlights" items={pkg.highlights} />
             )}
             {pkg.terms_conditions && pkg.terms_conditions.length > 0 && (
               <CollapsibleList title="Terms & Conditions" items={pkg.terms_conditions} renderAsMarkdown />
