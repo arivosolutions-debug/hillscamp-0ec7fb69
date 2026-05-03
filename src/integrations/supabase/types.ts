@@ -265,6 +265,7 @@ export type Database = {
           duration_days: number | null
           duration_nights: number | null
           hero_images: string[] | null
+          highlights: string[] | null
           id: string
           instagram_hashtag: string | null
           is_featured: boolean | null
@@ -281,6 +282,7 @@ export type Database = {
           tags: string[] | null
           terms_conditions: string[] | null
           updated_at: string | null
+          whats_included: string[] | null
           whats_not_included: string[] | null
         }
         Insert: {
@@ -290,6 +292,7 @@ export type Database = {
           duration_days?: number | null
           duration_nights?: number | null
           hero_images?: string[] | null
+          highlights?: string[] | null
           id?: string
           instagram_hashtag?: string | null
           is_featured?: boolean | null
@@ -306,6 +309,7 @@ export type Database = {
           tags?: string[] | null
           terms_conditions?: string[] | null
           updated_at?: string | null
+          whats_included?: string[] | null
           whats_not_included?: string[] | null
         }
         Update: {
@@ -315,6 +319,7 @@ export type Database = {
           duration_days?: number | null
           duration_nights?: number | null
           hero_images?: string[] | null
+          highlights?: string[] | null
           id?: string
           instagram_hashtag?: string | null
           is_featured?: boolean | null
@@ -331,6 +336,7 @@ export type Database = {
           tags?: string[] | null
           terms_conditions?: string[] | null
           updated_at?: string | null
+          whats_included?: string[] | null
           whats_not_included?: string[] | null
         }
         Relationships: []
