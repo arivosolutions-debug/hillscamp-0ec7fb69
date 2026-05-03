@@ -1220,6 +1220,14 @@ const PackageFormPage: React.FC<{
           <StringList label="Items" placeholder="e.g. Airfare not included" items={form.whats_not_included} onChange={w => set('whats_not_included', w)} />
         </SectionCard>
 
+        <SectionCard title="What's Included">
+          <StringList label="Items" placeholder="e.g. All meals included" items={form.whats_included} onChange={w => set('whats_included', w)} />
+        </SectionCard>
+
+        <SectionCard title="Highlights">
+          <StringList label="Highlights" placeholder="e.g. Sunrise trek to Chembra Peak" items={form.highlights} onChange={h => set('highlights', h)} />
+        </SectionCard>
+
         <SectionCard title="Terms & Conditions">
           <MarkdownEditor
             label="Terms"
