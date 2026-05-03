@@ -1873,9 +1873,13 @@ const CollectionEditor: React.FC = () => {
   const [newName, setNewName] = useState('');
 
   const load = () => {
-    (supabase.from('property_types' as any) as any).select('*').order('sort_order').then(({ data }: any) => {
-      if (data) setTypes(data);
-    });
+    (supabase.from('property_types' as any) as any)
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: true })
+      .then(({ data }: any) => {
+        if (data) setTypes(data);
+      });
   };
 
   useEffect(() => { load(); }, []);
