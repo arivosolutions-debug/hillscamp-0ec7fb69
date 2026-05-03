@@ -1177,7 +1177,6 @@ const PackageFormPage: React.FC<{
             <DynamicSelect label="Region" value={form.region} onChange={v => set('region', v)} table="regions" valueField="name" orderField="sort_order" />
             <Input label="Price (₹ per person)" type="number" value={form.price_inr} onChange={e => set('price_inr', e.target.value)} />
             <Input label="Instagram Hashtag" value={form.instagram_hashtag} onChange={e => set('instagram_hashtag', e.target.value)} placeholder="hillscampwayanad (no #)" />
-            <Input label="Sort Order" type="number" value={form.sort_order} onChange={e => set('sort_order', parseInt(e.target.value) || 0)} />
           </div>
         </SectionCard>
 
