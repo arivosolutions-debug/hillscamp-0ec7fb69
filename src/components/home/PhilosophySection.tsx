@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-
-const STATS = [
-  { value: '15', label: 'PROPERTIES' },
-  { value: '100%', label: 'Unique' },
-  { value: '0', label: 'Compromises' },
-];
+import { usePropertyCount } from '@/hooks/usePropertyCount';
 
 export const PhilosophySection: React.FC = () => {
   const ref = useRef<HTMLElement>(null);
+  const { data: propertyCount } = usePropertyCount();
+
+  const STATS = [
+    { value: propertyCount != null ? String(propertyCount) : '—', label: 'PROPERTIES' },
+    { value: '100%', label: 'Unique' },
+    { value: '0', label: 'Compromises' },
+  ];
 
   useEffect(() => {
     const section = ref.current;

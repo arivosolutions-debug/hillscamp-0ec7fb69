@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Heart, Compass, Headphones, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import aboutHero from '@/assets/about-hero.jpg';
+import { usePropertyCount } from '@/hooks/usePropertyCount';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -39,6 +40,7 @@ const FALLBACK_TEAM: TeamMember[] = [
 ];
 
 const About = () => {
+  const { data: propertyCount } = usePropertyCount();
   const { data: team } = useQuery({
     queryKey: ['team'],
     queryFn: async () => {
@@ -145,7 +147,9 @@ const About = () => {
               </div>
               <div className="flex items-center gap-12 md:gap-16 justify-center lg:justify-end">
                 <div className="text-center">
-                  <span className="font-headline text-hc-primary text-5xl md:text-6xl block">15</span>
+                  <span className="font-headline text-hc-primary text-5xl md:text-6xl block">
+                    {propertyCount != null ? propertyCount : '—'}
+                  </span>
                   <p className="text-xs text-hc-text-light uppercase tracking-[0.2em] mt-2 font-bold font-body">
                     Estates
                   </p>
