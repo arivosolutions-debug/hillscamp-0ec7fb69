@@ -1920,10 +1920,17 @@ const CollectionEditor: React.FC = () => {
   const move = async (i: number, dir: -1 | 1) => {
     const j = i + dir;
     if (j < 0 || j >= types.length) return;
-    await Promise.all([
-      (supabase.from('property_types' as any) as any).update({ sort_order: types[j].sort_order ?? j }).eq('id', types[i].id),
-      (supabase.from('property_types' as any) as any).update({ sort_order: types[i].sort_order ?? i }).eq('id', types[j].id),
-    ]);
+    // Build a fresh sequential order with the two items swapped, then persist all rows.
+    // This eliminates erratic behaviour caused by tied/duplicate sort_order values.
+    const reordered = [...types];
+    [reordered[i], reordered[j]] = [reordered[j], reordered[i]];
+    await Promise.all(
+      reordered.map((t, idx) =>
+        (supabase.from('property_types' as any) as any)
+          .update({ sort_order: idx })
+          .eq('id', t.id),
+      ),
+    );
     load();
   };
 
