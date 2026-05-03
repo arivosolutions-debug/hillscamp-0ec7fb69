@@ -69,12 +69,12 @@ const About = () => {
               />
             </div>
             <div className="relative z-10 px-6 max-w-3xl mx-auto">
-              <h1 className="font-headline text-white text-4xl md:text-5xl lg:text-6xl leading-[0.95] mb-6">
+              <h1 className="font-headline text-white text-4xl md:text-5xl lg:text-6xl leading-[0.95] mb-6 font-extrabold">
                 A Better Way{' '}
                 <br className="md:hidden" />
                 to <em className="text-hc-accent not-italic">Wander!</em>
               </h1>
-              <p className="text-white/70 text-base md:text-xl max-w-lg mx-auto leading-relaxed font-body italic mb-10">
+              <p className="text-base md:text-xl max-w-lg mx-auto leading-relaxed font-body italic mb-10 text-slate-50">
                 It's about the morning mist on a trek!
               </p>
               <div className="flex items-center justify-center gap-4 mb-[-20px]">
