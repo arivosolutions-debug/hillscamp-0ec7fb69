@@ -40,7 +40,7 @@ export const Footer: React.FC = () => {
           </p>
           <div className="flex gap-3">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/hillscamp_india?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
