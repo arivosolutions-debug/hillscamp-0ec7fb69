@@ -61,7 +61,7 @@ export const TestimonialsSection: React.FC = () => {
 
         {/* Desktop grid */}
         <div className="hidden md:grid grid-cols-2 gap-10">
-          {reviews.map((review) => (
+          {reviews.slice(0, 4).map((review) => (
             <div key={review.id} className="testimonial-card group bg-white rounded-[2rem] p-10 flex flex-col shadow-card">
               <div className="h-0.5 w-10 group-hover:w-20 bg-hc-secondary mb-8 transition-all duration-500 ease-out" />
               <Quote size={36} className="text-hc-secondary/20 mb-4 group-hover:text-hc-secondary/40 transition-colors duration-500" />
