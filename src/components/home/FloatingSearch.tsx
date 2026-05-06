@@ -153,7 +153,7 @@ export const FloatingSearch: React.FC = () => {
           </div>
           <div className="px-6 py-3 rounded-xl">
             <label className="block text-xs font-bold uppercase tracking-wider mb-1 mx-[4px] text-[#944729]">
-              District
+              LOCATION
             </label>
             <select
               name="district"
