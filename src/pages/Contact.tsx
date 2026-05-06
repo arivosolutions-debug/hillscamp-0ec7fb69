@@ -162,12 +162,11 @@ const Contact = () => {
                   <div className="flex items-start gap-6">
                     <MapPin size={22} className="text-[#924a29] mt-1 shrink-0" />
                     <div>
-                      <h3 className="font-headline text-[#17341e] text-xl mb-3">Estate House Office</h3>
-                      <p className="text-[#424842] leading-relaxed mb-4 font-body">
-                        Munnar Estate House<br />
-                        Idukki District<br />
-                        Kerala 685612, India
-                      </p>
+                       <h3 className="font-headline text-[#17341e] text-xl mb-3">Estate Office</h3>
+                       <p className="text-[#424842] leading-relaxed mb-4 font-body whitespace-pre-line">
+                         O.NO 87/2C, 7th Main Road{"\n"}
+                         Tavrekere, Bangalore 560029
+                       </p>
                       <a
                         href="https://www.openstreetmap.org/?mlat=10.09&mlon=77.06#map=12/10.09/77.06"
                         target="_blank"
