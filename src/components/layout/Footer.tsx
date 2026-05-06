@@ -58,7 +58,7 @@ export const Footer: React.FC = () => {
               <MessageCircle size={16} className="text-emerald-50" />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/company/hillscamp/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
