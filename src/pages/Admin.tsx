@@ -960,7 +960,7 @@ const PropertyFormPage: React.FC<{
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input label="Property Name *" value={form.name} onChange={e => handleNameChange(e.target.value)} placeholder="e.g. Mist Valley Treehouse" />
             <Input label="Slug (URL) *" value={form.slug} onChange={e => set('slug', e.target.value)} />
-            <DynamicSelect label="District *" value={form.district} onChange={v => set('district', v)} table="districts" valueField="slug" />
+            <DynamicSelect label="LOCATION *" value={form.district} onChange={v => set('district', v)} table="districts" valueField="slug" />
             <DynamicSelect label="Property Type *" value={form.property_type} onChange={v => set('property_type', v)} table="property_types" valueField="slug" />
             <Input label="Tagline" value={form.tagline} onChange={e => set('tagline', e.target.value)} placeholder="Nature meets comfort above the clouds" />
             <Input label="Location" value={form.location} onChange={e => set('location', e.target.value)} placeholder="e.g. Vythiri Village, Wayanad" />
@@ -2084,7 +2084,7 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <LookupManager title="Locations" table="locations" />
-        <LookupManager title="Districts" table="districts" />
+        <LookupManager title="LOCATIONS" table="districts" />
         <CollectionEditor />
         <LookupManager title="Regions" table="regions" />
         <LookupManager title="Amenities" table="amenities" extraField="category" extraLabel="Category" />
