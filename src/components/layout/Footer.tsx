@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
             <Logo variant="light" />
           </div>
           <p className="text-[rgba(167,243,208,0.6)] text-sm leading-relaxed mb-6">
-            An editorial retreat experience nestled in the verdant peaks of Kerala's high ranges.
+           An editorial retreat experience nestled in the nature.
           </p>
           <div className="flex gap-3">
             <a
