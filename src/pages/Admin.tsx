@@ -799,7 +799,7 @@ const HeroImagesEditor: React.FC<{ items: { url: string; file?: File }[]; onChan
 // ─── Property Form ────────────────────────────────────────────────
 
 const emptyProperty = (): PropertyForm => ({
-  name: '', slug: '', district: '', property_type: '', tagline: '', description: '',
+  name: '', slug: '', district: '', property_type: '', property_type_slugs: [], tagline: '', description: '',
   highlights: [], tags: [], terms_conditions: [], max_guests: 2, price_per_night: '',
   latitude: '', longitude: '', cover_image: '', location: '', is_featured: false, is_published: false,
   sort_order: 0, property_images: [], room_types: [], amenity_ids: [], nearby_attractions: [],
@@ -918,6 +918,20 @@ const PropertyFormPage: React.FC<{
       if (form.amenity_ids.length) {
         await supabase.from('property_amenities').insert(
           form.amenity_ids.map(amenity_id => ({ property_id: propertyId!, amenity_id }))
+        );
+      }
+
+      // Save property type assignments (multi-type tagging)
+      const typeSlugs = Array.from(new Set([
+        ...(form.property_type ? [form.property_type] : []),
+        ...form.property_type_slugs,
+      ]));
+      await (supabase.from('property_type_assignments' as any) as any)
+        .delete()
+        .eq('property_id', propertyId!);
+      if (typeSlugs.length) {
+        await (supabase.from('property_type_assignments' as any) as any).insert(
+          typeSlugs.map((property_type_slug) => ({ property_id: propertyId!, property_type_slug }))
         );
       }
 
