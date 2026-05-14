@@ -322,6 +322,45 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
   });
 }
 
+async function buildPostHtml(slug: string, isBotReq: boolean): Promise<string | null> {
+  const { data: post, error } = await supabase
+    .from("blog_posts")
+    .select("id, slug, title, excerpt, cover_image, published_at, author")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (error || !post) return null;
+
+  const image = brandedOgImage("post", post.slug);
+  const description = post.excerpt || DEFAULT_DESCRIPTION;
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description,
+    image,
+    url: canonicalUrl,
+    datePublished: (post as any).published_at ?? undefined,
+    author: (post as any).author
+      ? { "@type": "Person", name: (post as any).author }
+      : undefined,
+  };
+
+  return renderHtml({
+    title: post.title,
+    description,
+    image,
+    canonicalUrl,
+    redirectUrl: canonicalUrl,
+    type: "article",
+    jsonLd,
+    isBot: isBotReq,
+  });
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -332,11 +371,14 @@ Deno.serve(async (req) => {
   // Be lenient: also accept /property/:slug or /package/:slug after the function root.
   const parts = url.pathname.split("/").filter(Boolean);
   // Drop the leading function name segment if present
-  const idx = parts.findIndex((p) => p === "property" || p === "package");
+  const idx = parts.findIndex(
+    (p) => p === "property" || p === "package" || p === "post" || p === "blog",
+  );
   if (idx === -1 || !parts[idx + 1]) {
     return htmlResponse(notFoundHtml("Missing type or slug"), 404);
   }
-  const type = parts[idx];
+  const rawType = parts[idx];
+  const type = rawType === "blog" ? "post" : rawType;
   const slug = decodeURIComponent(parts[idx + 1]);
 
   const userAgent = req.headers.get("user-agent");
@@ -357,6 +399,7 @@ Deno.serve(async (req) => {
   try {
     if (type === "property") html = await buildPropertyHtml(slug, botRequest);
     else if (type === "package") html = await buildPackageHtml(slug, botRequest);
+    else if (type === "post") html = await buildPostHtml(slug, botRequest);
   } catch (err) {
     console.error("share-meta error:", err);
     return htmlResponse(notFoundHtml("Server error"), 500);
