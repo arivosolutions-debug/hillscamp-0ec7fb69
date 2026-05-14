@@ -15,6 +15,16 @@ export function useProperties(filters: PropertyFilters = {}) {
   return useQuery({
     queryKey: ['properties', filters],
     queryFn: async () => {
+      // If filtering by property_type, get IDs that have this type assigned (multi-type support)
+      let allowedIds: string[] | null = null;
+      if (filters.property_type) {
+        const { data: assignRows } = await (supabase.from('property_type_assignments' as any) as any)
+          .select('property_id')
+          .eq('property_type_slug', filters.property_type);
+        allowedIds = ((assignRows ?? []) as any[]).map((r: any) => r.property_id);
+        if (allowedIds.length === 0) return [];
+      }
+
       let query = supabase
         .from('properties')
         .select('*, property_amenities(amenity_id, amenities(name)), property_images(image_url, sort_order), room_types(price_per_night)')
@@ -23,7 +33,7 @@ export function useProperties(filters: PropertyFilters = {}) {
         .order('created_at', { ascending: false });
 
       if (filters.district) query = query.eq('district', filters.district);
-      if (filters.property_type) query = query.eq('property_type', filters.property_type);
+      if (allowedIds) query = query.in('id', allowedIds);
       if (filters.max_guests) query = query.gte('max_guests', filters.max_guests);
       if (filters.featured) query = query.eq('is_featured', true).limit(4);
 
