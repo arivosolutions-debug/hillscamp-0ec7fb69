@@ -94,10 +94,7 @@ const PackageDetail: React.FC = () => {
   const lng = coords?.lng ?? 76.5;
   const itinerary: ItineraryDay[] = Array.isArray(pkg.itinerary) ? pkg.itinerary : [];
 
-  const ogImage =
-    pkg.hero_images?.[0] ||
-    pkg.gallery?.[0]?.image_url ||
-    null;
+  const ogImage = pkg.slug ? ogImageUrl('package', pkg.slug) : null;
   const ogDescription =
     (pkg as { tagline?: string | null }).tagline ||
     (pkg as { description?: string | null }).description ||
