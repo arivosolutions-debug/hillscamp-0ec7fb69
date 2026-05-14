@@ -496,6 +496,24 @@ export type Database = {
           },
         ]
       }
+      property_type_assignments: {
+        Row: {
+          created_at: string
+          property_id: string
+          property_type_slug: string
+        }
+        Insert: {
+          created_at?: string
+          property_id: string
+          property_type_slug: string
+        }
+        Update: {
+          created_at?: string
+          property_id?: string
+          property_type_slug?: string
+        }
+        Relationships: []
+      }
       property_types: {
         Row: {
           collection: string | null
