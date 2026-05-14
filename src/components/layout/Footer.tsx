@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Linkedin, MessageCircle, ArrowRight } from 'lucide-react';
+import { Instagram, Linkedin, MessageCircle } from 'lucide-react';
 import { Logo } from '@/components/shared/Logo';
+import { useLocations } from '@/hooks/useLocations';
 
 const WHATSAPP_URL =
   'https://wa.me/917510810961?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat.';
@@ -14,21 +15,18 @@ const EXPLORE_LINKS = [
   { label: 'Contact Us',       to: '/contact' },
 ];
 
-const LOCATION_LINKS = [
-  { label: 'Wayanad Reserve',     to: '/listings?district=wayanad' },
-  { label: 'Munnar Estates',      to: '/listings?district=munnar' },
-  { label: 'Ooty Hills',          to: '/listings?district=vagamon' },
-  { label: 'Alleppey Backwaters', to: '/listings?district=alleppey' },
-];
-
 const linkCls = 'text-[rgba(167,243,208,0.6)] hover:text-emerald-100 transition-colors text-sm font-body';
 
 export const Footer: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const { data: locations } = useLocations();
+  const locationLinks = (locations ?? []).slice(0, 4).map(l => ({
+    label: l.name,
+    to: `/listings?district=${encodeURIComponent(l.name.toLowerCase().replace(/\s+/g, '-'))}`,
+  }));
 
   return (
     <footer className="relative z-10 bg-[#022c22] rounded-tl-[32px] rounded-tr-[32px]">
-      <div className="max-w-content mx-auto px-5 md:px-12 py-16 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12">
+      <div className="max-w-content mx-auto px-5 md:px-12 py-16 md:py-20 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
 
         {/* Brand */}
         <div>
@@ -85,52 +83,27 @@ export const Footer: React.FC = () => {
         <div>
           <h4 className="font-headline text-emerald-50 text-sm uppercase tracking-wider mb-6">Locations</h4>
           <ul className="space-y-3">
-            {LOCATION_LINKS.map(l => (
+            {locationLinks.map(l => (
               <li key={l.to}>
                 <Link to={l.to} className={linkCls}>{l.label}</Link>
               </li>
             ))}
           </ul>
         </div>
-
-        {/* Connect / Newsletter */}
-        <div>
-          <h4 className="font-headline text-emerald-50 text-sm uppercase tracking-wider mb-4">Journal</h4>
-          <p className="text-[rgba(167,243,208,0.6)] text-sm mb-4 leading-relaxed">
-            Join our seasonal mailing list for mountain stories.
-          </p>
-          <div className="relative w-full mb-6">
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Email"
-              className="w-full bg-white/5 rounded-xl px-4 py-3 pr-12 text-sm text-emerald-50 placeholder:text-emerald-50/30 focus:outline-none focus:ring-1 focus:ring-emerald-50/20 border-none"
-            />
-            <button
-              className={`absolute right-2 top-1/2 -translate-y-1/2 bg-white/10 text-emerald-50 p-2 rounded-lg hover:bg-white/20 transition-all ${email.length > 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'}`}
-              aria-label="Subscribe"
-            >
-              <ArrowRight size={16} />
-            </button>
-          </div>
-          {/* WhatsApp CTA */}
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 bg-hc-secondary text-white px-5 py-3 rounded-xl font-bold text-sm hover:brightness-110 active:scale-[0.97] transition-all font-body"
-          >
-            <MessageCircle size={16} />
-            Contact via WhatsApp
-          </a>
-        </div>
       </div>
 
       {/* Bottom bar */}
       <div className="bg-[#011d17] mx-0 px-5 md:px-12 py-7 flex flex-col items-center gap-4">
         <p className="text-emerald-50/40 text-xs font-body">
-          Powered by <span className="font-bold text-emerald-50/60">Arivo</span>
+          Powered by{' '}
+          <a
+            href="https://arivosolutions.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-emerald-50/60 hover:text-emerald-50 transition-colors"
+          >
+            Arivo Solutions
+          </a>
         </p>
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
           <p className="text-emerald-50/30 text-xs font-body">
