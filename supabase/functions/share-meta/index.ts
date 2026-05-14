@@ -220,7 +220,8 @@ async function buildPropertyHtml(slug: string, isBotReq: boolean): Promise<strin
   const image = absoluteImage(
     property.cover_image || images[0]?.image_url || null,
   );
-  const optimizedImage = ogOptimize(image);
+  // Prefer branded OG card; fall back to optimized cover image.
+  const optimizedImage = brandedOgImage("property", property.slug) || ogOptimize(image);
   const description = property.tagline || property.description || DEFAULT_DESCRIPTION;
   const canonicalUrl = `${SITE_URL}/property/${property.slug}`;
 
@@ -276,7 +277,7 @@ async function buildPackageHtml(slug: string, isBotReq: boolean): Promise<string
   const image = absoluteImage(
     (pkg.hero_images && pkg.hero_images[0]) || gallery[0]?.image_url || null,
   );
-  const optimizedImage = ogOptimize(image);
+  const optimizedImage = brandedOgImage("package", pkg.slug) || ogOptimize(image);
   const description =
     [pkg.location, pkg.region].filter(Boolean).join(" · ") ||
     DEFAULT_DESCRIPTION;
