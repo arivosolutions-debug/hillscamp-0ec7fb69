@@ -1287,14 +1287,16 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
   useEffect(() => { load(); }, []);
 
   const handleEdit = async (prop: any) => {
-    const [imagesRes, roomsRes, amenitiesRes, attractionsRes] = await Promise.all([
+    const [imagesRes, roomsRes, amenitiesRes, attractionsRes, typesRes] = await Promise.all([
       supabase.from('property_images').select('*').eq('property_id', prop.id).order('sort_order'),
       supabase.from('room_types').select('*, room_type_images(*)').eq('property_id', prop.id).order('sort_order'),
       supabase.from('property_amenities').select('amenity_id').eq('property_id', prop.id),
       supabase.from('nearby_attractions').select('*').eq('property_id', prop.id),
+      (supabase.from('property_type_assignments' as any) as any).select('property_type_slug').eq('property_id', prop.id),
     ]);
     const form: PropertyForm = {
       ...prop,
+      property_type_slugs: ((typesRes as any)?.data ?? []).map((t: any) => t.property_type_slug),
       price_per_night: prop.price_per_night?.toString() ?? '',
       latitude: prop.latitude?.toString() ?? '',
       longitude: prop.longitude?.toString() ?? '',
