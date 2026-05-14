@@ -29,6 +29,7 @@ import { PropertyReviews } from "@/components/property/PropertyReviews";
 import { ImageLightbox } from "@/components/property/ImageLightbox";
 import { MarkdownContent } from "@/components/shared/MarkdownContent";
 import { SeoHead } from "@/components/shared/SeoHead";
+import { ogImageUrl } from "@/lib/ogImage";
 
 const WHATSAPP_PHONE = "917510810961";
 
@@ -94,10 +95,7 @@ const PackageDetail: React.FC = () => {
   const lng = coords?.lng ?? 76.5;
   const itinerary: ItineraryDay[] = Array.isArray(pkg.itinerary) ? pkg.itinerary : [];
 
-  const ogImage =
-    pkg.hero_images?.[0] ||
-    pkg.gallery?.[0]?.image_url ||
-    null;
+  const ogImage = pkg.slug ? ogImageUrl('package', pkg.slug) : null;
   const ogDescription =
     (pkg as { tagline?: string | null }).tagline ||
     (pkg as { description?: string | null }).description ||
