@@ -66,6 +66,7 @@ interface PropertyForm {
   slug: string;
   district: string;
   property_type: string;
+  property_type_slugs: string[];
   tagline: string;
   description: string;
   highlights: string[];
@@ -476,6 +477,59 @@ const DynamicSelect: React.FC<{
 
 // ─── Amenity Selector ─────────────────────────────────────────────
 
+const PropertyTypeMultiSelect: React.FC<{
+  primary: string;
+  selected: string[];
+  onChange: (primary: string, slugs: string[]) => void;
+}> = ({ primary, selected, onChange }) => {
+  const [types, setTypes] = useState<any[]>([]);
+  useEffect(() => {
+    (supabase.from('property_types' as any) as any)
+      .select('slug, name')
+      .order('sort_order')
+      .then(({ data }: any) => { if (data) setTypes(data); });
+  }, []);
+
+  const toggle = (slug: string) => {
+    const isSel = selected.includes(slug);
+    let next = isSel ? selected.filter(s => s !== slug) : [...selected, slug];
+    let nextPrimary = primary;
+    if (isSel && primary === slug) nextPrimary = next[0] ?? '';
+    if (!isSel && !primary) nextPrimary = slug;
+    onChange(nextPrimary, next);
+  };
+
+  return (
+    <div className="md:col-span-2 flex flex-col gap-2">
+      <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">
+        Property Types * <span className="text-hc-text-light normal-case font-normal">(select one or more — first selected is primary)</span>
+      </label>
+      <div className="flex flex-wrap gap-2">
+        {types.map((t: any) => {
+          const isSel = selected.includes(t.slug);
+          const isPrimary = primary === t.slug;
+          return (
+            <button
+              key={t.slug}
+              type="button"
+              onClick={() => toggle(t.slug)}
+              className={`px-3 py-1.5 rounded-full text-xs font-body border transition-all ${
+                isSel
+                  ? isPrimary
+                    ? 'bg-hc-primary text-white border-hc-primary ring-2 ring-hc-primary/30'
+                    : 'bg-hc-primary/80 text-white border-hc-primary'
+                  : 'bg-white text-hc-text border-hc-text-light/30 hover:border-hc-primary'
+              }`}
+            >
+              {t.name}{isPrimary ? ' · primary' : ''}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const AmenitySelector: React.FC<{ selected: string[]; onChange: (ids: string[]) => void }> = ({ selected, onChange }) => {
   const [amenities, setAmenities] = useState<any[]>([]);
   const [newName, setNewName] = useState('');
@@ -798,7 +852,7 @@ const HeroImagesEditor: React.FC<{ items: { url: string; file?: File }[]; onChan
 // ─── Property Form ────────────────────────────────────────────────
 
 const emptyProperty = (): PropertyForm => ({
-  name: '', slug: '', district: '', property_type: '', tagline: '', description: '',
+  name: '', slug: '', district: '', property_type: '', property_type_slugs: [], tagline: '', description: '',
   highlights: [], tags: [], terms_conditions: [], max_guests: 2, price_per_night: '',
   latitude: '', longitude: '', cover_image: '', location: '', is_featured: false, is_published: false,
   sort_order: 0, property_images: [], room_types: [], amenity_ids: [], nearby_attractions: [],
@@ -920,6 +974,20 @@ const PropertyFormPage: React.FC<{
         );
       }
 
+      // Save property type assignments (multi-type tagging)
+      const typeSlugs = Array.from(new Set([
+        ...(form.property_type ? [form.property_type] : []),
+        ...form.property_type_slugs,
+      ]));
+      await (supabase.from('property_type_assignments' as any) as any)
+        .delete()
+        .eq('property_id', propertyId!);
+      if (typeSlugs.length) {
+        await (supabase.from('property_type_assignments' as any) as any).insert(
+          typeSlugs.map((property_type_slug) => ({ property_id: propertyId!, property_type_slug }))
+        );
+      }
+
       // Save nearby attractions
       if (isEdit) await supabase.from('nearby_attractions').delete().eq('property_id', propertyId!);
       const validAttractions = form.nearby_attractions.filter(a => a.name.trim());
@@ -961,7 +1029,11 @@ const PropertyFormPage: React.FC<{
             <Input label="Property Name *" value={form.name} onChange={e => handleNameChange(e.target.value)} placeholder="e.g. Mist Valley Treehouse" />
             <Input label="Slug (URL) *" value={form.slug} onChange={e => set('slug', e.target.value)} />
             <DynamicSelect label="LOCATION *" value={form.district} onChange={v => set('district', v)} table="districts" valueField="slug" />
-            <DynamicSelect label="Property Type *" value={form.property_type} onChange={v => set('property_type', v)} table="property_types" valueField="slug" />
+            <PropertyTypeMultiSelect
+              primary={form.property_type}
+              selected={form.property_type_slugs}
+              onChange={(primary, slugs) => setForm(p => ({ ...p, property_type: primary, property_type_slugs: slugs }))}
+            />
             <Input label="Tagline" value={form.tagline} onChange={e => set('tagline', e.target.value)} placeholder="Nature meets comfort above the clouds" />
             <Input label="Location" value={form.location} onChange={e => set('location', e.target.value)} placeholder="e.g. Vythiri Village, Wayanad" />
             <Input label="Max Guests" type="number" value={form.max_guests} onChange={e => set('max_guests', parseInt(e.target.value) || 1)} />
@@ -1272,14 +1344,16 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
   useEffect(() => { load(); }, []);
 
   const handleEdit = async (prop: any) => {
-    const [imagesRes, roomsRes, amenitiesRes, attractionsRes] = await Promise.all([
+    const [imagesRes, roomsRes, amenitiesRes, attractionsRes, typesRes] = await Promise.all([
       supabase.from('property_images').select('*').eq('property_id', prop.id).order('sort_order'),
       supabase.from('room_types').select('*, room_type_images(*)').eq('property_id', prop.id).order('sort_order'),
       supabase.from('property_amenities').select('amenity_id').eq('property_id', prop.id),
       supabase.from('nearby_attractions').select('*').eq('property_id', prop.id),
+      (supabase.from('property_type_assignments' as any) as any).select('property_type_slug').eq('property_id', prop.id),
     ]);
     const form: PropertyForm = {
       ...prop,
+      property_type_slugs: ((typesRes as any)?.data ?? []).map((t: any) => t.property_type_slug),
       price_per_night: prop.price_per_night?.toString() ?? '',
       latitude: prop.latitude?.toString() ?? '',
       longitude: prop.longitude?.toString() ?? '',
