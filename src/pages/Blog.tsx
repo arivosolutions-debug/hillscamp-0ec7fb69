@@ -9,6 +9,8 @@ import { BlogCard, FeaturedPost } from '@/components/blog/BlogCard';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
 import { useBlogPost } from '@/hooks/useBlogPost';
 import { MarkdownContent } from '@/components/shared/MarkdownContent';
+import { SeoHead } from '@/components/shared/SeoHead';
+import { ogImageUrl } from '@/lib/ogImage';
 
 const CATEGORIES = ['All', 'Wayanad', 'Alleppey', 'Munnar', 'Travel Tips', 'Sustainability'];
 
@@ -165,6 +167,20 @@ export const BlogPost = () => {
 
   return (
     <>
+      <SeoHead
+        title={post.title}
+        description={post.excerpt || null}
+        image={post.slug ? ogImageUrl('post', post.slug) : null}
+        type="article"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: post.title,
+          datePublished: post.published_at ?? undefined,
+          articleSection: post.category ?? undefined,
+          image: post.cover_image ?? undefined,
+        }}
+      />
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg">
