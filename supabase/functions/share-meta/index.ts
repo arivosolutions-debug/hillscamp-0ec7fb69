@@ -26,9 +26,6 @@ const SITE_NAME = "Hills Camp Kerala";
 const SITE_URL = "https://hillscamp.com";
 const DEFAULT_DESCRIPTION =
   "Luxury wilderness retreats and curated experiences in Kerala's Western Ghats.";
-const SUPABASE_FUNCTIONS_URL =
-  Deno.env.get("SUPABASE_URL")!.replace(".supabase.co", ".functions.supabase.co");
-
 // Branded 1200x630 OG card rendered by the og-image edge function.
 function brandedOgImage(type: "property" | "package" | "post", slug: string): string {
   return `${Deno.env.get("SUPABASE_URL")}/functions/v1/og-image?type=${type}&slug=${encodeURIComponent(slug)}`;
