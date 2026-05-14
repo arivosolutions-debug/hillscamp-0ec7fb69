@@ -66,6 +66,7 @@ interface PropertyForm {
   slug: string;
   district: string;
   property_type: string;
+  property_type_slugs: string[];
   tagline: string;
   description: string;
   highlights: string[];
