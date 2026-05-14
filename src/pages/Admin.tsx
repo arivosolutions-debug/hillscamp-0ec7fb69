@@ -976,7 +976,11 @@ const PropertyFormPage: React.FC<{
             <Input label="Property Name *" value={form.name} onChange={e => handleNameChange(e.target.value)} placeholder="e.g. Mist Valley Treehouse" />
             <Input label="Slug (URL) *" value={form.slug} onChange={e => set('slug', e.target.value)} />
             <DynamicSelect label="LOCATION *" value={form.district} onChange={v => set('district', v)} table="districts" valueField="slug" />
-            <DynamicSelect label="Property Type *" value={form.property_type} onChange={v => set('property_type', v)} table="property_types" valueField="slug" />
+            <PropertyTypeMultiSelect
+              primary={form.property_type}
+              selected={form.property_type_slugs}
+              onChange={(primary, slugs) => setForm(p => ({ ...p, property_type: primary, property_type_slugs: slugs }))}
+            />
             <Input label="Tagline" value={form.tagline} onChange={e => set('tagline', e.target.value)} placeholder="Nature meets comfort above the clouds" />
             <Input label="Location" value={form.location} onChange={e => set('location', e.target.value)} placeholder="e.g. Vythiri Village, Wayanad" />
             <Input label="Max Guests" type="number" value={form.max_guests} onChange={e => set('max_guests', parseInt(e.target.value) || 1)} />
