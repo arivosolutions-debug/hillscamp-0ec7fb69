@@ -26,6 +26,22 @@ export const BlogTeaser: React.FC = () => {
     return () => observer.disconnect();
   }, [posts, isLoading]);
 
+  // One-time peek nudge on mobile so users see there's more
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(min-width: 768px)').matches) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const nudgeDistance = Math.max(40, Math.min(80, Math.round(window.innerWidth * 0.1)));
+    const nudge = window.setTimeout(() => {
+      el.scrollTo({ left: nudgeDistance, behavior: 'smooth' });
+      window.setTimeout(() => {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      }, 650);
+    }, 600);
+    return () => window.clearTimeout(nudge);
+  }, [posts]);
+
   // Hide entire section when no featured posts are available
   if (!isLoading && (!posts || posts.length === 0)) return null;
 
@@ -37,19 +53,19 @@ export const BlogTeaser: React.FC = () => {
   };
 
   const CardContent = ({ post }: { post: NonNullable<typeof posts>[0] }) => (
-    <Link to={`/blog/${post.slug}`} className="blog-card group block bg-white rounded-2xl overflow-hidden shadow-sm md:shadow-none md:bg-transparent md:rounded-none">
+    <Link to={`/blog/${post.slug}`} className="blog-card group block bg-white rounded-2xl overflow-hidden shadow-sm h-full">
       {/* Cover image */}
-      <div className="rounded-t-2xl md:rounded-2xl overflow-hidden mb-0 md:mb-6 card-hover bg-hc-bg-alt">
+      <div className="overflow-hidden card-hover bg-hc-bg-alt">
         {post.cover_image && (
           <img
             src={post.cover_image}
             alt={post.title}
-            className="w-full h-[200px] md:h-[210px] aspect-[4/3] md:aspect-auto object-cover"
+            className="w-full h-[200px] md:h-[240px] object-cover"
           />
         )}
       </div>
 
-      <div className="p-5 md:p-0">
+      <div className="p-5 md:p-6">
         {/* Category */}
         {post.category && (
           <p className="text-hc-secondary text-xs font-bold uppercase tracking-wider mb-2">
@@ -79,13 +95,13 @@ export const BlogTeaser: React.FC = () => {
   );
 
   return (
-    <section ref={ref} className="py-16 md:py-32 px-5 md:px-8 pb-28 md:pb-32 max-w-content mx-auto">
+    <section ref={ref} className="py-16 md:py-32 pl-5 md:pl-8 pr-0 pb-28 md:pb-32 max-w-content mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-4 mb-4 pr-5 md:pr-8">
         <div className="h-px w-12 bg-hc-secondary" />
         <span className="font-label text-xs tracking-[0.4em] text-hc-secondary">FROM THE JOURNAL</span>
       </div>
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 md:mb-16">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 md:mb-16 pr-5 md:pr-8">
         <div>
           <h2 className="font-headline text-hc-primary text-3xl md:text-5xl mb-2 md:mb-4">
             The Hills Camp <em className="italic">Journal.</em>
@@ -105,7 +121,7 @@ export const BlogTeaser: React.FC = () => {
 
       {/* Cards */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 pr-5 md:pr-8">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="animate-pulse">
               <div className="rounded-2xl bg-hc-bg-alt h-[200px] md:h-[210px] mb-6" />
@@ -116,34 +132,36 @@ export const BlogTeaser: React.FC = () => {
           ))}
         </div>
       ) : (
-        <>
-          {/* Desktop grid */}
-          <div className={`hidden md:grid gap-12 ${
-            posts && posts.length >= 3 ? 'grid-cols-3' :
-            posts && posts.length === 2 ? 'grid-cols-2 max-w-4xl mx-auto' :
-            'grid-cols-1 max-w-xl mx-auto'
-          }`}>
-            {posts?.map((post) => (
-              <CardContent key={post.id} post={post} />
-            ))}
-          </div>
-
-          {/* Mobile carousel */}
-          <div className="md:hidden -mr-5">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory pb-4 overscroll-x-contain"
+          style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+        >
+          {posts?.slice(0, 4).map((post) => (
             <div
-              ref={scrollRef}
-              onScroll={handleScroll}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4"
-              style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+              key={post.id}
+              className="w-[80vw] md:w-[30%] shrink-0 snap-start"
+              style={{ scrollSnapStop: 'always' }}
             >
-              {posts?.map((post) => (
-                <div key={post.id} className="min-w-[85vw] snap-start" style={{ scrollSnapStop: 'always' }}>
-                  <CardContent post={post} />
-                </div>
-              ))}
+              <CardContent post={post} />
             </div>
+          ))}
+          <div className="shrink-0 flex items-center pr-5 md:pr-8" style={{ minHeight: 280 }}>
+            <Link
+              to="/blog"
+              aria-label="View all stories"
+              className="flex flex-col items-center gap-2 group"
+            >
+              <span className="flex items-center justify-center w-14 h-14 rounded-full bg-hc-primary text-hc-bg group-hover:bg-hc-secondary transition-colors">
+                <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+              </span>
+              <span className="text-hc-primary text-xs font-bold uppercase tracking-wider font-body">
+                View More
+              </span>
+            </Link>
           </div>
-        </>
+        </div>
       )}
     </section>
   );
