@@ -477,6 +477,59 @@ const DynamicSelect: React.FC<{
 
 // ─── Amenity Selector ─────────────────────────────────────────────
 
+const PropertyTypeMultiSelect: React.FC<{
+  primary: string;
+  selected: string[];
+  onChange: (primary: string, slugs: string[]) => void;
+}> = ({ primary, selected, onChange }) => {
+  const [types, setTypes] = useState<any[]>([]);
+  useEffect(() => {
+    (supabase.from('property_types' as any) as any)
+      .select('slug, name')
+      .order('sort_order')
+      .then(({ data }: any) => { if (data) setTypes(data); });
+  }, []);
+
+  const toggle = (slug: string) => {
+    const isSel = selected.includes(slug);
+    let next = isSel ? selected.filter(s => s !== slug) : [...selected, slug];
+    let nextPrimary = primary;
+    if (isSel && primary === slug) nextPrimary = next[0] ?? '';
+    if (!isSel && !primary) nextPrimary = slug;
+    onChange(nextPrimary, next);
+  };
+
+  return (
+    <div className="md:col-span-2 flex flex-col gap-2">
+      <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">
+        Property Types * <span className="text-hc-text-light normal-case font-normal">(select one or more — first selected is primary)</span>
+      </label>
+      <div className="flex flex-wrap gap-2">
+        {types.map((t: any) => {
+          const isSel = selected.includes(t.slug);
+          const isPrimary = primary === t.slug;
+          return (
+            <button
+              key={t.slug}
+              type="button"
+              onClick={() => toggle(t.slug)}
+              className={`px-3 py-1.5 rounded-full text-xs font-body border transition-all ${
+                isSel
+                  ? isPrimary
+                    ? 'bg-hc-primary text-white border-hc-primary ring-2 ring-hc-primary/30'
+                    : 'bg-hc-primary/80 text-white border-hc-primary'
+                  : 'bg-white text-hc-text border-hc-text-light/30 hover:border-hc-primary'
+              }`}
+            >
+              {t.name}{isPrimary ? ' · primary' : ''}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const AmenitySelector: React.FC<{ selected: string[]; onChange: (ids: string[]) => void }> = ({ selected, onChange }) => {
   const [amenities, setAmenities] = useState<any[]>([]);
   const [newName, setNewName] = useState('');
