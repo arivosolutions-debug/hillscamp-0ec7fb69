@@ -29,6 +29,7 @@ import { PropertyReviews } from "@/components/property/PropertyReviews";
 import { ImageLightbox } from "@/components/property/ImageLightbox";
 import { MarkdownContent } from "@/components/shared/MarkdownContent";
 import { SeoHead } from "@/components/shared/SeoHead";
+import { ogImageUrl } from "@/lib/ogImage";
 
 const WHATSAPP_PHONE = "917510810961";
 
