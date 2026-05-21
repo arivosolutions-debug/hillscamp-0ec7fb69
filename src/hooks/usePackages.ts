@@ -48,7 +48,7 @@ export function usePackages(filters: PackageFilters = {}) {
       }
 
       if (filters.featured === true) {
-        query = query.eq('is_featured', true).limit(4);
+        query = query.eq('is_featured', true).limit(7);
       }
 
       const { data, error } = await query;

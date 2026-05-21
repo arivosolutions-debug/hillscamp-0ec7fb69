@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Users } from "lucide-react";
+import { ArrowRight, ArrowLeft, Users } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
 import { CardSlideshow } from "@/components/shared/CardSlideshow";
 
@@ -98,7 +98,7 @@ export const FeaturedRetreats: React.FC = () => {
 
   const cards =
     properties && properties.length > 0
-      ? properties.slice(0, 4).map((p) => ({
+      ? properties.slice(0, 7).map((p) => ({
           image: p.cover_image ?? "/placeholder.svg",
           images: [
             p.cover_image ?? undefined,
@@ -113,6 +113,14 @@ export const FeaturedRetreats: React.FC = () => {
           min_price: (p as any).min_price ?? null,
         }))
       : FALLBACK_CARDS;
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-carousel-card]");
+    const step = card ? card.offsetWidth + 32 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
 
   const CardContent = ({ card }: { card: (typeof cards)[0] }) => (
     <Link
@@ -171,24 +179,37 @@ export const FeaturedRetreats: React.FC = () => {
               From the heights of Wayanad to the tranquil backwaters, find your perfect escape.
             </p>
           </div>
-          <Link
-            to="/listings"
-            className="text-hc-secondary md:text-hc-primary font-bold flex items-center gap-2 hover:gap-3 transition-all group shrink-0 text-sm"
-          >
-            View More
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="hidden md:flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Previous"
+                onClick={() => scrollByCard(-1)}
+                className="w-10 h-10 rounded-full border border-hc-primary/20 text-hc-primary flex items-center justify-center hover:bg-hc-primary hover:text-hc-bg transition-colors"
+              >
+                <ArrowLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next"
+                onClick={() => scrollByCard(1)}
+                className="w-10 h-10 rounded-full border border-hc-primary/20 text-hc-primary flex items-center justify-center hover:bg-hc-primary hover:text-hc-bg transition-colors"
+              >
+                <ArrowRight size={16} />
+              </button>
+            </div>
+            <Link
+              to="/listings"
+              className="text-hc-secondary md:text-hc-primary font-bold flex items-center gap-2 hover:gap-3 transition-all group text-sm"
+            >
+              View More
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </div>
 
-        {/* Desktop Grid */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {cards.map((card) => (
-            <CardContent key={card.slug} card={card} />
-          ))}
-        </div>
-
-        {/* Mobile Carousel */}
-        <div className="md:hidden">
+        {/* Unified Carousel (mobile + desktop) */}
+        <div>
           <div
             ref={scrollRef}
             onScroll={handleScroll}
@@ -196,11 +217,16 @@ export const FeaturedRetreats: React.FC = () => {
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {cards.map((card) => (
-              <div key={card.slug} className="w-[80vw] shrink-0 snap-start" style={{ scrollSnapStop: "always" }}>
+              <div
+                key={card.slug}
+                data-carousel-card
+                className="w-[80vw] md:w-[calc((100%-3rem)/4)] shrink-0 snap-start"
+                style={{ scrollSnapStop: "always" }}
+              >
                 <CardContent card={card} />
               </div>
             ))}
-            <div className="shrink-0 flex items-center pr-5" style={{ height: 280 }}>
+            <div className="shrink-0 flex items-center pr-5 md:pr-0" style={{ height: 280 }}>
               <Link
                 to="/listings"
                 aria-label="View more retreats"

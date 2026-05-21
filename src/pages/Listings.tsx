@@ -12,11 +12,11 @@ import listingsHeroBg from '@/assets/listings-hero-bg.jpg';
 const PAGE_SIZE = 12;
 
 const Listings = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [location, setLocation] = useState<string>(searchParams.get('location') ?? searchParams.get('district') ?? '');
   const [propertyType, setPropertyType] = useState<PropertyType | ''>((searchParams.get('type') as PropertyType) ?? '');
   const [guests, setGuests] = useState<number>(Number(searchParams.get('guests')) || 2);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<number>(Math.max(0, Number(searchParams.get('page') ?? 0)));
   const [isSticky, setIsSticky] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const filterSentinelRef = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ const Listings = () => {
     setLocation(searchParams.get('location') ?? searchParams.get('district') ?? '');
     setPropertyType((searchParams.get('type') as PropertyType) ?? '');
     setGuests(Number(searchParams.get('guests')) || 2);
-    setPage(0);
+    setPage(Math.max(0, Number(searchParams.get('page') ?? 0)));
   }, [searchParams]);
 
   // Intersection observer for sticky filter bar
@@ -40,11 +40,52 @@ const Listings = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Persist page changes to URL so back navigation restores them
+  const updatePage = (newPage: number) => {
+    setPage(newPage);
+    const params = new URLSearchParams(searchParams);
+    if (newPage > 0) params.set('page', String(newPage));
+    else params.delete('page');
+    setSearchParams(params, { replace: true });
+  };
+
+  // Persist filter changes (clear page when filters change)
+  const updateFilter = (key: string, value: string) => {
+    sessionStorage.removeItem('listings-scroll');
+    const params = new URLSearchParams(searchParams);
+    if (value) params.set(key, value);
+    else params.delete(key);
+    params.delete('page');
+    setSearchParams(params, { replace: true });
+  };
+
+  // Save & restore scroll position across navigation (sessionStorage)
+  useEffect(() => {
+    const key = 'listings-scroll';
+    const save = () => sessionStorage.setItem(key, String(window.scrollY));
+    window.addEventListener('scroll', save, { passive: true });
+    return () => {
+      save();
+      window.removeEventListener('scroll', save);
+    };
+  }, []);
+
   const { data: properties, isLoading } = useProperties({
     location: location || undefined,
     property_type: propertyType || undefined,
     max_guests: guests > 1 ? guests : undefined,
   });
+
+  // Restore scroll after first data load
+  useEffect(() => {
+    if (isLoading) return;
+    const saved = sessionStorage.getItem('listings-scroll');
+    if (saved) {
+      const y = Number(saved);
+      requestAnimationFrame(() => window.scrollTo({ top: y }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   const totalPages = Math.ceil((properties?.length ?? 0) / PAGE_SIZE);
   const paged = properties?.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE) ?? [];
@@ -87,9 +128,9 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
                     location={location}
                     propertyType={propertyType}
                     guests={guests}
-                    onLocation={(v) => { setLocation(v); setPage(0); }}
-                    onPropertyType={(v) => { setPropertyType(v); setPage(0); }}
-                    onGuests={(v) => { setGuests(v); setPage(0); }}
+                    onLocation={(v) => { setLocation(v); updateFilter('location', v); }}
+                    onPropertyType={(v) => { setPropertyType(v); updateFilter('type', v); }}
+                    onGuests={(v) => { setGuests(v); updateFilter('guests', v > 1 ? String(v) : ''); }}
                     totalCount={properties?.length}
                   />
                 </div>
@@ -105,9 +146,9 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
                   location={location}
                   propertyType={propertyType}
                   guests={guests}
-                  onLocation={(v) => { setLocation(v); setPage(0); }}
-                  onPropertyType={(v) => { setPropertyType(v); setPage(0); }}
-                  onGuests={(v) => { setGuests(v); setPage(0); }}
+                  onLocation={(v) => { setLocation(v); updateFilter('location', v); }}
+                  onPropertyType={(v) => { setPropertyType(v); updateFilter('type', v); }}
+                  onGuests={(v) => { setGuests(v); updateFilter('guests', v > 1 ? String(v) : ''); }}
                   totalCount={properties?.length}
                   isSticky
                 />
@@ -135,7 +176,7 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i}
-                    onClick={() => { setPage(i); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { updatePage(i); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     className={`w-10 h-10 rounded-full text-sm font-medium transition-colors ${
                       page === i
                         ? 'bg-hc-primary text-white'

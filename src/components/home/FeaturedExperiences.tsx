@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Users } from "lucide-react";
+import { ArrowRight, ArrowLeft, Users } from "lucide-react";
 import { usePackages, type Package } from "@/hooks/usePackages";
 
 export const FeaturedExperiences: React.FC = () => {
@@ -9,7 +9,7 @@ export const FeaturedExperiences: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const cards = (packages ?? []).slice(0, 4);
+  const cards = (packages ?? []).slice(0, 7);
 
   useEffect(() => {
     const section = ref.current;
@@ -52,6 +52,14 @@ export const FeaturedExperiences: React.FC = () => {
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
     setScrollProgress(max > 0 ? el.scrollLeft / max : 0);
+  };
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-carousel-card]");
+    const step = card ? card.offsetWidth + 32 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
   if (cards.length === 0) return null;
@@ -136,24 +144,37 @@ export const FeaturedExperiences: React.FC = () => {
               Curated journeys through Kerala's wilderness — guided, immersive, unforgettable.
             </p>
           </div>
-          <Link
-            to="/experiences"
-            className="text-hc-secondary md:text-hc-primary font-bold flex items-center gap-2 hover:gap-3 transition-all group shrink-0 text-sm"
-          >
-            View More
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="hidden md:flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Previous"
+                onClick={() => scrollByCard(-1)}
+                className="w-10 h-10 rounded-full border border-hc-primary/20 text-hc-primary flex items-center justify-center hover:bg-hc-primary hover:text-hc-bg transition-colors"
+              >
+                <ArrowLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next"
+                onClick={() => scrollByCard(1)}
+                className="w-10 h-10 rounded-full border border-hc-primary/20 text-hc-primary flex items-center justify-center hover:bg-hc-primary hover:text-hc-bg transition-colors"
+              >
+                <ArrowRight size={16} />
+              </button>
+            </div>
+            <Link
+              to="/experiences"
+              className="text-hc-secondary md:text-hc-primary font-bold flex items-center gap-2 hover:gap-3 transition-all group text-sm"
+            >
+              View More
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </div>
 
-        {/* Desktop Grid */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {cards.map((card) => (
-            <CardContent key={card.slug} card={card} />
-          ))}
-        </div>
-
-        {/* Mobile Carousel */}
-        <div className="md:hidden">
+        {/* Unified Carousel (mobile + desktop) */}
+        <div>
           <div
             ref={scrollRef}
             onScroll={handleScroll}
@@ -161,11 +182,16 @@ export const FeaturedExperiences: React.FC = () => {
             style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {cards.map((card) => (
-              <div key={card.slug} className="w-[80vw] shrink-0 snap-start" style={{ scrollSnapStop: "always" }}>
+              <div
+                key={card.slug}
+                data-carousel-card
+                className="w-[80vw] md:w-[calc((100%-3rem)/4)] shrink-0 snap-start"
+                style={{ scrollSnapStop: "always" }}
+              >
                 <CardContent card={card} />
               </div>
             ))}
-            <div className="shrink-0 flex items-center pr-5" style={{ height: 280 }}>
+            <div className="shrink-0 flex items-center pr-5 md:pr-0" style={{ height: 280 }}>
               <Link
                 to="/experiences"
                 aria-label="View more experiences"
