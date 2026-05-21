@@ -38,7 +38,7 @@ export function usePackages(filters: PackageFilters = {}) {
     queryFn: async () => {
       let query = supabase
         .from('packages' as any)
-        .select('*')
+        .select('*, package_gallery(image_url, display_order)')
         .eq('is_published', true)
         .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false });
@@ -53,7 +53,18 @@ export function usePackages(filters: PackageFilters = {}) {
 
       const { data, error } = await query;
       if (error) throw error;
-      return data as unknown as Package[];
+      const rows = (data ?? []) as any[];
+      const merged = rows.map((r) => {
+        const gallery = ((r.package_gallery ?? []) as any[])
+          .slice()
+          .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+          .map((g) => g.image_url as string)
+          .filter(Boolean);
+        const heros = (r.hero_images ?? []) as string[];
+        const combined = Array.from(new Set([...(heros ?? []), ...gallery]));
+        return { ...r, hero_images: combined } as Package;
+      });
+      return merged as Package[];
     },
   });
 }
