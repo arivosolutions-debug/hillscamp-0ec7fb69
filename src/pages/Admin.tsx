@@ -1439,10 +1439,18 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
       ) : (
         <div className="flex flex-col gap-3">
           {properties.map((prop, i) => (
-            <div key={prop.id} className="bg-white border border-hc-text-light/15 rounded-2xl p-4 flex items-center gap-4">
-              <div className="flex flex-col gap-1 shrink-0">
-                <button onClick={() => move(i, -1)} disabled={i === 0} className="p-1 text-hc-text-light hover:text-hc-primary disabled:opacity-30"><ChevronUp size={16} /></button>
-                <button onClick={() => move(i, 1)} disabled={i === properties.length - 1} className="p-1 text-hc-text-light hover:text-hc-primary disabled:opacity-30"><ChevronDown size={16} /></button>
+            <div
+              key={prop.id}
+              draggable
+              onDragStart={() => setDragIdx(i)}
+              onDragOver={e => { e.preventDefault(); if (overIdx !== i) setOverIdx(i); }}
+              onDragLeave={() => { if (overIdx === i) setOverIdx(null); }}
+              onDrop={e => { e.preventDefault(); if (dragIdx !== null) reorder(dragIdx, i); setDragIdx(null); setOverIdx(null); }}
+              onDragEnd={() => { setDragIdx(null); setOverIdx(null); }}
+              className={`bg-white border rounded-2xl p-4 flex items-center gap-4 transition-all ${dragIdx === i ? 'opacity-50' : ''} ${overIdx === i && dragIdx !== i ? 'border-hc-primary border-2' : 'border-hc-text-light/15'}`}
+            >
+              <div className="shrink-0 cursor-grab active:cursor-grabbing text-hc-text-light hover:text-hc-primary" title="Drag to reorder">
+                <GripVertical size={18} />
               </div>
               {prop.cover_image && (
                 <img src={prop.cover_image} alt={prop.name} className="w-14 h-14 object-cover rounded-xl shrink-0"
