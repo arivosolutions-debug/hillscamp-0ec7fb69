@@ -6,12 +6,14 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { usePackages } from '@/hooks/usePackages';
 import { MapPin, ArrowRight, Users } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PriceFilterPopover, getBucketById } from '@/components/shared/PriceFilterPopover';
 import experiencesHeroBg from '@/assets/experiences-hero-bg.jpg';
 
 const PAGE_SIZE = 8;
 
 const Packages: React.FC = () => {
   const [region, setRegion] = useState('');
+  const [price, setPrice] = useState('');
   const [page, setPage] = useState(0);
   const [isSticky, setIsSticky] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -21,7 +23,7 @@ const Packages: React.FC = () => {
     region: region || undefined,
   });
 
-  useEffect(() => setPage(0), [region]);
+  useEffect(() => setPage(0), [region, price]);
 
   // Sticky observer
   useEffect(() => {
@@ -35,29 +37,41 @@ const Packages: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  const totalPages = Math.ceil((packages?.length ?? 0) / PAGE_SIZE);
-  const paged = packages?.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE) ?? [];
+  // Client-side price bucket filter
+  const priceBucket = getBucketById(price);
+  const filtered = (packages ?? []).filter((p) => {
+    if (!priceBucket) return true;
+    const v = p.price_inr != null ? Number(p.price_inr) : null;
+    if (v == null) return false;
+    if (v < priceBucket.min) return false;
+    if (priceBucket.max != null && v >= priceBucket.max) return false;
+    return true;
+  });
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   const filterBar = (
-    <div className={`bg-[#17341e]/80 backdrop-blur-xl rounded-2xl px-6 py-4 flex items-center justify-between gap-4 ${isSticky ? '' : ''}`}>
-      <div className="flex items-center gap-6">
-        <span className="text-[10px] font-body uppercase tracking-[0.2em] text-secondary-foreground">Locations</span>
-        <select
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-          className="bg-transparent text-white font-body text-sm border-none outline-none cursor-pointer appearance-none pr-4"
-          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right center' }}
-        >
-          <option value="" className="text-black">All Regions</option>
-          <option value="South India" className="text-black">South India</option>
-          <option value="North India" className="text-black">North India</option>
-        </select>
+    <div className={`bg-[#17341e]/80 backdrop-blur-xl rounded-2xl px-4 md:px-6 py-4 ${isSticky ? '' : ''}`}>
+      <div className="grid grid-cols-2 gap-3 md:gap-6 items-end">
+        <div>
+          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 font-body text-white">
+            Region
+          </label>
+          <div className="relative">
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              className="w-full appearance-none bg-white/15 text-xs md:text-sm rounded-full px-3 md:px-4 py-2 md:py-2.5 pr-8 border-none focus:ring-0 font-body cursor-pointer text-white"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}
+            >
+              <option value="" className="text-black">All Regions</option>
+              <option value="South India" className="text-black">South India</option>
+              <option value="North India" className="text-black">North India</option>
+            </select>
+          </div>
+        </div>
+        <PriceFilterPopover value={price} onChange={setPrice} variant="dark" label="Price" />
       </div>
-      {!isLoading && packages && (
-        <span className="text-xs font-body text-secondary-foreground">
-          Showing {packages.length} {packages.length === 1 ? 'package' : 'packages'}
-        </span>
-      )}
     </div>
   );
 
@@ -111,9 +125,9 @@ const Packages: React.FC = () => {
           )}
 
           {/* Showing count */}
-          {!isLoading && packages && (
+          {!isLoading && (
             <p className="text-center font-headline italic text-sm text-hc-secondary underline mt-4 mb-6 text-primary">
-              Showing {packages.length} {packages.length === 1 ? 'experience' : 'experiences'}
+              Showing {filtered.length} {filtered.length === 1 ? 'experience' : 'experiences'}
             </p>
           )}
 
