@@ -20,7 +20,7 @@ export const SimilarStays: React.FC<SimilarStaysProps> = ({ currentSlug, distric
         .eq('is_published', true)
         .neq('slug', currentSlug)
         .or(`district.eq.${district},property_type.eq.${propertyType}`)
-        .limit(4);
+        .limit(6);
       return data ?? [];
     },
   });
