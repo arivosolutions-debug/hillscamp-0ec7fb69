@@ -1333,6 +1333,8 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'list' | 'add' | 'edit'>('list');
   const [editing, setEditing] = useState<PropertyForm | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [overIdx, setOverIdx] = useState<number | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -1399,14 +1401,17 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
     load();
   };
 
-  const move = async (i: number, dir: -1 | 1) => {
-    const j = i + dir;
-    if (j < 0 || j >= properties.length) return;
-    const a = properties[i], b = properties[j];
-    await Promise.all([
-      supabase.from('properties').update({ sort_order: b.sort_order }).eq('id', a.id),
-      supabase.from('properties').update({ sort_order: a.sort_order }).eq('id', b.id),
-    ]);
+  const reorder = async (from: number, to: number) => {
+    if (from === to || from < 0 || to < 0 || from >= properties.length || to >= properties.length) return;
+    const next = [...properties];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setProperties(next);
+    await Promise.all(
+      next.map((p, idx) =>
+        supabase.from('properties').update({ sort_order: idx }).eq('id', p.id)
+      )
+    );
     load();
   };
 
