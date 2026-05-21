@@ -19,10 +19,15 @@ const linkCls = 'text-[rgba(167,243,208,0.6)] hover:text-emerald-100 transition-
 
 export const Footer: React.FC = () => {
   const { data: locations } = useLocations();
-  const locationLinks = (locations ?? []).slice(0, 4).map(l => ({
-    label: l.name,
-    to: `/listings?district=${encodeURIComponent(l.name.toLowerCase().replace(/\s+/g, '-'))}`,
-  }));
+  const locationLinks = (locations ?? [])
+    .filter(l => l.show_in_footer)
+    .slice(0, 4)
+    .map(l => ({
+      label: l.name,
+      // Pass the raw name so Listings' free-text location filter matches
+      // against properties' location/district/tags/highlights fields.
+      to: `/listings?location=${encodeURIComponent(l.name)}`,
+    }));
 
   return (
     <footer className="relative z-10 bg-[#022c22] rounded-tl-[32px] rounded-tr-[32px]">
