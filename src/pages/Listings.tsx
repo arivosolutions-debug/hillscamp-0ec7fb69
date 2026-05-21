@@ -51,6 +51,7 @@ const Listings = () => {
 
   // Persist filter changes (clear page when filters change)
   const updateFilter = (key: string, value: string) => {
+    sessionStorage.removeItem('listings-scroll');
     const params = new URLSearchParams(searchParams);
     if (value) params.set(key, value);
     else params.delete(key);
