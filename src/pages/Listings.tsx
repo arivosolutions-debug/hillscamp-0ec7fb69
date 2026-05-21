@@ -7,6 +7,7 @@ import { FilterBar } from '@/components/listings/FilterBar';
 import { PropertyGrid } from '@/components/listings/PropertyGrid';
 import { useProperties } from '@/hooks/useProperties';
 import type { PropertyType } from '@/lib/types';
+import { getBucketById } from '@/components/shared/PriceFilterPopover';
 import listingsHeroBg from '@/assets/listings-hero-bg.jpg';
 
 const PAGE_SIZE = 12;
@@ -16,6 +17,7 @@ const Listings = () => {
   const [location, setLocation] = useState<string>(searchParams.get('location') ?? searchParams.get('district') ?? '');
   const [propertyType, setPropertyType] = useState<PropertyType | ''>((searchParams.get('type') as PropertyType) ?? '');
   const [guests, setGuests] = useState<number>(Number(searchParams.get('guests')) || 2);
+  const [price, setPrice] = useState<string>(searchParams.get('price') ?? '');
   const [page, setPage] = useState<number>(Math.max(0, Number(searchParams.get('page') ?? 0)));
   const [isSticky, setIsSticky] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -25,6 +27,7 @@ const Listings = () => {
     setLocation(searchParams.get('location') ?? searchParams.get('district') ?? '');
     setPropertyType((searchParams.get('type') as PropertyType) ?? '');
     setGuests(Number(searchParams.get('guests')) || 2);
+    setPrice(searchParams.get('price') ?? '');
     setPage(Math.max(0, Number(searchParams.get('page') ?? 0)));
   }, [searchParams]);
 
@@ -87,8 +90,18 @@ const Listings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const totalPages = Math.ceil((properties?.length ?? 0) / PAGE_SIZE);
-  const paged = properties?.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE) ?? [];
+  // Apply client-side price filter using min_price (computed in useProperties)
+  const priceBucket = getBucketById(price);
+  const filtered = (properties ?? []).filter((p) => {
+    if (!priceBucket) return true;
+    const v = p.min_price;
+    if (v == null) return false;
+    if (v < priceBucket.min) return false;
+    if (priceBucket.max != null && v >= priceBucket.max) return false;
+    return true;
+  });
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   return (
     <>
@@ -128,10 +141,12 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
                     location={location}
                     propertyType={propertyType}
                     guests={guests}
+                    price={price}
                     onLocation={(v) => { setLocation(v); updateFilter('location', v); }}
                     onPropertyType={(v) => { setPropertyType(v); updateFilter('type', v); }}
                     onGuests={(v) => { setGuests(v); updateFilter('guests', v > 1 ? String(v) : ''); }}
-                    totalCount={properties?.length}
+                    onPrice={(v) => { setPrice(v); updateFilter('price', v); }}
+                    totalCount={filtered.length}
                   />
                 </div>
               </div>
@@ -146,10 +161,12 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
                   location={location}
                   propertyType={propertyType}
                   guests={guests}
+                  price={price}
                   onLocation={(v) => { setLocation(v); updateFilter('location', v); }}
                   onPropertyType={(v) => { setPropertyType(v); updateFilter('type', v); }}
                   onGuests={(v) => { setGuests(v); updateFilter('guests', v > 1 ? String(v) : ''); }}
-                  totalCount={properties?.length}
+                  onPrice={(v) => { setPrice(v); updateFilter('price', v); }}
+                  totalCount={filtered.length}
                   isSticky
                 />
               </div>
@@ -160,9 +177,9 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
           
 
           {/* Showing count */}
-          {!isLoading && properties && (
+          {!isLoading && (
             <p className="text-center font-headline italic text-sm text-hc-secondary underline mt-4 mb-6 text-primary">
-              Showing {properties.length} {properties.length === 1 ? 'property' : 'properties'}
+              Showing {filtered.length} {filtered.length === 1 ? 'property' : 'properties'}
             </p>
           )}
 
