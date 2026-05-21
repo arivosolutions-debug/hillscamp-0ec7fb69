@@ -109,7 +109,7 @@ const Listings = () => {
       <PageTransition>
         <main className="min-h-screen bg-hc-bg">
           {/* Hero Section */}
-          <section ref={heroRef} className="relative h-[calc(58vh+80px)] min-h-[480px] md:h-[calc(50vh+80px)] md:min-h-0 overflow-hidden rounded-b-[32px]">
+          <section ref={heroRef} className="relative h-auto md:h-[calc(50vh+80px)] md:min-h-0 overflow-hidden rounded-b-[32px]">
             <img
               src={listingsHeroBg}
               alt="Misty Kerala mountains"
@@ -120,7 +120,7 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
             />
 
             {/* Hero Content */}
-            <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-8 max-w-[1280px] mx-auto pb-[200px] md:pb-24 pt-[55px]">
+            <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-8 max-w-[1280px] mx-auto pb-6 md:pb-24 pt-[120px] md:pt-[55px]">
               <h1 className="font-headline text-3xl md:text-7xl leading-none mb-2 font-bold text-primary">
                 Discover<br />
                 <span className="italic font-normal">Your Escape</span>
@@ -128,14 +128,31 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
               <p className="text-sm md:text-base text-white/70 mt-2 font-body font-semibold">
                 A curated stays made just for you!
               </p>
+
+              {/* Mobile filter bar — sits 5px under subtitle */}
+              {!isSticky && (
+                <div className="md:hidden mt-[5px] -mx-1">
+                  <FilterBar
+                    location={location}
+                    propertyType={propertyType}
+                    guests={guests}
+                    price={price}
+                    onLocation={(v) => { setLocation(v); updateFilter('location', v); }}
+                    onPropertyType={(v) => { setPropertyType(v); updateFilter('type', v); }}
+                    onGuests={(v) => { setGuests(v); updateFilter('guests', v > 1 ? String(v) : ''); }}
+                    onPrice={(v) => { setPrice(v); updateFilter('price', v); }}
+                    totalCount={filtered.length}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Filter bar sentinel — marks where filter bar originally sits */}
             <div ref={filterSentinelRef} className="absolute bottom-0 left-0 right-0 h-1" />
 
-            {/* Filter bar inside hero, overlapping bottom */}
+            {/* Desktop filter bar inside hero, overlapping bottom */}
             {!isSticky && (
-              <div className="absolute bottom-5 md:bottom-[70px] left-0 right-0 md:translate-y-1/2 z-30 px-5 md:px-8">
+              <div className="hidden md:block absolute bottom-[70px] left-0 right-0 translate-y-1/2 z-30 px-8">
                 <div className="max-w-[1280px] mx-auto opacity-80">
                   <FilterBar
                     location={location}
