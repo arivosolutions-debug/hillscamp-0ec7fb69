@@ -3,14 +3,17 @@ import { Minus, Plus, ChevronDown } from 'lucide-react';
 import type { PropertyType } from '@/lib/types';
 import { usePropertyTypes } from '@/hooks/usePropertyTypes';
 import { useLocations } from '@/hooks/useLocations';
+import { PriceFilterPopover } from '@/components/shared/PriceFilterPopover';
 
 interface FilterBarProps {
   location: string;
   propertyType: PropertyType | '';
   guests: number;
+  price: string;
   onLocation: (v: string) => void;
   onPropertyType: (v: PropertyType | '') => void;
   onGuests: (v: number) => void;
+  onPrice: (v: string) => void;
   totalCount?: number;
   isSticky?: boolean;
 }
@@ -18,8 +21,8 @@ interface FilterBarProps {
 // Property types and locations are loaded dynamically from admin tables.
 
 export const FilterBar: React.FC<FilterBarProps> = ({
-  location, propertyType, guests,
-  onLocation, onPropertyType, onGuests,
+  location, propertyType, guests, price,
+  onLocation, onPropertyType, onGuests, onPrice,
   isSticky = false,
 }) => {
   const { data: typeOptions = [] } = usePropertyTypes();
@@ -32,7 +35,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           : 'bg-[#17341e]'
       }`}
     >
-      <div className="grid grid-cols-3 gap-2 md:gap-4 p-4 md:p-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 p-4 md:p-6">
         {/* LOCATIONS */}
         <div>
           <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 font-body text-white">
@@ -98,6 +101,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
           </div>
         </div>
+
+        {/* PRICE */}
+        <PriceFilterPopover value={price} onChange={onPrice} variant="dark" label="Price" />
       </div>
     </div>
   );
