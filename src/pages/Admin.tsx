@@ -1493,6 +1493,8 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'list' | 'add' | 'edit'>('list');
   const [editing, setEditing] = useState<PackageForm | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [overIdx, setOverIdx] = useState<number | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -1552,14 +1554,17 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
     load();
   };
 
-  const move = async (i: number, dir: -1 | 1) => {
-    const j = i + dir;
-    if (j < 0 || j >= packages.length) return;
-    const a = packages[i], b = packages[j];
-    await Promise.all([
-      (supabase.from('packages' as any) as any).update({ sort_order: b.sort_order }).eq('id', a.id),
-      (supabase.from('packages' as any) as any).update({ sort_order: a.sort_order }).eq('id', b.id),
-    ]);
+  const reorder = async (from: number, to: number) => {
+    if (from === to || from < 0 || to < 0 || from >= packages.length || to >= packages.length) return;
+    const next = [...packages];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    setPackages(next);
+    await Promise.all(
+      next.map((p, idx) =>
+        (supabase.from('packages' as any) as any).update({ sort_order: idx }).eq('id', p.id)
+      )
+    );
     load();
   };
 
@@ -1587,10 +1592,18 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
       ) : (
         <div className="flex flex-col gap-3">
           {packages.map((pkg, i) => (
-            <div key={pkg.id} className="bg-white border border-hc-text-light/15 rounded-2xl p-4 flex items-center gap-4">
-              <div className="flex flex-col gap-1 shrink-0">
-                <button onClick={() => move(i, -1)} disabled={i === 0} className="p-1 text-hc-text-light hover:text-hc-primary disabled:opacity-30"><ChevronUp size={16} /></button>
-                <button onClick={() => move(i, 1)} disabled={i === packages.length - 1} className="p-1 text-hc-text-light hover:text-hc-primary disabled:opacity-30"><ChevronDown size={16} /></button>
+            <div
+              key={pkg.id}
+              draggable
+              onDragStart={() => setDragIdx(i)}
+              onDragOver={e => { e.preventDefault(); if (overIdx !== i) setOverIdx(i); }}
+              onDragLeave={() => { if (overIdx === i) setOverIdx(null); }}
+              onDrop={e => { e.preventDefault(); if (dragIdx !== null) reorder(dragIdx, i); setDragIdx(null); setOverIdx(null); }}
+              onDragEnd={() => { setDragIdx(null); setOverIdx(null); }}
+              className={`bg-white border rounded-2xl p-4 flex items-center gap-4 transition-all ${dragIdx === i ? 'opacity-50' : ''} ${overIdx === i && dragIdx !== i ? 'border-hc-primary border-2' : 'border-hc-text-light/15'}`}
+            >
+              <div className="shrink-0 cursor-grab active:cursor-grabbing text-hc-text-light hover:text-hc-primary" title="Drag to reorder">
+                <GripVertical size={18} />
               </div>
               {pkg.hero_images?.[0] && (
                 <img src={pkg.hero_images[0]} alt={pkg.name} className="w-14 h-14 object-cover rounded-xl shrink-0"
