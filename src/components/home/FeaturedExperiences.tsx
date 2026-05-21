@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowLeft, Users } from "lucide-react";
 import { usePackages, type Package } from "@/hooks/usePackages";
+import { CardSlideshow } from "@/components/shared/CardSlideshow";
 
 export const FeaturedExperiences: React.FC = () => {
   const { data: packages } = usePackages({ featured: true });
@@ -65,6 +66,8 @@ export const FeaturedExperiences: React.FC = () => {
   if (cards.length === 0) return null;
 
   const CardContent = ({ card }: { card: Package }) => {
+    const slideshowImages = (card.hero_images ?? []).filter(Boolean);
+    const finalImages = slideshowImages.length > 0 ? slideshowImages : ["/placeholder.svg"];
     const participants =
       card.min_participants != null && card.max_participants != null
         ? `${card.min_participants} to ${card.max_participants}`
@@ -78,14 +81,10 @@ export const FeaturedExperiences: React.FC = () => {
       to={`/packages/${card.slug}`}
       className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group block flex flex-col"
     >
-      <div className="relative overflow-hidden rounded-2xl">
-        <img
-          src={card.hero_images?.[0] ?? "/placeholder.svg"}
-          alt={card.name}
-          className="w-full h-[280px] md:h-[280px] aspect-[4/3] md:aspect-auto object-cover transition-transform duration-700 group-hover:scale-105 brightness-90 group-hover:brightness-100"
-        />
+      <div className="relative overflow-hidden rounded-2xl h-[280px]">
+        <CardSlideshow images={finalImages} alt={card.name} autoplay={false} showDots={false} />
         {card.duration_days != null && (
-          <span className="absolute top-3 left-4 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-xs font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
+          <span className="absolute top-3 left-4 z-20 bg-hc-bg/90 backdrop-blur-sm text-hc-primary text-xs font-bold uppercase tracking-tight px-3 py-1 rounded-full font-body">
             {card.duration_days}D / {card.duration_nights}N
           </span>
         )}

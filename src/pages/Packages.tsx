@@ -7,6 +7,7 @@ import { usePackages } from '@/hooks/usePackages';
 import { MapPin, ArrowRight, Users } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PriceFilterPopover, getBucketById } from '@/components/shared/PriceFilterPopover';
+import { CardSlideshow } from '@/components/shared/CardSlideshow';
 import experiencesHeroBg from '@/assets/experiences-hero-bg.jpg';
 
 const PAGE_SIZE = 8;
@@ -199,7 +200,8 @@ interface PackageCardProps {
 }
 
 const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
-  const image = pkg.hero_images?.[0] ?? '/placeholder.svg';
+  const images = (pkg.hero_images ?? []).filter(Boolean);
+  const finalImages = images.length > 0 ? images : ['/placeholder.svg'];
   const participants =
     pkg.min_participants != null && pkg.max_participants != null
       ? `${pkg.min_participants} to ${pkg.max_participants}`
@@ -215,13 +217,8 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
       className="group block overflow-hidden"
     >
       {/* Image */}
-      <div className="aspect-[4/3] rounded-t-2xl overflow-hidden">
-        <img
-          src={image}
-          alt={pkg.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
+      <div className="relative aspect-[4/3] rounded-t-2xl overflow-hidden">
+        <CardSlideshow images={finalImages} alt={pkg.name} autoplay={false} showDots={false} />
       </div>
 
       {/* Card body with light background and rounded bottom */}
