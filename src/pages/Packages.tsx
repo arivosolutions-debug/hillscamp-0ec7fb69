@@ -70,7 +70,7 @@ const Packages: React.FC = () => {
             </select>
           </div>
         </div>
-        <PriceFilterPopover value={price} onChange={setPrice} variant="dark" label="\u00A0 PRICE" />
+        <PriceFilterPopover value={price} onChange={setPrice} variant="dark" label="Price" />
       </div>
     </div>
   );

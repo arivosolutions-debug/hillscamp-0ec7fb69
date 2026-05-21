@@ -34,7 +34,7 @@ export const PriceFilterPopover: React.FC<PriceFilterPopoverProps> = ({
   onChange,
   variant = 'dark',
   className = '',
-  label = '\u00A0 PRICE',
+  label = 'Price',
 }) => {
   const active = getBucketById(value);
   const display = active ? active.label : 'Any Price';

@@ -103,7 +103,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         </div>
 
         {/* PRICE */}
-        <PriceFilterPopover value={price} onChange={onPrice} variant="dark" label="\u00A0 PRICE" />
+        <PriceFilterPopover value={price} onChange={onPrice} variant="dark" label="Price" />
       </div>
     </div>
   );
