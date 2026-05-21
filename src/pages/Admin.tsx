@@ -2077,8 +2077,8 @@ const CollectionEditor: React.FC = () => {
 // ─── Settings Tab ─────────────────────────────────────────────────
 
 const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') => void }> = ({ onToast }) => {
-  const LookupManager: React.FC<{ title: string; table: string; nameField?: string; extraField?: string; extraLabel?: string }> = ({
-    title, table, nameField = 'name', extraField, extraLabel
+  const LookupManager: React.FC<{ title: string; table: string; nameField?: string; extraField?: string; extraLabel?: string; footerToggle?: boolean; footerLimit?: number }> = ({
+    title, table, nameField = 'name', extraField, extraLabel, footerToggle = false, footerLimit = 4
   }) => {
     const [items, setItems] = useState<any[]>([]);
     const [newName, setNewName] = useState('');
@@ -2119,9 +2119,28 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
       load();
     };
 
+    const footerCount = items.filter((it) => it.show_in_footer).length;
+    const toggleFooter = async (item: any) => {
+      const next = !item.show_in_footer;
+      if (next && footerCount >= footerLimit) {
+        onToast(`You can select up to ${footerLimit} footer locations.`, 'error');
+        return;
+      }
+      const { error } = await (supabase.from(table as any) as any)
+        .update({ show_in_footer: next })
+        .eq('id', item.id);
+      if (error) { onToast(error.message, 'error'); return; }
+      load();
+    };
+
     return (
       <div className="bg-white border border-hc-text-light/15 rounded-2xl p-5">
         <h3 className="font-headline text-hc-primary text-base mb-4">{title}</h3>
+        {footerToggle && (
+          <p className="text-xs font-body text-hc-text-light mb-3">
+            Tick up to {footerLimit} locations to feature in the site footer ({footerCount}/{footerLimit} selected).
+          </p>
+        )}
         <div className="flex gap-2 mb-4">
           <input value={newName} onChange={e => setNewName(e.target.value)} placeholder={`Add new ${title.toLowerCase()}`}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
@@ -2142,6 +2161,17 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
               <span className="flex-1 text-sm font-body text-hc-text">{item[nameField]}</span>
               {extraField && item[extraField] && <span className="text-xs font-body text-hc-text-light">{item[extraField]}</span>}
               {'slug' in item && <span className="text-xs text-hc-text-light/60 font-body">/{item.slug}</span>}
+              {footerToggle && (
+                <label className="flex items-center gap-1.5 text-xs font-body text-hc-text-light cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!item.show_in_footer}
+                    onChange={() => toggleFooter(item)}
+                    className="accent-hc-primary"
+                  />
+                  Footer
+                </label>
+              )}
               <button onClick={() => del(item.id)} className="text-hc-text-light hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
             </div>
           ))}
@@ -2157,7 +2187,7 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
         <p className="text-sm text-hc-text-light font-body">Manage dropdown options used across properties and packages</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <LookupManager title="Locations" table="locations" />
+        <LookupManager title="Locations" table="locations" footerToggle footerLimit={4} />
         <LookupManager title="LOCATIONS" table="districts" />
         <CollectionEditor />
         <LookupManager title="Regions" table="regions" />
