@@ -35,7 +35,7 @@ export function useProperties(filters: PropertyFilters = {}) {
       if (filters.district) query = query.eq('district', filters.district);
       if (allowedIds) query = query.in('id', allowedIds);
       if (filters.max_guests) query = query.gte('max_guests', filters.max_guests);
-      if (filters.featured) query = query.eq('is_featured', true).limit(4);
+      if (filters.featured) query = query.eq('is_featured', true).limit(7);
 
       const { data, error } = await query;
       if (error) throw error;
