@@ -1,0 +1,1 @@
+ALTER TABLE public.locations ADD COLUMN IF NOT EXISTS show_in_footer boolean NOT NULL DEFAULT false;

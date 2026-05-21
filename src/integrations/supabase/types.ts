@@ -174,18 +174,21 @@ export type Database = {
           created_at: string | null
           id: string
           name: string
+          show_in_footer: boolean
           sort_order: number | null
         }
         Insert: {
           created_at?: string | null
           id?: string
           name: string
+          show_in_footer?: boolean
           sort_order?: number | null
         }
         Update: {
           created_at?: string | null
           id?: string
           name?: string
+          show_in_footer?: boolean
           sort_order?: number | null
         }
         Relationships: []
