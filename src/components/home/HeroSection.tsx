@@ -96,6 +96,12 @@ export const HeroSection: React.FC = () => {
         <img
           src={heroBg}
           alt="Luxury balcony overlooking misty Kerala mountains"
+          width={1920}
+          height={1080}
+          loading="eager"
+          decoding="async"
+          // @ts-ignore - fetchpriority valid HTML attr
+          fetchpriority="high"
           className="w-full h-full object-cover animate-kenburns origin-center" />
         <div className="absolute inset-0 bg-black/30" />
         <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-hc-bg" />
