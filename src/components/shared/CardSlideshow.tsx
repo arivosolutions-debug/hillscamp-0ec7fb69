@@ -79,6 +79,8 @@ export const CardSlideshow: React.FC<CardSlideshowProps> = ({
           src={src}
           alt={`${alt} — ${i + 1}`}
           loading={i === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={i === 0 ? 'high' : 'low'}
           draggable={false}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[600ms] ease-in-out ${imgClassName}`}
           style={{ opacity: i === current ? 1 : 0 }}
