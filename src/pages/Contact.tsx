@@ -8,6 +8,33 @@ import { useProperties } from '@/hooks/useProperties';
 import { toast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { z } from 'zod';
+import { SeoHead } from '@/components/shared/SeoHead';
+
+const CONTACT_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Hills Camp Kerala',
+  url: 'https://hillscamp.com/contact',
+  email: 'hillscampbypovaam@gmail.com',
+  telephone: '+91-7510810961',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'O.NO 87/2C, 7th Main Road, Tavrekere',
+    addressLocality: 'Bangalore',
+    postalCode: '560029',
+    addressRegion: 'Karnataka',
+    addressCountry: 'IN',
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '09:00',
+      closes: '19:00',
+    },
+  ],
+  areaServed: 'Kerala, India',
+};
 
 const enquirySchema = z.object({
   name:        z.string().trim().min(1, 'Name is required').max(100),
@@ -80,6 +107,12 @@ const Contact = () => {
 
   return (
     <>
+      <SeoHead
+        title="Contact Hills Camp — Plan Your Kerala Retreat"
+        description="Reach the Hills Camp team to plan a curated Kerala staycation. WhatsApp, email, and enquiry form — replies within 24 hours."
+        url="https://hillscamp.com/contact"
+        jsonLd={CONTACT_JSONLD}
+      />
       <Navbar />
       <PageTransition>
         <main className="min-h-screen bg-hc-bg font-body antialiased">
