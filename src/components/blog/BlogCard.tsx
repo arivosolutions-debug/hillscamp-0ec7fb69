@@ -73,8 +73,9 @@ export const FeaturedPost: React.FC<FeaturedPostProps> = ({ post }) => (
       <Link
         to={`/blog/${post.slug}`}
         className="text-hc-primary font-bold flex items-center gap-2 hover:gap-3 transition-all font-body text-sm"
+        aria-label={`Read the full story: ${post.title}`}
       >
-        Read More <ArrowRight size={16} />
+        Read the full story <ArrowRight size={16} />
       </Link>
     </div>
   </div>

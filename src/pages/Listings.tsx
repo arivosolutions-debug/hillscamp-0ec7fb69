@@ -196,8 +196,8 @@ className="absolute inset-0 w-full h-full object-cover scale-[1.15]"
             </div>
           )}
 
-          {/* Spacer for filter bar overlap */}
-          
+          {/* Section heading for accessibility */}
+          <h2 className="sr-only">Available Properties</h2>
 
           {/* Showing count */}
           {!isLoading && (

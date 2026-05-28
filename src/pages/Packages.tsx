@@ -130,6 +130,8 @@ const Packages: React.FC = () => {
               </div>
             </div>
           )}
+          {/* Section heading for accessibility */}
+          <h2 className="sr-only">Available Experiences</h2>
 
           {/* Showing count */}
           {!isLoading && (
