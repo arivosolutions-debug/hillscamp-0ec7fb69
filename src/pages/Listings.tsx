@@ -6,6 +6,7 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { FilterBar } from '@/components/listings/FilterBar';
 import { PropertyGrid } from '@/components/listings/PropertyGrid';
 import { useProperties } from '@/hooks/useProperties';
+import { SeoHead } from '@/components/shared/SeoHead';
 import type { PropertyType } from '@/lib/types';
 import { getBucketById } from '@/components/shared/PriceFilterPopover';
 import listingsHeroBg from '@/assets/listings-hero-bg.jpg';
@@ -105,6 +106,11 @@ const Listings = () => {
 
   return (
     <>
+      <SeoHead
+        title="Luxury Stays & Retreats in Kerala"
+        description="Discover handpicked luxury stays and wilderness retreats in Kerala's Western Ghats. From glamping to heritage estates."
+        url="https://hillscamp.com/listings"
+      />
       <Navbar />
       <PageTransition>
         <main className="min-h-screen bg-hc-bg">
