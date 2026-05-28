@@ -189,7 +189,6 @@ const Contact = () => {
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-7" noValidate>
-                  <form onSubmit={handleSubmit} className="space-y-7" noValidate>
 
                     {/* Name + Email */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -235,19 +234,6 @@ const Contact = () => {
                       <label htmlFor="contact-message" className={labelCls}>Your Message <span className="text-red-400 normal-case tracking-normal">*</span></label>
                       <textarea
                         id="contact-message"
-                        rows={5}
-                        value={form.message}
-                        onChange={set('message')}
-                        placeholder="Tell us about your ideal retreat — number of guests, special requirements, or anything on your mind..."
-                        className={`${inputCls('message')} resize-none`}
-                      />
-                      {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
-                    </div>
-
-                    {/* Message */}
-                    <div>
-                      <label className={labelCls}>Your Message <span className="text-red-400 normal-case tracking-normal">*</span></label>
-                      <textarea
                         rows={5}
                         value={form.message}
                         onChange={set('message')}
