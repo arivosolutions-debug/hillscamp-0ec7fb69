@@ -1,0 +1,30 @@
+# Hills Camp Kerala
+
+> Curated luxury staycations and wilderness retreats across Kerala's Western Ghats — Wayanad, Munnar, Vagamon, and the backwaters.
+
+Hills Camp is a boutique travel platform that handpicks heritage stays, glamping retreats, treehouses, and homestays in Kerala. We also curate guided treks and experiences across South India.
+
+## Pages
+
+- [Home](/): Overview of featured retreats and experiences.
+- [About](/about): Our story, philosophy, and team.
+- [Contact](/contact): Reach the team via WhatsApp, email, or enquiry form.
+
+## Stays
+
+- [All Stays](/listings): Browse every handpicked property.
+- [Wayanad Resorts](/wayanad-resorts): Luxury resorts and retreats in Wayanad.
+- [Munnar Homestays](/munnar-homestays): Boutique homestays in Munnar's tea country.
+
+## Experiences
+
+- [Experiences & Treks](/experiences): Curated treks, safaris, and adventures.
+
+## Journal
+
+- [Blog](/blog): Stories, travel guides, and field notes from Kerala.
+
+## Optional
+
+- [Sitemap](/sitemap.xml): Full list of indexed URLs.
+- [Robots](/robots.txt): Crawler directives.
