@@ -8,6 +8,7 @@
  *   node compress-images.mjs              → dry run (shows what would happen, no changes)
  *   node compress-images.mjs --run        → actually compresses and re-uploads
  *   node compress-images.mjs --run --bucket property-images  → single bucket only
+ *   node compress-images.mjs --run --strip-only  → strip metadata only, keep dimensions & quality
  * 
  * Requirements:
  *   npm install @supabase/supabase-js sharp
@@ -50,6 +51,7 @@ const BACKUP_DIR = './image-backup-originals';
 
 const args        = process.argv.slice(2);
 const DRY_RUN     = !args.includes('--run');
+const STRIP_ONLY  = args.includes('--strip-only');
 const bucketArg   = args.includes('--bucket') ? args[args.indexOf('--bucket') + 1] : null;
 const bucketsToRun = bucketArg ? [bucketArg] : BUCKETS;
 
@@ -95,7 +97,9 @@ async function main() {
   console.log('╚══════════════════════════════════════════════════╝');
   console.log(DRY_RUN
     ? '\n🔍  DRY RUN — no files will be changed. Add --run to apply.\n'
-    : '\n🚀  LIVE RUN — images will be compressed and re-uploaded.\n');
+    : STRIP_ONLY
+      ? '\n🚀  LIVE RUN (STRIP-ONLY) — metadata stripped, dimensions & quality preserved.\n'
+      : '\n🚀  LIVE RUN — images will be compressed and re-uploaded.\n');
 
   let totalFiles       = 0;
   let totalSkipped     = 0;
@@ -185,10 +189,13 @@ async function main() {
 
         if (DRY_RUN) {
           // Estimate compression without actually re-uploading
-          const compressed = await sharp(originalBuffer)
-            .resize({ width: settings.maxWidth, withoutEnlargement: true })
-            .jpeg({ quality: settings.quality, progressive: true, mozjpeg: true })
-            .toBuffer();
+          const pipeline = sharp(originalBuffer).rotate();
+          const compressed = STRIP_ONLY
+            ? await pipeline.withMetadata({ exif: {}, icc: undefined }).toBuffer()
+            : await pipeline
+                .resize({ width: settings.maxWidth, withoutEnlargement: true })
+                .jpeg({ quality: settings.quality, progressive: true, mozjpeg: true })
+                .toBuffer();
 
           const saving = formatPct(originalSize, compressed.length);
           totalBytesAfter += compressed.length;
@@ -203,7 +210,17 @@ async function main() {
           let compressedBuffer;
           let contentType;
 
-          if (isPng) {
+          if (STRIP_ONLY) {
+            // Preserve format, dimensions, and quality — only strip metadata (EXIF/ICC/XMP)
+            compressedBuffer = await sharp(originalBuffer)
+              .rotate()
+              .withMetadata({ exif: {}, icc: undefined })
+              .toBuffer();
+            contentType = isPng ? 'image/png'
+              : /\.webp$/i.test(file.fullPath) ? 'image/webp'
+              : /\.gif$/i.test(file.fullPath)  ? 'image/gif'
+              : 'image/jpeg';
+          } else if (isPng) {
             compressedBuffer = await sharp(originalBuffer)
               .resize({ width: settings.maxWidth, withoutEnlargement: true })
               .png({ compressionLevel: 9, palette: true })
