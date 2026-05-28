@@ -8,6 +8,8 @@ import { WhatsAppWidget } from "@/components/property/WhatsAppWidget";
 import Index from "./pages/Index";
 import Listings from "./pages/Listings";
 import PropertyDetail from "./pages/PropertyDetail";
+import WayanadResorts from "./pages/WayanadResorts";
+import MunnarHomestays from "./pages/MunnarHomestays";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Experiences from "./pages/Packages";
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/property/:slug" element={<PropertyDetail />} />
+          <Route path="/wayanad-resorts" element={<WayanadResorts />} />
+          <Route path="/munnar-homestays" element={<MunnarHomestays />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/experiences" element={<Experiences />} />
