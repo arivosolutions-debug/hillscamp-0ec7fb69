@@ -28,6 +28,11 @@ export const Blog = () => {
 
   return (
     <>
+      <SeoHead
+        title="The Journal — Stories from Kerala's Western Ghats"
+        description="Read stories, travel guides, and insider tips about Kerala's Western Ghats, from hidden trails to the best stays."
+        url="https://hillscamp.com/blog"
+      />
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg min-h-screen">

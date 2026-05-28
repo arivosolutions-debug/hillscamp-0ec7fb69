@@ -8,6 +8,7 @@ import { usePropertyCount } from '@/hooks/usePropertyCount';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
+import { SeoHead } from '@/components/shared/SeoHead';
 import type { TeamMember } from '@/lib/types';
 
 const WHY_CARDS = [
@@ -54,6 +55,11 @@ const About = () => {
 
   return (
     <>
+      <SeoHead
+        title="About HillsCamp — Curated Kerala Retreats"
+        description="Learn about HillsCamp's mission to connect travelers with Kerala's finest wilderness retreats and curated experiences."
+        url="https://hillscamp.com/about"
+      />
       <Navbar />
       <PageTransition>
         <main className="bg-hc-bg text-hc-text font-body antialiased">

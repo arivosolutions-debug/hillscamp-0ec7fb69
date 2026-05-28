@@ -4,6 +4,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { usePackages } from '@/hooks/usePackages';
+import { SeoHead } from '@/components/shared/SeoHead';
 import { MapPin, ArrowRight, Users } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PriceFilterPopover, getBucketById } from '@/components/shared/PriceFilterPopover';
@@ -78,6 +79,11 @@ const Packages: React.FC = () => {
 
   return (
     <>
+      <SeoHead
+        title="Curated Experiences & Treks in Kerala"
+        description="Explore curated treks, wildlife safaris, and adventure experiences across Kerala's Western Ghats and beyond."
+        url="https://hillscamp.com/experiences"
+      />
       <Navbar />
       <PageTransition>
         <main className="min-h-screen bg-hc-bg">
