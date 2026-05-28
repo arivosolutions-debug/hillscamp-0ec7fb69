@@ -26,6 +26,8 @@ const RoomImageCarousel: React.FC<{ images: string[]; alt: string }> = ({ images
           key={src + i}
           src={src}
           alt={`${alt} — ${i + 1}`}
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: i === current ? 1 : 0 }}
         />
@@ -65,6 +67,8 @@ const RoomImageCarouselClickable: React.FC<{
     >
       {images.map((src, i) => (
         <img key={src + i} src={src} alt={`${alt} — ${i + 1}`}
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: i === current ? 1 : 0 }}
         />
