@@ -19,6 +19,8 @@ export const BlogCard: React.FC<BlogCardProps> = ({ post, offset }) => {
         <img
           src={post.cover_image ?? '/placeholder.svg'}
           alt={post.title}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
       </div>
@@ -52,6 +54,8 @@ export const FeaturedPost: React.FC<FeaturedPostProps> = ({ post }) => (
         <img
           src={post.cover_image ?? '/placeholder.svg'}
           alt={post.title}
+          loading="lazy"
+          decoding="async"
           className="w-full h-[420px] md:h-[522px] object-cover transition-transform duration-700 hover:scale-105"
         />
       </Link>
