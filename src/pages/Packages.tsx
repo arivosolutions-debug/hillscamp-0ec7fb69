@@ -56,11 +56,12 @@ const Packages: React.FC = () => {
     <div className={`bg-[#17341e]/80 backdrop-blur-xl rounded-2xl px-4 md:px-6 py-4 ${isSticky ? '' : ''}`}>
       <div className="grid grid-cols-2 gap-3 md:gap-6 items-end">
         <div>
-          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 font-body text-white">
+          <label htmlFor="experiences-region" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 font-body text-white">
             Region
           </label>
           <div className="relative">
             <select
+              id="experiences-region"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
               className="w-full appearance-none bg-white/15 text-xs md:text-sm rounded-full px-3 md:px-4 py-2 md:py-2.5 pr-8 border-none focus:ring-0 font-body cursor-pointer text-white"
@@ -130,6 +131,8 @@ const Packages: React.FC = () => {
               </div>
             </div>
           )}
+          {/* Section heading for accessibility */}
+          <h2 className="sr-only">Available Experiences</h2>
 
           {/* Showing count */}
           {!isLoading && (

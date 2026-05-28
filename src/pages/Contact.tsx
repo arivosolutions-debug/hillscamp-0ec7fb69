@@ -193,13 +193,13 @@ const Contact = () => {
                     {/* Name + Email */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
-                        <label className={labelCls}>Name <span className="text-red-400 normal-case tracking-normal">*</span></label>
-                        <input type="text" value={form.name} onChange={set('name')} placeholder="Your full name" className={inputCls('name')} />
+                        <label htmlFor="contact-name" className={labelCls}>Name <span className="text-red-400 normal-case tracking-normal">*</span></label>
+                        <input id="contact-name" type="text" value={form.name} onChange={set('name')} placeholder="Your full name" className={inputCls('name')} />
                         {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                       </div>
                       <div>
-                        <label className={labelCls}>Email Address <span className="text-red-400 normal-case tracking-normal">*</span></label>
-                        <input type="email" value={form.email} onChange={set('email')} placeholder="email@example.com" className={inputCls('email')} />
+                        <label htmlFor="contact-email" className={labelCls}>Email Address <span className="text-red-400 normal-case tracking-normal">*</span></label>
+                        <input id="contact-email" type="email" value={form.email} onChange={set('email')} placeholder="email@example.com" className={inputCls('email')} />
                         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                       </div>
                     </div>
@@ -207,20 +207,20 @@ const Contact = () => {
                     {/* Phone + Dates */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
-                        <label className={labelCls}>Phone (optional)</label>
-                        <input type="tel" value={form.phone} onChange={set('phone')} placeholder="+91 98765 43210" className={inputCls('phone')} />
+                        <label htmlFor="contact-phone" className={labelCls}>Phone (optional)</label>
+                        <input id="contact-phone" type="tel" value={form.phone} onChange={set('phone')} placeholder="+91 98765 43210" className={inputCls('phone')} />
                       </div>
                       <div>
-                        <label className={labelCls}>Proposed Dates</label>
-                        <input type="text" value={form.dates} onChange={set('dates')} placeholder="e.g. Oct 12 – Oct 15" className={inputCls('dates')} />
+                        <label htmlFor="contact-dates" className={labelCls}>Proposed Dates</label>
+                        <input id="contact-dates" type="text" value={form.dates} onChange={set('dates')} placeholder="e.g. Oct 12 – Oct 15" className={inputCls('dates')} />
                       </div>
                     </div>
 
                     {/* Property selector */}
                     {properties && properties.length > 0 && (
                       <div>
-                        <label className={labelCls}>Property of Interest (optional)</label>
-                        <select value={form.property_id} onChange={set('property_id')} className={`${inputCls('property_id')} cursor-pointer`}>
+                        <label htmlFor="contact-property" className={labelCls}>Property of Interest (optional)</label>
+                        <select id="contact-property" value={form.property_id} onChange={set('property_id')} className={`${inputCls('property_id')} cursor-pointer`}>
                           <option value="">— Any / Not sure yet —</option>
                           {properties.map(p => (
                             <option key={p.id} value={p.id}>{p.name}</option>
@@ -231,8 +231,9 @@ const Contact = () => {
 
                     {/* Message */}
                     <div>
-                      <label className={labelCls}>Your Message <span className="text-red-400 normal-case tracking-normal">*</span></label>
+                      <label htmlFor="contact-message" className={labelCls}>Your Message <span className="text-red-400 normal-case tracking-normal">*</span></label>
                       <textarea
+                        id="contact-message"
                         rows={5}
                         value={form.message}
                         onChange={set('message')}
