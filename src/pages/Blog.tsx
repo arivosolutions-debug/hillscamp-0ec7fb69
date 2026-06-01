@@ -224,7 +224,7 @@ export const BlogPost = () => {
                 </div>
                 {post.category && (
                   <figcaption className="text-center text-sm text-hc-text-light mt-4 italic font-body">
-                    Hills Camp Kerala — {post.category}
+                    Hills Camp — {post.category}
                   </figcaption>
                 )}
               </figure>
