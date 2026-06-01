@@ -312,7 +312,7 @@ const Contact = () => {
                     src="https://www.openstreetmap.org/export/embed.html?bbox=76.6%2C10.0%2C77.2%2C10.5&layer=mapnik&marker=10.09%2C76.92"
                     className="w-full h-full"
                     style={{ border: 0 }}
-                    title="Hills Camp Kerala location map"
+                    title="Hills Camp location map"
                   />
                 </div>
               </div>
