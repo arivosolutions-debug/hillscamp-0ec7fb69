@@ -22,7 +22,7 @@ function htmlResponse(html: string, status: number, extra: Record<string, string
   return new Response(blob, { status, headers: htmlHeaders(extra) });
 }
 
-const SITE_NAME = "Hills Camp Kerala";
+const SITE_NAME = "Hills Camp";
 const SITE_URL = "https://hillscamp.com";
 const DEFAULT_DESCRIPTION =
   "Luxury wilderness retreats and curated experiences in Kerala's Western Ghats.";
