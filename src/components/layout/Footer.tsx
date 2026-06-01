@@ -5,7 +5,7 @@ import { Logo } from '@/components/shared/Logo';
 import { useLocations } from '@/hooks/useLocations';
 
 const WHATSAPP_URL =
-  'https://wa.me/917510810961?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat.';
+  'https://wa.me/917510810961?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20retreat.';
 
 const EXPLORE_LINKS = [
   { label: 'All Stays',        to: '/listings' },
