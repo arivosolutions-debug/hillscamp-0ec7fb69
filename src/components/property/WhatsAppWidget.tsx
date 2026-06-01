@@ -25,7 +25,7 @@ export const WhatsAppWidget: React.FC<WhatsAppWidgetProps> = ({
 
   const msg = encodeURIComponent(
     propertyName
-      ? `Hi, I'm interested in ${propertyName} at Hills Camp Kerala. Could you share availability and pricing details?`
+      ? `Hi, I'm interested in ${propertyName} at Hills Camp. Could you share availability and pricing details?`
       : `Hi, I'd like to enquire about a stay`
   );
   const href = `https://wa.me/${phone}?text=${msg}`;

@@ -13,7 +13,7 @@ import { SeoHead } from '@/components/shared/SeoHead';
 const CONTACT_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
-  name: 'Hills Camp Kerala',
+  name: 'Hills Camp',
   url: 'https://hillscamp.com/contact',
   email: 'hillscampbypovaam@gmail.com',
   telephone: '+91-7510810961',
@@ -158,7 +158,7 @@ const Contact = () => {
                       The fastest way to reach us. Typical reply time is under 30 minutes during business hours.
                     </p>
                     <a
-                      href="https://wa.me/917510810961?text=Hi%2C%20I'd%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat."
+                      href="https://wa.me/917510810961?text=Hi%2C%20I'd%20like%20to%20enquire%20about%20a%20Hills%20Camp%20retreat."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-bold inline-flex items-center gap-2 hover:brightness-105 transition-all active:scale-[0.97] shadow-lg shadow-[#25D366]/20 font-body"
@@ -312,7 +312,7 @@ const Contact = () => {
                     src="https://www.openstreetmap.org/export/embed.html?bbox=76.6%2C10.0%2C77.2%2C10.5&layer=mapnik&marker=10.09%2C76.92"
                     className="w-full h-full"
                     style={{ border: 0 }}
-                    title="Hills Camp Kerala location map"
+                    title="Hills Camp location map"
                   />
                 </div>
               </div>

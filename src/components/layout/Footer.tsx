@@ -5,7 +5,7 @@ import { Logo } from '@/components/shared/Logo';
 import { useLocations } from '@/hooks/useLocations';
 
 const WHATSAPP_URL =
-  'https://wa.me/917510810961?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20Kerala%20retreat.';
+  'https://wa.me/917510810961?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20Hills%20Camp%20retreat.';
 
 const EXPLORE_LINKS = [
   { label: 'All Stays',        to: '/listings' },
@@ -112,7 +112,7 @@ export const Footer: React.FC = () => {
         </p>
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
           <p className="text-emerald-50/30 text-xs font-body">
-            © {new Date().getFullYear()} Hills Camp Kerala. A Curated Wilderness Experience.
+            © {new Date().getFullYear()} Hills Camp. A Curated Wilderness Experience.
           </p>
           <div className="flex gap-6">
             <span className="text-emerald-50/30 text-xs font-body cursor-default">Privacy Policy</span>
