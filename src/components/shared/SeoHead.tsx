@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-const SITE_NAME = 'Hills Camp Kerala';
+const SITE_NAME = 'Hills Camp';
 const SITE_URL = 'https://hillscamp.com';
 const DEFAULT_DESCRIPTION =
   "Luxury wilderness retreats and curated experiences in Kerala's Western Ghats.";
