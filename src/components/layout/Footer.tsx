@@ -112,7 +112,7 @@ export const Footer: React.FC = () => {
         </p>
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
           <p className="text-emerald-50/30 text-xs font-body">
-            © {new Date().getFullYear()} Hills Camp Kerala. A Curated Wilderness Experience.
+            © {new Date().getFullYear()} Hills Camp. A Curated Wilderness Experience.
           </p>
           <div className="flex gap-6">
             <span className="text-emerald-50/30 text-xs font-body cursor-default">Privacy Policy</span>
