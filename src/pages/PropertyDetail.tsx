@@ -55,7 +55,7 @@ const PropertyDetail = () => {
     );
   }
 
-  const whatsappMsg = encodeURIComponent(`Hi, I'm interested in ${property.name} at Hills Camp Kerala.`);
+  const whatsappMsg = encodeURIComponent(`Hi, I'm interested in ${property.name} at Hills Camp.`);
   const whatsappHref = `https://wa.me/${WHATSAPP_PHONE}?text=${whatsappMsg}`;
   const districtLabel = DISTRICT_LABELS[property.district];
   const amenityNames = property.amenities.map(a => a.name);
