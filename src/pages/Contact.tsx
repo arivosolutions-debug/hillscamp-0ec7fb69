@@ -13,7 +13,7 @@ import { SeoHead } from '@/components/shared/SeoHead';
 const CONTACT_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
-  name: 'Hills Camp Kerala',
+  name: 'Hills Camp',
   url: 'https://hillscamp.com/contact',
   email: 'hillscampbypovaam@gmail.com',
   telephone: '+91-7510810961',
