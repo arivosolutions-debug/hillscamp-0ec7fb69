@@ -12,16 +12,30 @@ import { MarkdownContent } from '@/components/shared/MarkdownContent';
 import { SeoHead } from '@/components/shared/SeoHead';
 import { ogImageUrl } from '@/lib/ogImage';
 
-const CATEGORIES = ['All', 'Wayanad', 'Alleppey', 'Munnar', 'Travel Tips', 'Sustainability'];
-
 /* ═══════════════════════════════════════════════════════════════
    Blog Listing
 ════════════════════════════════════════════════════════════════ */
 export const Blog = () => {
-  const [activeCategory, setActiveCategory] = useState('All');
-  const { data: posts, isLoading } = useBlogPosts(
-    activeCategory !== 'All' ? activeCategory : undefined,
-  );
+  const [activeTag, setActiveTag] = useState<string>('All');
+  const { data: allPosts, isLoading } = useBlogPosts();
+
+  // Tags that appear on 2+ posts
+  const tagOptions = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    (allPosts ?? []).forEach(p => {
+      (p.tags ?? []).forEach(t => {
+        if (!t) return;
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      });
+    });
+    return ['All', ...Array.from(counts.entries()).filter(([, n]) => n >= 2).map(([t]) => t).sort()];
+  }, [allPosts]);
+
+  const posts = React.useMemo(() => {
+    if (!allPosts) return undefined;
+    if (activeTag === 'All') return allPosts;
+    return allPosts.filter(p => (p.tags ?? []).includes(activeTag));
+  }, [allPosts, activeTag]);
 
   const featured  = posts?.[0];
   const remaining = posts?.slice(1) ?? [];
@@ -51,24 +65,26 @@ export const Blog = () => {
             </h1>
           </section>
 
-          {/* ── Category Filter ─────────────────────────────────── */}
-          <section className="px-8 max-w-[1280px] mx-auto pt-10 pb-2">
-            <div className="flex flex-wrap justify-center gap-3">
-              {CATEGORIES.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-5 py-2.5 rounded-full font-body text-sm font-semibold transition-all ${
-                    activeCategory === cat
-                      ? 'bg-[#17341e] text-white shadow-sm'
-                      : 'bg-[#f5f3f3] text-[#424842] hover:text-[#17341e] hover:bg-[#ede9e8]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </section>
+          {/* ── Tag Filter ─────────────────────────────────── */}
+          {tagOptions.length > 1 && (
+            <section className="px-8 max-w-[1280px] mx-auto pt-10 pb-2">
+              <div className="flex flex-wrap justify-center gap-3">
+                {tagOptions.map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => setActiveTag(tag)}
+                    className={`px-5 py-2.5 rounded-full font-body text-sm font-semibold transition-all ${
+                      activeTag === tag
+                        ? 'bg-[#17341e] text-white shadow-sm'
+                        : 'bg-[#f5f3f3] text-[#424842] hover:text-[#17341e] hover:bg-[#ede9e8]'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* ── Skeletons ───────────────────────────────────────── */}
           {isLoading && (
@@ -115,7 +131,7 @@ export const Blog = () => {
                 <div className="flex flex-col items-center justify-center py-32 text-center px-8">
                   <p className="font-headline text-4xl text-hc-primary mb-3">No stories yet</p>
                   <p className="font-body text-hc-text-light text-sm">
-                    {activeCategory !== 'All' ? `No posts in "${activeCategory}" — try another category.` : 'Check back soon.'}
+                    {activeTag !== 'All' ? `No posts tagged "${activeTag}" — try another tag.` : 'Check back soon.'}
                   </p>
                 </div>
               )}
