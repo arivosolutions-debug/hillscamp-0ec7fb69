@@ -57,6 +57,18 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
 
       {/* Mobile carousel - compact */}
       <div className="md:hidden -mr-5">
+        {reviews.length > 1 && (
+          <div className="flex items-center justify-center gap-1.5 mb-2 mr-5">
+            {reviews.map((_, i) => (
+              <span
+                key={i}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  i === activeIndex ? 'w-6 bg-hc-secondary' : 'w-4 bg-hc-secondary/25'
+                }`}
+              />
+            ))}
+          </div>
+        )}
         <div
           ref={scrollRef}
           onScroll={handleScroll}
@@ -85,18 +97,6 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
             </div>
           ))}
         </div>
-        {reviews.length > 1 && (
-          <div className="flex items-center justify-center gap-1.5 mt-3 mr-5">
-            {reviews.map((_, i) => (
-              <span
-                key={i}
-                className={`h-1 rounded-full transition-all duration-300 ${
-                  i === activeIndex ? 'w-6 bg-hc-secondary' : 'w-4 bg-hc-secondary/25'
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );
