@@ -17,6 +17,7 @@ export const TestimonialsSection: React.FC = () => {
   const ref = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const { data: allReviews = [] } = useReviews(true);
   const reviews = allReviews.slice(0, 4);
 
@@ -41,6 +42,10 @@ export const TestimonialsSection: React.FC = () => {
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
     setScrollProgress(max > 0 ? el.scrollLeft / max : 0);
+    const slideWidth = el.clientWidth;
+    if (slideWidth > 0) {
+      setActiveIndex(Math.round(el.scrollLeft / slideWidth));
+    }
   };
 
   if (reviews.length === 0) return null;
@@ -106,6 +111,18 @@ export const TestimonialsSection: React.FC = () => {
               </div>
             ))}
           </div>
+          {reviews.length > 1 && (
+            <div className="flex items-center justify-center gap-1.5 mt-4 mr-5">
+              {reviews.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-1 rounded-full transition-all duration-300 ${
+                    i === activeIndex ? 'w-6 bg-hc-secondary' : 'w-4 bg-hc-secondary/25'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

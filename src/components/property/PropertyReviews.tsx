@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Quote } from 'lucide-react';
 import { useReviews, type Review } from '@/hooks/useReviews';
 
@@ -14,6 +14,15 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
   title = 'Guest Reviews',
 }) => {
   const { data: reviews = [] } = useReviews({ propertyId, packageId });
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const slideWidth = el.clientWidth;
+    if (slideWidth > 0) setActiveIndex(Math.round(el.scrollLeft / slideWidth));
+  };
 
   if (!reviews.length) return null;
 
@@ -49,6 +58,8 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
       {/* Mobile carousel - compact */}
       <div className="md:hidden -mr-5">
         <div
+          ref={scrollRef}
+          onScroll={handleScroll}
           className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3"
           style={{ scrollbarWidth: 'none' }}
         >
@@ -74,6 +85,18 @@ export const PropertyReviews: React.FC<PropertyReviewsProps> = ({
             </div>
           ))}
         </div>
+        {reviews.length > 1 && (
+          <div className="flex items-center justify-center gap-1.5 mt-3 mr-5">
+            {reviews.map((_, i) => (
+              <span
+                key={i}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  i === activeIndex ? 'w-6 bg-hc-secondary' : 'w-4 bg-hc-secondary/25'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
