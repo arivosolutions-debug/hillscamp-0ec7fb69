@@ -1512,6 +1512,7 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
   const [editing, setEditing] = useState<PackageForm | null>(null);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
 
   const load = async () => {
     setLoading(true);
@@ -1597,6 +1598,18 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
         </div>
         <Btn onClick={() => setView('add')}><Plus size={16} />Add Package</Btn>
       </div>
+      {packages.length > 0 && (
+        <div className="relative mb-4">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-hc-text-light pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by name or location…"
+            className="w-full bg-white border border-hc-text-light/15 rounded-2xl pl-10 pr-4 py-3 text-sm font-body text-hc-text outline-none focus:border-hc-primary"
+          />
+        </div>
+      )}
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <div className="w-8 h-8 border-2 border-hc-secondary border-t-transparent rounded-full animate-spin" />
@@ -1608,7 +1621,10 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {packages.map((pkg, i) => (
+          {packages.map((pkg, i) => {
+            const q = search.trim().toLowerCase();
+            if (q && !`${pkg.name ?? ''} ${pkg.location ?? ''}`.toLowerCase().includes(q)) return null;
+            return (
             <div
               key={pkg.id}
               draggable
@@ -1652,7 +1668,8 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
                 </button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
