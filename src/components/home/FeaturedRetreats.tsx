@@ -125,7 +125,7 @@ export const FeaturedRetreats: React.FC = () => {
   const CardContent = ({ card }: { card: (typeof cards)[0] }) => (
     <Link
       to={`/property/${card.slug}`}
-      className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group block flex flex-col"
+      className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group flex flex-col h-full"
     >
       <div className="relative overflow-hidden rounded-2xl">
         <div className="w-full h-[280px] md:h-[280px] aspect-[4/3] md:aspect-auto">
@@ -144,7 +144,7 @@ export const FeaturedRetreats: React.FC = () => {
         <p className="text-hc-secondary text-xs font-bold uppercase tracking-[0.2em] mb-1 font-body">
           {card.district}, Kerala
         </p>
-        <h3 className="font-headline text-hc-primary text-lg md:text-xl mb-3 group-hover:text-hc-secondary transition-colors duration-200 leading-snug">
+        <h3 className="font-headline text-hc-primary text-lg md:text-xl mb-3 group-hover:text-hc-secondary transition-colors duration-200 leading-snug line-clamp-2 min-h-[3.25rem] md:min-h-[3.5rem]">
           {card.name}
         </h3>
         <div className="flex items-center gap-4 text-sm text-hc-text mb-4 font-body">
