@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageCircle, ChevronDown, ChevronUp, Calendar as CalendarIcon } from 'lucide-react';
+import { format, differenceInCalendarDays } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import type { RoomType } from '@/lib/types';
 
 interface BookNowModalProps {
@@ -14,15 +18,32 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
   const [phoneNum, setPhoneNum] = useState('');
   const [guests, setGuests] = useState(2);
   const [selectedRoom, setSelectedRoom] = useState('');
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
+
+  const nights =
+    checkIn && checkOut ? Math.max(0, differenceInCalendarDays(checkOut, checkIn)) : 0;
 
   const handleSubmit = () => {
     const roomLabel = selectedRoom || 'Not specified';
+    const datesLine =
+      checkIn && checkOut && nights > 0
+        ? `Check-in: ${format(checkIn, 'EEE, d MMM yyyy')}\nCheck-out: ${format(checkOut, 'EEE, d MMM yyyy')}\nNights: ${nights}`
+        : checkIn
+        ? `Check-in: ${format(checkIn, 'EEE, d MMM yyyy')}\nCheck-out: Not specified\nDates: Flexible`
+        : `Dates: Flexible`;
     const msg = encodeURIComponent(
-      `Hi, I'd like to book ${propertyName}.\nRoom: ${roomLabel}\nName: ${name}\nPhone: ${phoneNum}\nGuests: ${guests}`
+      `Hi, I'd like to book ${propertyName}.\nRoom: ${roomLabel}\n${datesLine}\nName: ${name}\nPhone: ${phoneNum}\nGuests: ${guests}`
     );
     window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
     setExpanded(false);
   };
+
+  const dateBtnCls = (val?: Date) =>
+    cn(
+      'w-full bg-white rounded-xl px-4 py-3 text-sm font-body text-left flex items-center justify-between outline-none focus:ring-2 focus:ring-hc-primary/20',
+      val ? 'text-hc-text' : 'text-hc-text/50'
+    );
 
   return (
     <div className="px-5 mt-8">
@@ -68,6 +89,66 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
                 </select>
                 <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-hc-text/50 pointer-events-none" />
               </div>
+            )}
+
+            {/* Dates */}
+            <div className="grid grid-cols-2 gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button type="button" className={dateBtnCls(checkIn)}>
+                    <span className="truncate">
+                      {checkIn ? format(checkIn, 'd MMM yyyy') : 'Check-in'}
+                    </span>
+                    <CalendarIcon size={16} className="text-hc-text/50 shrink-0 ml-2" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={checkIn}
+                    onSelect={(d) => {
+                      setCheckIn(d);
+                      if (d && checkOut && differenceInCalendarDays(checkOut, d) <= 0) {
+                        setCheckOut(undefined);
+                      }
+                    }}
+                    disabled={(d) => d < new Date(new Date().setHours(0, 0, 0, 0))}
+                    initialFocus
+                    className={cn('p-3 pointer-events-auto')}
+                  />
+                </PopoverContent>
+              </Popover>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button type="button" className={dateBtnCls(checkOut)}>
+                    <span className="truncate">
+                      {checkOut ? format(checkOut, 'd MMM yyyy') : 'Check-out'}
+                    </span>
+                    <CalendarIcon size={16} className="text-hc-text/50 shrink-0 ml-2" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={checkOut}
+                    onSelect={setCheckOut}
+                    disabled={(d) =>
+                      checkIn
+                        ? d <= checkIn
+                        : d < new Date(new Date().setHours(0, 0, 0, 0))
+                    }
+                    initialFocus
+                    className={cn('p-3 pointer-events-auto')}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {nights > 0 && (
+              <p className="text-xs font-body text-hc-secondary -mt-1 px-1">
+                {nights} {nights === 1 ? 'night' : 'nights'} selected
+              </p>
             )}
 
             <div className="bg-white rounded-xl px-4 py-3 flex items-center justify-between">
