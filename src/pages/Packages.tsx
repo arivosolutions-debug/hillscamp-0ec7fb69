@@ -223,7 +223,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
   return (
     <Link
       to={`/packages/${pkg.slug}`}
-      className="group block overflow-hidden"
+      className="group flex h-full flex-col overflow-hidden"
     >
       {/* Image */}
       <div className="relative aspect-[4/3] rounded-t-2xl overflow-hidden">
@@ -231,14 +231,14 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
       </div>
 
       {/* Card body with light background and rounded bottom */}
-      <div className="bg-surface-low rounded-b-2xl px-4 py-4">
+      <div className="bg-surface-low rounded-b-2xl px-4 py-4 flex flex-1 flex-col">
         {/* Name */}
-        <h3 className="font-headline text-lg text-hc-primary leading-snug mb-1">
+        <h3 className="font-headline text-lg text-hc-primary leading-snug mb-1 line-clamp-2 min-h-[3rem]">
           {pkg.name}
         </h3>
 
         {/* Location & Guests row */}
-        <div className="flex items-center gap-3 text-hc-text-light text-xs font-body mb-2">
+        <div className="flex items-center gap-3 text-hc-text-light text-xs font-body mb-2 min-h-[1rem]">
           {pkg.location && (
             <span className="flex items-center gap-1">
               <MapPin size={12} />
@@ -253,22 +253,20 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
           )}
         </div>
 
-        {/* Tags */}
-        {pkg.tags && pkg.tags.length > 0 && (
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar mb-3">
-            {pkg.tags.map((tag) => (
-              <span
-                key={tag}
-                className="shrink-0 bg-hc-secondary text-white text-[10px] font-body px-2.5 py-1 rounded-full capitalize"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Tags — reserve slot to keep card heights consistent */}
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar mb-3 min-h-[1.5rem]">
+          {pkg.tags?.map((tag) => (
+            <span
+              key={tag}
+              className="shrink-0 bg-hc-secondary text-white text-[10px] font-body px-2.5 py-1 rounded-full capitalize"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
 
         {/* Learn More */}
-        <div className="flex items-center justify-between mt-1">
+        <div className="flex items-center justify-between mt-auto pt-1">
           <span className="font-bold text-hc-primary text-sm font-body">
             {pkg.price_inr != null
               ? `Price Starting from ₹${Number(pkg.price_inr).toLocaleString('en-IN')}`
