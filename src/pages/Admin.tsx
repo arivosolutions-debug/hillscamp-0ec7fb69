@@ -6,7 +6,7 @@ import { MarkdownEditor } from '@/components/admin/MarkdownEditor';
 import {
   Plus, Trash2, Edit2, Eye, EyeOff, X, Save, LogOut,
   Home, Package, Star, Settings, ChevronUp, ChevronDown,
-  FileText, Upload, GripVertical, Loader2, Users
+  FileText, Upload, GripVertical, Loader2, Users, Search
 } from 'lucide-react';
 import { compressImage } from '@/lib/compressImage';
 import { toast } from 'sonner';
