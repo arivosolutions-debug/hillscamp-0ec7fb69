@@ -21,6 +21,10 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
   const [checkIn, setCheckIn] = useState<Date | undefined>();
   const [checkOut, setCheckOut] = useState<Date | undefined>();
 
+  const today = new Date();
+  const fromYear = today.getFullYear();
+  const toYear = fromYear + 3;
+
   const nights =
     checkIn && checkOut ? Math.max(0, differenceInCalendarDays(checkOut, checkIn)) : 0;
 
@@ -106,6 +110,10 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
                   <Calendar
                     mode="single"
                     selected={checkIn}
+                    defaultMonth={checkIn ?? today}
+                    captionLayout="dropdown-buttons"
+                    fromYear={fromYear}
+                    toYear={toYear}
                     onSelect={(d) => {
                       setCheckIn(d);
                       if (d && checkOut && differenceInCalendarDays(checkOut, d) <= 0) {
@@ -132,6 +140,10 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
                   <Calendar
                     mode="single"
                     selected={checkOut}
+                    defaultMonth={checkOut ?? checkIn ?? today}
+                    captionLayout="dropdown-buttons"
+                    fromYear={fromYear}
+                    toYear={toYear}
                     onSelect={setCheckOut}
                     disabled={(d) =>
                       checkIn
