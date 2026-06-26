@@ -1451,7 +1451,10 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {properties.map((prop, i) => (
+          {properties.map((prop, i) => {
+            const q = search.trim().toLowerCase();
+            if (q && !`${prop.name ?? ''} ${prop.district ?? ''} ${prop.location ?? ''}`.toLowerCase().includes(q)) return null;
+            return (
             <div
               key={prop.id}
               draggable
@@ -1492,7 +1495,8 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
                 </button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
