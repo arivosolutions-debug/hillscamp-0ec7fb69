@@ -107,7 +107,7 @@ export const FeaturedRetreats: React.FC = () => {
           badge: p.property_type.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
           district: p.district.charAt(0).toUpperCase() + p.district.slice(1),
           name: p.name,
-          guests: `${p.max_guests} Guests`,
+          guests: `Up to ${p.max_guests} Guests`,
           amenity: p.highlights?.[0] ?? "Luxury Stay",
           slug: p.slug,
           min_price: (p as any).min_price ?? null,
