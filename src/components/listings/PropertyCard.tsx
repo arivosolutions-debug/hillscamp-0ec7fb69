@@ -29,7 +29,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   const finalImages = slideshowImages.length > 0 ? slideshowImages : ['/placeholder.svg'];
 
   return (
-    <Link to={`/property/${property.slug}`} className="group block">
+    <Link to={`/property/${property.slug}`} className="group flex h-full flex-col">
       {/* Image */}
       <div className="relative rounded-2xl overflow-hidden mb-3 aspect-[4/3] md:aspect-[4/5]">
         <CardSlideshow images={finalImages} alt={property.name} autoplay={false} showDots={false} />
@@ -40,8 +40,8 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
       </div>
 
       {/* Body */}
-      <div className="px-1 md:px-0 py-2">
-        <h3 className="font-headline text-hc-primary text-xl md:text-lg leading-snug mb-1">
+      <div className="px-1 md:px-0 py-2 flex flex-1 flex-col">
+        <h3 className="font-headline text-hc-primary text-xl md:text-lg leading-snug mb-1 line-clamp-2 min-h-[2.75rem] md:min-h-[2.5rem]">
           {property.name}
         </h3>
 
@@ -54,21 +54,19 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           Up to {property.max_guests} Guests
         </p>
 
-        {/* Admin-defined tag pills */}
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="shrink-0 bg-hc-secondary text-white text-[10px] font-body px-2.5 py-1 rounded-full capitalize"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Admin-defined tag pills — reserve slot so cards align even without tags */}
+        <div className="flex flex-wrap gap-1.5 mt-3 min-h-[1.5rem]">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="shrink-0 bg-hc-secondary text-white text-[10px] font-body px-2.5 py-1 rounded-full capitalize"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
 
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-auto pt-4 flex items-center justify-between">
           <span className="font-bold text-hc-primary text-sm font-body">
             {property.min_price != null
               ? `Price Starting from ₹${property.min_price.toLocaleString('en-IN')}`

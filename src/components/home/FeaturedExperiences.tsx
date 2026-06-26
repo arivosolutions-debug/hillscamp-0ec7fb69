@@ -79,7 +79,7 @@ export const FeaturedExperiences: React.FC = () => {
     return (
     <Link
       to={`/packages/${card.slug}`}
-      className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group block flex flex-col"
+      className="retreat-card bg-hc-bg-alt rounded-2xl overflow-hidden group flex flex-col h-full"
     >
       <div className="relative overflow-hidden rounded-2xl h-[280px]">
         <CardSlideshow images={finalImages} alt={card.name} autoplay={false} showDots={false} />
@@ -90,32 +90,25 @@ export const FeaturedExperiences: React.FC = () => {
         )}
       </div>
       <div className="p-5 md:p-6 flex flex-col flex-1">
-        {card.location && (
-          <p className="text-hc-secondary text-xs font-bold uppercase tracking-[0.2em] mb-1 font-body">
-            {card.location}
-          </p>
-        )}
-        <h3 className="font-headline text-hc-primary text-lg md:text-xl mb-3 group-hover:text-hc-secondary transition-colors duration-200 leading-snug">
+        <p className="text-hc-secondary text-xs font-bold uppercase tracking-[0.2em] mb-1 font-body min-h-[1rem]">
+          {card.location || '\u00A0'}
+        </p>
+        <h3 className="font-headline text-hc-primary text-lg md:text-xl mb-3 group-hover:text-hc-secondary transition-colors duration-200 leading-snug line-clamp-2 min-h-[3.25rem] md:min-h-[3.5rem]">
           {card.name}
         </h3>
-        {participants && (
-          <div className="flex items-center gap-1 text-hc-text-light text-xs font-body mb-3">
-            <Users size={12} />
-            <span>{participants}</span>
-          </div>
-        )}
-        {card.tags && card.tags.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap mb-4">
-            {card.tags.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="bg-hc-accent-light text-hc-primary border border-hc-primary/10 text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full font-body"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="flex items-center gap-1 text-hc-text-light text-xs font-body mb-3 min-h-[1rem]">
+          {participants && (<><Users size={12} /><span>{participants}</span></>)}
+        </div>
+        <div className="flex items-center gap-2 flex-wrap mb-4 min-h-[1.5rem]">
+          {card.tags?.slice(0, 2).map((tag) => (
+            <span
+              key={tag}
+              className="bg-hc-accent-light text-hc-primary border border-hc-primary/10 text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full font-body"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
         <div className="mt-auto pt-3 flex items-center justify-between">
           <span className="font-bold text-hc-primary text-sm font-body">
             {card.price_inr != null
