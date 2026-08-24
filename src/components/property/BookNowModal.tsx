@@ -5,14 +5,16 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import type { RoomType } from '@/lib/types';
+import { logEnquiry } from '@/lib/logEnquiry';
 
 interface BookNowModalProps {
   propertyName: string;
   phone: string;
   rooms?: RoomType[];
+  propertyId?: string;
 }
 
-export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone, rooms = [] }) => {
+export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone, rooms = [], propertyId }) => {
   const [expanded, setExpanded] = useState(false);
   const [name, setName] = useState('');
   const [phoneNum, setPhoneNum] = useState('');
@@ -36,12 +38,23 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
         : checkIn
         ? `Check-in: ${format(checkIn, 'EEE, d MMM yyyy')}\nCheck-out: Not specified\nDates: Flexible`
         : `Dates: Flexible`;
-    const msg = encodeURIComponent(
-      `Hi, I'd like to book ${propertyName}.\nRoom: ${roomLabel}\n${datesLine}\nName: ${name}\nPhone: ${phoneNum}\nGuests: ${guests}`
-    );
+    const body = `Hi, I'd like to book ${propertyName}.\nRoom: ${roomLabel}\n${datesLine}\nName: ${name}\nPhone: ${phoneNum}\nGuests: ${guests}`;
+
+    // Log the lead (non-blocking) before handing off to WhatsApp
+    if (name.trim() && phoneNum.trim()) {
+      void logEnquiry({
+        name: name.trim(),
+        phone: phoneNum.trim(),
+        message: body,
+        property_id: propertyId,
+      });
+    }
+
+    const msg = encodeURIComponent(body);
     window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
     setExpanded(false);
   };
+
 
   const dateBtnCls = (val?: Date) =>
     cn(

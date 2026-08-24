@@ -313,19 +313,28 @@ const StatCard: React.FC<{ icon: React.ReactNode; label: string; value: string }
 );
 
 /* ── Book Now Section ── */
-const BookNowSection: React.FC<{ packageName: string }> = ({ packageName }) => {
+const BookNowSection: React.FC<{ packageName: string; packageId?: string }> = ({ packageName, packageId }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(2);
 
   const handleSubmit = () => {
-    const msg = encodeURIComponent(
-      `Hi, I'm interested in the "${packageName}" experience.\nName: ${name}\nPhone: ${phone}\nGuests: ${guests}`,
-    );
-    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${msg}`, "_blank");
+    const body = `Hi, I'm interested in the "${packageName}" experience.\nName: ${name}\nPhone: ${phone}\nGuests: ${guests}`;
+
+    if (name.trim() && phone.trim()) {
+      void logEnquiry({
+        name: name.trim(),
+        phone: phone.trim(),
+        message: body,
+        package_id: packageId,
+      });
+    }
+
+    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(body)}`, "_blank");
     setOpen(false);
   };
+
 
   return (
     <div className="px-5 md:px-8 max-w-[1280px] mx-auto">
