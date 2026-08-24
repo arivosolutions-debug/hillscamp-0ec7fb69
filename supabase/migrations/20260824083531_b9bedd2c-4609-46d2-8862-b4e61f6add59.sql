@@ -1,0 +1,1 @@
+GRANT ALL ON public.enquiries TO service_role;
