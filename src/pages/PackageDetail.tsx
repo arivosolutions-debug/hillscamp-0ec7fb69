@@ -1,3 +1,4 @@
+import { logEnquiry } from "@/lib/logEnquiry";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -218,7 +219,7 @@ const PackageDetail: React.FC = () => {
           </section>
 
           {/* Book Now */}
-          <BookNowSection packageName={pkg.name} />
+          <BookNowSection packageName={pkg.name} packageId={pkg.id} />
 
           {/* Trip Itinerary */}
           {itinerary.length > 0 && (
