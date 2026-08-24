@@ -66,20 +66,27 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate email
+    // Validate email (optional when a phone number is supplied)
     const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    if (!email || !EMAIL_RE.test(email) || email.length > 255) {
+    const phone = typeof body.phone === "string" ? body.phone.trim() : null;
+
+    if (email && (!EMAIL_RE.test(email) || email.length > 255)) {
       return new Response(
         JSON.stringify({ error: "A valid email address is required." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Validate phone (optional)
-    const phone = typeof body.phone === "string" ? body.phone.trim() : null;
     if (phone && !PHONE_RE.test(phone)) {
       return new Response(
         JSON.stringify({ error: "Invalid phone number format." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!email && !phone) {
+      return new Response(
+        JSON.stringify({ error: "Either an email address or a phone number is required." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -93,12 +100,18 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate property_id (optional UUID)
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    // Validate property_id / package_id (optional UUIDs)
     const property_id =
-      typeof body.property_id === "string" &&
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(body.property_id)
+      typeof body.property_id === "string" && UUID_RE.test(body.property_id)
         ? body.property_id
         : null;
+    const package_id =
+      typeof body.package_id === "string" && UUID_RE.test(body.package_id)
+        ? body.package_id
+        : null;
+
 
     // Insert using service role (bypasses RLS)
     const supabase = createClient(
