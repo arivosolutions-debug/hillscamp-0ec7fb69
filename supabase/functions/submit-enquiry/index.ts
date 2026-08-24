@@ -120,8 +120,9 @@ Deno.serve(async (req) => {
     );
 
     const { error: dbError } = await supabase.from("enquiries").insert([
-      { name, email, phone, message, property_id },
+      { name, email, phone, message, property_id, package_id },
     ]);
+
 
     if (dbError) {
       console.error("DB insert error:", dbError);
