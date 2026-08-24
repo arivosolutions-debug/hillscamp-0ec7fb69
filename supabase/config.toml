@@ -2,3 +2,9 @@ project_id = "amlhmlfzvqdghbbuluio"
 
 [functions.share-meta]
 verify_jwt = false
+
+[functions.og-image]
+verify_jwt = false
+
+[functions.submit-enquiry]
+verify_jwt = false

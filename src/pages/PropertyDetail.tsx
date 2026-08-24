@@ -142,7 +142,7 @@ const PropertyDetail = () => {
 
           {/* 5. Book Now (mobile only, above amenities) */}
           <div className="md:hidden">
-            <BookNowModal propertyName={property.name} phone={WHATSAPP_PHONE} rooms={property.room_types} />
+            <BookNowModal propertyName={property.name} phone={WHATSAPP_PHONE} rooms={property.room_types} propertyId={property.id} />
           </div>
 
           {/* 6. Amenities (mobile) */}
@@ -229,7 +229,7 @@ const PropertyDetail = () => {
           {/* Desktop Book Now */}
           <section className="hidden md:flex justify-center px-8 max-w-[1280px] mx-auto mb-12">
             <div className="w-1/2">
-              <BookNowModal propertyName={property.name} phone={WHATSAPP_PHONE} rooms={property.room_types} />
+              <BookNowModal propertyName={property.name} phone={WHATSAPP_PHONE} rooms={property.room_types} propertyId={property.id} />
             </div>
           </section>
 
