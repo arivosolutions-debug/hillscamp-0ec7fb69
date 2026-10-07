@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { MapPin, Users, ArrowRight } from 'lucide-react';
 import { DISTRICT_LABELS, PROPERTY_TYPE_LABELS } from '@/lib/types';
 import { usePropertyTypeLabels } from '@/hooks/usePropertyTypes';

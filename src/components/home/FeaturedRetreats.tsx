@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { ArrowRight, ArrowLeft, Users } from "lucide-react";
 import { useProperties } from "@/hooks/useProperties";
 import { CardSlideshow } from "@/components/shared/CardSlideshow";

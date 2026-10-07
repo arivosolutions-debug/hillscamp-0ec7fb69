@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           // Typography
           "font-body text-sm text-hc-text placeholder:text-hc-text-light",
           // Focus: bottom stroke transitions to brand primary
-          "outline-none transition-colors duration-200",
+          "outline-hidden transition-colors duration-200",
           "focus-visible:border-b-hc-primary",
           // File input resets
           "file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-hc-text",

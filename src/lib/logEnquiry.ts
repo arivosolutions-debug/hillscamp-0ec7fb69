@@ -1,12 +1,12 @@
-import { supabase } from '@/integrations/supabase/client';
+import { submitEnquiry } from '@/lib/submitEnquiry.functions';
 
 export interface EnquiryPayload {
   name: string;
-  email?: string;
-  phone?: string;
-  message?: string;
-  property_id?: string;
-  package_id?: string;
+  email?: string | undefined;
+  phone?: string | undefined;
+  message?: string | undefined;
+  property_id?: string | undefined;
+  package_id?: string | undefined;
 }
 
 /**
@@ -15,8 +15,16 @@ export interface EnquiryPayload {
  */
 export async function logEnquiry(payload: EnquiryPayload): Promise<void> {
   try {
-    const { error } = await supabase.functions.invoke('submit-enquiry', { body: payload });
-    if (error) console.error('logEnquiry failed:', error);
+    await submitEnquiry({
+      data: {
+        name: payload.name,
+        email: payload.email ?? null,
+        phone: payload.phone ?? null,
+        message: payload.message ?? null,
+        property_id: payload.property_id ?? null,
+        package_id: payload.package_id ?? null,
+      },
+    });
   } catch (err) {
     console.error('logEnquiry failed:', err);
   }

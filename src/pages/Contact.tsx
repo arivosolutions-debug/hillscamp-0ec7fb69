@@ -3,7 +3,7 @@ import { MapPin, Mail, Clock, Send, ExternalLink, MessageCircle } from 'lucide-r
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
-import { supabase } from '@/integrations/supabase/client';
+import { submitEnquiry } from '@/lib/submitEnquiry.functions';
 import { useProperties } from '@/hooks/useProperties';
 import { toast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
@@ -74,8 +74,8 @@ const Contact = () => {
     }
     setLoading(true);
     try {
-      const { data: fnData, error: fnError } = await supabase.functions.invoke('submit-enquiry', {
-        body: {
+      await submitEnquiry({
+        data: {
           name:        result.data.name,
           email:       result.data.email,
           phone:       result.data.phone || null,
@@ -83,8 +83,6 @@ const Contact = () => {
           property_id: result.data.property_id || null,
         },
       });
-      if (fnError) throw fnError;
-      if (fnData?.error) throw new Error(fnData.error);
       toast({ title: 'Message sent!', description: "We'll be in touch within 24 hours to help plan your stay." });
       setForm({ name: '', email: '', phone: '', dates: '', message: '', property_id: '' });
       setErrors({});
@@ -97,7 +95,7 @@ const Contact = () => {
 
   /* Input base styles — light surface bg, terracotta focus ring */
   const inputCls = (field: keyof EnquiryForm) =>
-    `w-full bg-[#f5f3f3] border rounded-xl px-5 py-4 text-[#17341e] placeholder:text-[#424842]/40 font-body text-sm outline-none transition-all
+    `w-full bg-[#f5f3f3] border rounded-xl px-5 py-4 text-[#17341e] placeholder:text-[#424842]/40 font-body text-sm outline-hidden transition-all
      ${errors[field]
        ? 'border-red-400 focus:border-red-400'
        : 'border-[#c2c8bf]/30 focus:border-[#924a29]'

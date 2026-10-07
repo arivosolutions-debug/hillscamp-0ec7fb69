@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from '@/lib/router-compat';
 import { MapPin, Users, Leaf, MessageCircle, ArrowLeft } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -57,7 +57,7 @@ const PropertyDetail = () => {
 
   const whatsappMsg = encodeURIComponent(`Hi, I'm interested in ${property.name} at Hills Camp.`);
   const whatsappHref = `https://wa.me/${WHATSAPP_PHONE}?text=${whatsappMsg}`;
-  const districtLabel = DISTRICT_LABELS[property.district];
+  const districtLabel = DISTRICT_LABELS[property.district] ?? property.district;
   const amenityNames = property.amenities.map(a => a.name);
 
   const ogImage =

@@ -1,6 +1,6 @@
 import { logEnquiry } from "@/lib/logEnquiry";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link } from "@/lib/router-compat";
 import {
   MapPin,
   Clock,
@@ -87,8 +87,8 @@ const PackageDetail: React.FC = () => {
     image_url: url,
     alt_text: `${pkg.name} — ${i + 2}`,
     sort_order: i,
-    property_id: null,
-    created_at: null,
+    property_id: pkg.id,
+    created_at: '',
   }));
 
   const coords = pkg.coordinates as { lat?: number; lng?: number } | null;
@@ -357,14 +357,14 @@ const BookNowSection: React.FC<{ packageName: string; packageId?: string }> = ({
               placeholder="Your Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 outline-none focus:ring-2 focus:ring-hc-primary/20"
+              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 outline-hidden focus:ring-2 focus:ring-hc-primary/20"
             />
             <input
               type="tel"
               placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 outline-none focus:ring-2 focus:ring-hc-primary/20"
+              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 outline-hidden focus:ring-2 focus:ring-hc-primary/20"
             />
             <div className="bg-white rounded-xl px-4 py-3 flex items-center justify-between">
               <span className="text-sm font-body text-hc-text/50">Number of Guests</span>
@@ -427,7 +427,7 @@ const ItineraryAccordion: React.FC<{ day: ItineraryDay }> = ({ day }) => {
             <button
               type="button"
               onClick={() => setLightboxOpen(true)}
-              className="block w-full max-w-2xl mb-4 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-hc-secondary"
+              className="block w-full max-w-2xl mb-4 rounded-xl overflow-hidden focus:outline-hidden focus:ring-2 focus:ring-hc-secondary"
               aria-label={`View Day ${day.day} photo fullscreen`}
             >
               <img

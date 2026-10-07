@@ -18,7 +18,7 @@ export function useFadeIn(options: UseFadeInOptions = {}) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           el.classList.add('in-view');
           observer.disconnect();
         }

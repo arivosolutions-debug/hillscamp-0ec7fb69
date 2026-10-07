@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from '@/lib/router-compat';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { Navbar } from '@/components/layout/Navbar';

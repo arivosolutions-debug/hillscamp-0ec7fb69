@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { ArrowLeft, MapPin, Users } from 'lucide-react';
 import type { PropertyImage } from '@/lib/types';
 
@@ -36,13 +36,13 @@ export const MobileHeroSlideshow: React.FC<MobileHeroSlideshowProps> = ({
   }, [allImages.length]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStart.current = e.touches[0].clientX;
+    touchStart.current = e.touches[0]?.clientX ?? null;
     touchDelta.current = 0;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (touchStart.current === null) return;
-    touchDelta.current = e.touches[0].clientX - touchStart.current;
+    touchDelta.current = (e.touches[0]?.clientX ?? touchStart.current) - touchStart.current;
   };
 
   const handleTouchEnd = () => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { MapPin, Calendar, Search } from 'lucide-react';
 
 export const SearchSection: React.FC = () => {
@@ -51,7 +51,7 @@ export const SearchSection: React.FC = () => {
                   placeholder="Location — Wayanad, Munnar…"
                   value={location}
                   onChange={e => setLocation(e.target.value)}
-                  className="bg-transparent text-white placeholder:text-white/50 font-body text-sm w-full outline-none"
+                  className="bg-transparent text-white placeholder:text-white/50 font-body text-sm w-full outline-hidden"
                 />
               </div>
 
@@ -66,7 +66,7 @@ export const SearchSection: React.FC = () => {
                   placeholder="Dates — When are you visiting?"
                   value={dates}
                   onChange={e => setDates(e.target.value)}
-                  className="bg-transparent text-white placeholder:text-white/50 font-body text-sm w-full outline-none"
+                  className="bg-transparent text-white placeholder:text-white/50 font-body text-sm w-full outline-hidden"
                 />
               </div>
 

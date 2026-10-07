@@ -58,7 +58,7 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
 
   const dateBtnCls = (val?: Date) =>
     cn(
-      'w-full bg-white rounded-xl px-4 py-3 text-sm font-body text-left flex items-center justify-between outline-none focus:ring-2 focus:ring-hc-primary/20',
+      'w-full bg-white rounded-xl px-4 py-3 text-sm font-body text-left flex items-center justify-between outline-hidden focus:ring-2 focus:ring-hc-primary/20',
       val ? 'text-hc-text' : 'text-hc-text/50'
     );
 
@@ -82,14 +82,14 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
               placeholder="Your Name"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 border-none outline-none focus:ring-2 focus:ring-hc-primary/20"
+              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 border-none outline-hidden focus:ring-2 focus:ring-hc-primary/20"
             />
             <input
               type="tel"
               placeholder="Phone Number"
               value={phoneNum}
               onChange={e => setPhoneNum(e.target.value)}
-              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 border-none outline-none focus:ring-2 focus:ring-hc-primary/20"
+              className="bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text placeholder:text-hc-text/50 border-none outline-hidden focus:ring-2 focus:ring-hc-primary/20"
             />
 
             {rooms.length > 0 && (
@@ -97,7 +97,7 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
                 <select
                   value={selectedRoom}
                   onChange={e => setSelectedRoom(e.target.value)}
-                  className="w-full bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text appearance-none border-none outline-none focus:ring-2 focus:ring-hc-primary/20 pr-10"
+                  className="w-full bg-white rounded-xl px-4 py-3 text-sm font-body text-hc-text appearance-none border-none outline-hidden focus:ring-2 focus:ring-hc-primary/20 pr-10"
                 >
                   <option value="">Select a Room</option>
                   {rooms.map(r => (
@@ -124,9 +124,9 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
                     mode="single"
                     selected={checkIn}
                     defaultMonth={checkIn ?? today}
-                    captionLayout="dropdown-buttons"
-                    fromYear={fromYear}
-                    toYear={toYear}
+                    captionLayout="dropdown"
+                    startMonth={new Date(fromYear, 0)}
+                    endMonth={new Date(toYear, 11)}
                     onSelect={(d) => {
                       setCheckIn(d);
                       if (d && checkOut && differenceInCalendarDays(checkOut, d) <= 0) {
@@ -154,9 +154,9 @@ export const BookNowModal: React.FC<BookNowModalProps> = ({ propertyName, phone,
                     mode="single"
                     selected={checkOut}
                     defaultMonth={checkOut ?? checkIn ?? today}
-                    captionLayout="dropdown-buttons"
-                    fromYear={fromYear}
-                    toYear={toYear}
+                    captionLayout="dropdown"
+                    startMonth={new Date(fromYear, 0)}
+                    endMonth={new Date(toYear, 11)}
                     onSelect={setCheckOut}
                     disabled={(d) =>
                       checkIn

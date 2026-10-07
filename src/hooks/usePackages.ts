@@ -28,8 +28,8 @@ export interface Package {
 }
 
 export interface PackageFilters {
-  region?: string;
-  featured?: boolean;
+  region?: string | undefined;
+  featured?: boolean | undefined;
 }
 
 export function usePackages(filters: PackageFilters = {}) {

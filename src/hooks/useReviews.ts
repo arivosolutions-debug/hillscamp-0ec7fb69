@@ -14,9 +14,9 @@ export interface Review {
 }
 
 interface UseReviewsOptions {
-  featuredOnly?: boolean;
-  propertyId?: string;
-  packageId?: string;
+  featuredOnly?: boolean | undefined;
+  propertyId?: string | undefined;
+  packageId?: string | undefined;
 }
 
 export const useReviews = (
