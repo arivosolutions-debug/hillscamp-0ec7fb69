@@ -12,7 +12,7 @@ export function useLocations() {
   return useQuery({
     queryKey: ['locations'],
     queryFn: async () => {
-      const { data, error } = await (supabase.from('locations' as any) as any)
+      const { data, error } = await (supabase.from('districts' as any) as any)
         .select('id, name, sort_order, show_in_footer')
         .order('sort_order', { ascending: true })
         .order('name', { ascending: true });
