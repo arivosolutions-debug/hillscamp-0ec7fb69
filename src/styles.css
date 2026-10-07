@@ -1,0 +1,280 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Hills Camp design system — Light Editorial.
+ *
+ * Brand tokens are stored as HSL triplets in :root and mapped to Tailwind
+ * utilities in @theme inline (e.g. --color-hc-bg -> bg-hc-bg, text-hc-bg,
+ * bg-hc-bg/50). Ported from the Classic tailwind.config.ts + index.css.
+ */
+
+@theme inline {
+  /* ── Fonts ── */
+  --font-headline: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+  --font-logo: "Sacramento", cursive;
+
+  /* ── Radius scale (matches the Classic config) ── */
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --radius-4xl: 2.75rem;
+  --radius-5xl: 3rem;
+
+  /* ── Keep Tailwind v3 sizes for renamed scales ── */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --drop-shadow-sm: 0 1px 1px rgb(0 0 0 / 0.05);
+  --blur-sm: 4px;
+
+  /* ── Custom shadows ── */
+  --shadow-card: 0 20px 25px -5px rgba(27, 28, 28, 0.06), 0 8px 10px -6px rgba(27, 28, 28, 0.04);
+  --shadow-card-lg: 0 25px 50px -12px rgba(27, 28, 28, 0.1);
+  --shadow-float: 0 4px 24px 0 rgba(27, 28, 28, 0.08);
+  --shadow-glow-amber: 0 0 40px 0 rgba(255, 162, 121, 0.15);
+
+  /* ── Max width ── */
+  --container-content: 1280px;
+
+  /* ── Hills Camp brand colours ── */
+  --color-hc-bg: hsl(var(--hc-bg));
+  --color-hc-bg-alt: hsl(var(--hc-bg-alt));
+  --color-hc-primary: hsl(var(--hc-primary));
+  --color-hc-primary-deep: hsl(var(--hc-primary-deep));
+  --color-hc-primary-dark: hsl(var(--hc-primary-dark));
+  --color-hc-secondary: hsl(var(--hc-secondary));
+  --color-hc-accent: hsl(var(--hc-accent));
+  --color-hc-accent-light: hsl(var(--hc-accent-light));
+  --color-hc-text: hsl(var(--hc-text));
+  --color-hc-text-light: hsl(var(--hc-text-light));
+  --color-hc-moss: hsl(var(--hc-moss));
+  --color-hc-green-light: hsl(var(--hc-green-light));
+  --color-hc-footer-bg: hsl(var(--hc-footer-bg));
+
+  /* ── shadcn mappings ── */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-container: hsl(var(--primary-container));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-container: hsl(var(--secondary-container));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-ring-offset-background: hsl(var(--background));
+
+  /* ── Surface nesting ── */
+  --color-surface: hsl(var(--surface));
+  --color-surface-low: hsl(var(--surface-container-low));
+  --color-surface-mid: hsl(var(--surface-container));
+  --color-surface-high: hsl(var(--surface-container-high));
+  --color-surface-highest: hsl(var(--surface-container-highest));
+
+  /* ── Sidebar ── */
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  /* ── Animations ── */
+  --animate-kenburns: kenburns 20s ease-in-out infinite alternate;
+  --animate-fade-up: fadeInUp 0.8s ease-out both;
+
+  @keyframes kenburns {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(28px); filter: blur(3px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+}
+
+:root {
+  /* ── Core brand palette (Kerala light mode) ── */
+  --hc-bg: 251 33% 98%;
+  --hc-bg-alt: 20 14% 96%;
+  --hc-primary: 136 36% 15%;
+  --hc-primary-deep: 158 65% 17%;
+  --hc-primary-dark: 157 87% 9%;
+  --hc-secondary: 17 57% 37%;
+  --hc-accent: 20 100% 73%;
+  --hc-accent-light: 20 100% 91%;
+  --hc-text: 126 5% 27%;
+  --hc-text-light: 110 6% 77%;
+  --hc-moss: 78 57% 83%;
+  --hc-green-light: 126 46% 86%;
+  --hc-footer-bg: 157 87% 9%;
+
+  /* ── shadcn token values ── */
+  --background: 251 33% 98%;
+  --foreground: 126 5% 27%;
+  --card: 0 0% 100%;
+  --card-foreground: 126 5% 27%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 126 5% 27%;
+  --primary: 136 36% 15%;
+  --primary-foreground: 126 46% 86%;
+  --primary-container: 136 36% 15%;
+  --secondary: 17 57% 37%;
+  --secondary-foreground: 0 0% 100%;
+  --secondary-container: 17 57% 37%;
+  --on-secondary-container: 0 0% 100%;
+  --muted: 20 14% 96%;
+  --muted-foreground: 110 6% 60%;
+  --accent: 20 100% 91%;
+  --accent-foreground: 17 57% 37%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 110 6% 88%;
+  --input: 110 6% 88%;
+  --ring: 17 57% 37%;
+  --radius: 1rem;
+
+  /* ── Surface nesting ── */
+  --surface: 251 33% 98%;
+  --surface-container-low: 20 14% 96%;
+  --surface-container: 20 14% 96%;
+  --surface-container-high: 0 0% 100%;
+  --surface-container-highest: 0 0% 100%;
+
+  /* ── On-surface ── */
+  --on-surface: 126 5% 27%;
+  --on-surface-variant: 110 10% 47%;
+  --on-primary: 126 46% 86%;
+  --on-primary-container: 126 46% 86%;
+  --outline-variant: 110 6% 88%;
+
+  /* ── Sidebar ── */
+  --sidebar-background: 20 14% 96%;
+  --sidebar-foreground: 126 5% 27%;
+  --sidebar-primary: 136 36% 15%;
+  --sidebar-primary-foreground: 126 46% 86%;
+  --sidebar-accent: 20 100% 91%;
+  --sidebar-accent-foreground: 17 57% 37%;
+  --sidebar-border: 110 6% 88%;
+  --sidebar-ring: 17 57% 37%;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+    overflow-wrap: break-word;
+  }
+
+  /* Tailwind v3 defaults that v4 changed */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #9ca3af;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: hsl(var(--hc-bg));
+    color: hsl(var(--hc-text));
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    text-wrap: balance;
+    color: hsl(var(--hc-primary-deep));
+  }
+
+  p { text-wrap: pretty; }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+}
+
+/* ─── Custom utilities ─────────────────────────────────────────── */
+@utility font-label {
+  font-family: "Manrope", sans-serif;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+
+@utility section-fade-up {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(4px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  &.in-view {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@utility animate-fade-in-1 { animation: fadeInUp 0.8s ease-out 0.1s both; }
+@utility animate-fade-in-2 { animation: fadeInUp 0.8s ease-out 0.3s both; }
+@utility animate-fade-in-3 { animation: fadeInUp 0.8s ease-out 0.5s both; }
+@utility animate-fade-in-4 { animation: fadeInUp 0.8s ease-out 0.7s both; }
+
+@utility card-hover {
+  & img { transition: transform 0.8s ease; }
+  &:hover img { transform: scale(1.06); }
+}
+
+@utility hero-parallax {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+@utility text-footer-link { color: rgba(167, 243, 208, 0.6); }
+@utility text-footer-muted { color: rgba(167, 243, 208, 0.4); }
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}

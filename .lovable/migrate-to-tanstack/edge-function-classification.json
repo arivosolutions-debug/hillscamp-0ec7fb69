@@ -1,0 +1,5 @@
+{"functions": [
+  {"name": "og-image", "classification": "custom response", "signal": "PNG image URL embedded in shared og:image tags fetched by external crawlers; loads wasm from esm.sh", "outcome": "left"},
+  {"name": "share-meta", "classification": "unknown", "signal": "no internal call sites; serves crawler HTML to external link-preview bots", "outcome": "left"},
+  {"name": "submit-enquiry", "classification": "internal-only", "signal": "called from src/lib/logEnquiry.ts and src/pages/Contact.tsx", "outcome": "migrated"}
+]}

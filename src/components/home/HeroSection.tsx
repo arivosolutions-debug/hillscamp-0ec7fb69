@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from '@/lib/router-compat';
 import { ArrowRight, ChevronDown, Search } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
 import { SearchSuggestions } from '@/components/home/SearchSuggestions';
@@ -53,7 +53,7 @@ const MobileHeroSearch: React.FC<{ onSubmit: (value: string) => void }> = ({ onS
           onChange={(e) => setInputValue(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => { if (!inputValue) setIsFocused(false); }}
-          className="w-full bg-white/20 backdrop-blur-sm rounded-full px-5 py-3 pr-12 text-sm text-white font-body border border-white/30 shadow-sm focus:outline-none focus:ring-2 focus:ring-white/40 placeholder:text-white/60"
+          className="w-full bg-white/20 backdrop-blur-sm rounded-full px-5 py-3 pr-12 text-sm text-white font-body border border-white/30 shadow-sm focus:outline-hidden focus:ring-2 focus:ring-white/40 placeholder:text-white/60"
         />
         {!isFocused && !inputValue && (
           <div className="absolute inset-0 flex items-center px-5 pointer-events-none" onClick={() => inputRef.current?.focus()}>

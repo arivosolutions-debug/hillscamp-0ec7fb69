@@ -60,13 +60,17 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
       }}
       onClick={onClose}
       onTouchStart={(e) => {
-        touchStartX.current = e.touches[0].clientX;
-        touchStartY.current = e.touches[0].clientY;
+        const t = e.touches[0];
+        if (!t) return;
+        touchStartX.current = t.clientX;
+        touchStartY.current = t.clientY;
       }}
       onTouchEnd={(e) => {
         if (touchStartX.current === null || touchStartY.current === null) return;
-        const dx = e.changedTouches[0].clientX - touchStartX.current;
-        const dy = e.changedTouches[0].clientY - touchStartY.current;
+        const ct = e.changedTouches[0];
+        if (!ct) return;
+        const dx = ct.clientX - touchStartX.current;
+        const dy = ct.clientY - touchStartY.current;
         touchStartX.current = null;
         touchStartY.current = null;
         if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {

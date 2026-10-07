@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 marked.setOptions({ breaks: true, gfm: true });
 
 interface MarkdownContentProps {
-  source?: string | null;
-  className?: string;
+  source?: string | null | undefined;
+  className?: string | undefined;
   /** Visual size variant for the prose */
-  size?: "sm" | "base" | "lg";
+  size?: "sm" | "base" | "lg" | undefined;
 }
 
 /**

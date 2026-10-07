@@ -3,12 +3,12 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Property, District, PropertyType } from '@/lib/types';
 
 export interface PropertyFilters {
-  district?: District;
-  property_type?: PropertyType;
-  max_guests?: number;
-  featured?: boolean;
+  district?: District | undefined;
+  property_type?: PropertyType | undefined;
+  max_guests?: number | undefined;
+  featured?: boolean | undefined;
   /** Free-text location — partial (case-insensitive) match across location, district, tags, highlights. */
-  location?: string;
+  location?: string | undefined;
 }
 
 export function useProperties(filters: PropertyFilters = {}) {

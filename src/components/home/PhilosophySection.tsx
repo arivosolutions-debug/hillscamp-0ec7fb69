@@ -18,7 +18,7 @@ export const PhilosophySection: React.FC = () => {
     if (!content) return;
     content.classList.add('section-fade-up');
     const observer = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) content.classList.add('in-view'); },
+      ([e]) => { if (e?.isIntersecting) content.classList.add('in-view'); },
       { threshold: 0.2 }
     );
     observer.observe(section);

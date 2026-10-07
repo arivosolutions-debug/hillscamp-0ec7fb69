@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { Search } from 'lucide-react';
 import { SearchSuggestions } from '@/components/home/SearchSuggestions';
 
@@ -57,7 +57,7 @@ const AnimatedSearchBar: React.FC<{ onSubmit: (value: string) => void }> = ({ on
           onBlur={() => {
             if (!inputValue) setIsFocused(false);
           }}
-          className="w-full bg-white/60 rounded-full px-5 py-3 pr-12 text-sm text-hc-primary font-body border-0 shadow-sm focus:outline-none focus:ring-2 focus:ring-hc-secondary/30"
+          className="w-full bg-white/60 rounded-full px-5 py-3 pr-12 text-sm text-hc-primary font-body border-0 shadow-sm focus:outline-hidden focus:ring-2 focus:ring-hc-secondary/30"
         />
 
         {/* Animated placeholder overlay */}
@@ -142,7 +142,7 @@ export const FloatingSearch: React.FC = () => {
               value={desktopQuery}
               onChange={(e) => setDesktopQuery(e.target.value)}
               placeholder="Munnar, treehouse…"
-              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-none text-sm placeholder:text-hc-text/50"
+              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-hidden text-sm placeholder:text-hc-text/50"
             />
             <SearchSuggestions
               query={desktopQuery}
@@ -157,7 +157,7 @@ export const FloatingSearch: React.FC = () => {
             </label>
             <select
               name="district"
-              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-none text-sm cursor-pointer">
+              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-hidden text-sm cursor-pointer">
               <option value="">Any</option>
               <option>Wayanad</option>
               <option>Munnar</option>
@@ -174,7 +174,7 @@ export const FloatingSearch: React.FC = () => {
             </label>
             <select
               name="guests"
-              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-none text-sm cursor-pointer">
+              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-hidden text-sm cursor-pointer">
               <option value="2">2 Adults</option>
               <option value="4">4 Adults</option>
               <option value="6">6 Adults</option>
@@ -187,7 +187,7 @@ export const FloatingSearch: React.FC = () => {
             </label>
             <select
               name="type"
-              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-none text-sm cursor-pointer">
+              className="w-full bg-transparent border-none p-0 text-hc-primary font-semibold focus:ring-0 focus:outline-hidden text-sm cursor-pointer">
               <option value="">Any</option>
               <option value="tree_house">Canopy Retreat</option>
               <option value="tea_estate_cabin">Planter's Legacy</option>

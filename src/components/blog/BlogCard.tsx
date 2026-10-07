@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import type { BlogPost } from '@/lib/types';

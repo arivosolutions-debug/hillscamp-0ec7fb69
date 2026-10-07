@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { Instagram, Linkedin, MessageCircle } from 'lucide-react';
 import { Logo } from '@/components/shared/Logo';
 import { useLocations } from '@/hooks/useLocations';

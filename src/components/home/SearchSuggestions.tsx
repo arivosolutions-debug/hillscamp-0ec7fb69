@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { MapPin, Loader2 } from 'lucide-react';
 import { usePropertySearch } from '@/hooks/usePropertySearch';
 import { DISTRICT_LABELS } from '@/lib/types';
 
 interface SearchSuggestionsProps {
   query: string;
-  anchorRef: React.RefObject<HTMLElement>;
+  anchorRef: React.RefObject<HTMLElement | null>;
   onSelect?: () => void;
   width?: number; // optional fixed width; defaults to anchor width
 }

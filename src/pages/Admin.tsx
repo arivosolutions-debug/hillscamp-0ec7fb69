@@ -77,7 +77,7 @@ interface PropertyForm {
   latitude: string;
   longitude: string;
   cover_image: string;
-  cover_image_file?: File;
+  cover_image_file?: File | undefined;
   location: string;
   is_featured: boolean;
   is_published: boolean;
@@ -93,8 +93,8 @@ interface ItineraryDay {
   title: string;
   subtitle: string;
   description: string;
-  image?: string | null;
-  imageFile?: File;
+  image?: string | null | undefined;
+  imageFile?: File | undefined;
 }
 
 interface PackageGalleryForm {
@@ -154,7 +154,7 @@ interface BlogForm {
   excerpt: string;
   content: string;
   cover_image: string;
-  cover_image_file?: File;
+  cover_image_file?: File | undefined;
   category: string;
   tags: string[];
   author_id: string;
@@ -182,14 +182,14 @@ const uploadFile = async (file: File, bucket: string, folder = ''): Promise<stri
 const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label: string }> = ({ label, ...props }) => (
   <div className="flex flex-col gap-1">
     <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">{label}</label>
-    <input {...props} className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-none focus:ring-2 focus:ring-hc-primary/20 placeholder:text-hc-text/40 w-full" />
+    <input {...props} className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-hidden focus:ring-2 focus:ring-hc-primary/20 placeholder:text-hc-text/40 w-full" />
   </div>
 );
 
 const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string }> = ({ label, ...props }) => (
   <div className="flex flex-col gap-1">
     <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">{label}</label>
-    <textarea {...props} rows={4} className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-none focus:ring-2 focus:ring-hc-primary/20 resize-y w-full" />
+    <textarea {...props} rows={4} className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-hidden focus:ring-2 focus:ring-hc-primary/20 resize-y w-full" />
   </div>
 );
 
@@ -306,10 +306,10 @@ const MultiImageUpload: React.FC<{
     for (let i = 0; i < files.length; i++) {
       setCompressProgress(`Compressing ${i + 1} of ${files.length}...`);
       try {
-        compressed.push(await compressImage(files[i]));
+        compressed.push(await compressImage(files[i]!));
       } catch {
         toast.error(`Compression failed for image ${i + 1} — using original`);
-        compressed.push(files[i]);
+        compressed.push(files[i]!);
       }
     }
     const newItems = compressed.map((file, i) => ({
@@ -327,7 +327,7 @@ const MultiImageUpload: React.FC<{
     const n = [...items];
     const j = i + dir;
     if (j < 0 || j >= n.length) return;
-    [n[i], n[j]] = [n[j], n[i]];
+    [n[i], n[j]] = [n[j]!, n[i]!];
     onChange(n.map((img, idx) => ({ ...img, sort_order: idx })));
   };
 
@@ -363,8 +363,8 @@ const MultiImageUpload: React.FC<{
               </div>
               {/* Alt text below image — never covered by overlay */}
               <input placeholder="Alt text" value={img.alt_text}
-                onChange={e => { const n = [...items]; n[i].alt_text = e.target.value; onChange(n); }}
-                className="w-full border border-hc-text-light/30 rounded-lg px-2 py-1 text-xs font-body focus:outline-none" />
+                onChange={e => { const n = [...items]; n[i]!.alt_text = e.target.value; onChange(n); }}
+                className="w-full border border-hc-text-light/30 rounded-lg px-2 py-1 text-xs font-body focus:outline-hidden" />
             </div>
           ))}
         </div>
@@ -385,7 +385,7 @@ const StringList: React.FC<{ label: string; placeholder: string; items: string[]
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
           placeholder={placeholder}
-          className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-none" />
+          className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-hidden" />
         <Btn onClick={add} size="sm"><Plus size={14} />Add</Btn>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -444,7 +444,7 @@ const DynamicSelect: React.FC<{
       <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">{label}</label>
       <div className="flex gap-2">
         <select value={value} onChange={e => onChange(e.target.value)}
-          className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-none">
+          className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-hidden">
           <option value="">Select {label}</option>
           {items.map(item => (
             <option key={item.id} value={item[valueField]}>{item[nameField]}</option>
@@ -456,7 +456,7 @@ const DynamicSelect: React.FC<{
         <div className="flex gap-2">
           <input value={newName} onChange={e => setNewName(e.target.value)} placeholder={`New ${label}`}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
-            className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2 text-sm font-body bg-white focus:outline-none" />
+            className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2 text-sm font-body bg-white focus:outline-hidden" />
           <Btn onClick={add} size="sm">Add</Btn>
           <Btn onClick={() => setAdding(false)} size="sm" variant="secondary">Cancel</Btn>
         </div>
@@ -576,7 +576,7 @@ const AmenitySelector: React.FC<{ selected: string[]; onChange: (ids: string[]) 
         <div className="flex gap-2">
           <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Amenity name"
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
-            className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2 text-sm font-body bg-white focus:outline-none" />
+            className="flex-1 border border-hc-text-light/30 rounded-xl px-4 py-2 text-sm font-body bg-white focus:outline-hidden" />
           <Btn onClick={add} size="sm">Save</Btn>
         </div>
       )}
@@ -620,7 +620,7 @@ const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTy
     const n = [...rooms];
     const j = i + dir;
     if (j < 0 || j >= n.length) return;
-    [n[i], n[j]] = [n[j], n[i]];
+    [n[i], n[j]] = [n[j]!, n[i]!];
     onChange(n);
   };
 
@@ -640,13 +640,13 @@ const RoomTypeEditor: React.FC<{ rooms: RoomTypeForm[]; onChange: (rooms: RoomTy
             <div className="flex-1 flex flex-col gap-3">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 <input placeholder="Room name" value={room.name} onChange={e => update(i, 'name', e.target.value)}
-                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
                 <input placeholder="Bed type (e.g. King)" value={room.bed_type} onChange={e => update(i, 'bed_type', e.target.value)}
-                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
                 <input type="number" placeholder="Max guests" value={room.max_guests} onChange={e => update(i, 'max_guests', parseInt(e.target.value) || 1)}
-                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
                 <input type="number" placeholder="Price / night (₹)" value={room.price_per_night} onChange={e => update(i, 'price_per_night', e.target.value)}
-                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                  className="border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
               </div>
               <MarkdownEditor
                 value={room.description}
@@ -688,11 +688,11 @@ const AttractionEditor: React.FC<{ items: NearbyAttractionForm[]; onChange: (ite
         <div key={i} className="bg-hc-bg-alt rounded-xl p-3 flex gap-2 items-start">
           <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2">
             <input placeholder="Name" value={a.name} onChange={e => update(i, 'name', e.target.value)}
-              className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+              className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
             <input placeholder="Distance (km)" value={a.distance_km} onChange={e => update(i, 'distance_km', e.target.value)}
-              className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+              className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
             <input placeholder="Description" value={a.description} onChange={e => update(i, 'description', e.target.value)}
-              className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+              className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
           </div>
           <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="text-hc-text-light hover:text-red-500 mt-2"><Trash2 size={16} /></button>
         </div>
@@ -711,7 +711,7 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
   const handleImage = (i: number, file: File | undefined) => {
     if (!file) return;
     const n = [...days];
-    n[i] = { ...n[i], image: URL.createObjectURL(file), imageFile: file };
+    n[i] = { ...n[i]!, image: URL.createObjectURL(file), imageFile: file };
     onChange(n);
   };
   return (
@@ -726,9 +726,9 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
             <span className="font-headline text-hc-secondary text-2xl w-10 shrink-0">{String(day.day).padStart(2, '0')}</span>
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
               <input placeholder="Day title" value={day.title} onChange={e => update(i, 'title', e.target.value)}
-                className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
               <input placeholder="Subtitle" value={day.subtitle} onChange={e => update(i, 'subtitle', e.target.value)}
-                className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+                className="border border-hc-text-light/30 rounded-lg px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
             </div>
             <button onClick={() => onChange(days.filter((_, j) => j !== i))} className="text-hc-text-light hover:text-red-500 shrink-0"><Trash2 size={16} /></button>
           </div>
@@ -744,7 +744,7 @@ const ItineraryEditor: React.FC<{ days: ItineraryDay[]; onChange: (days: Itinera
                 <img src={day.image} alt="" className="w-24 h-24 object-cover rounded-lg" />
                 <button
                   type="button"
-                  onClick={() => { const n = [...days]; n[i] = { ...n[i], image: null, imageFile: undefined }; onChange(n); }}
+                  onClick={() => { const n = [...days]; n[i] = { ...n[i]!, image: null, imageFile: undefined }; onChange(n); }}
                   className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow border border-hc-text-light/20 text-hc-text-light hover:text-red-500"
                 >
                   <Trash2 size={12} />
@@ -785,7 +785,7 @@ const PackageGalleryEditor: React.FC<{ items: PackageGalleryForm[]; onChange: (i
     const n = [...items];
     const j = i + dir;
     if (j < 0 || j >= n.length) return;
-    [n[i], n[j]] = [n[j], n[i]];
+    [n[i], n[j]] = [n[j]!, n[i]!];
     onChange(n.map((img, idx) => ({ ...img, display_order: idx })));
   };
 
@@ -950,7 +950,7 @@ const PropertyFormPage: React.FC<{
       }
       const validRooms = form.room_types.filter(r => r.name.trim());
       for (let i = 0; i < validRooms.length; i++) {
-        const r = validRooms[i];
+        const r = validRooms[i]!;
         const { data: roomData } = await supabase.from('room_types').insert({
           property_id: propertyId!, name: r.name, bed_type: r.bed_type || null,
           max_guests: r.max_guests, sort_order: i,
@@ -1436,7 +1436,7 @@ const PropertiesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error'
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by name or location…"
-            className="w-full bg-white border border-hc-text-light/15 rounded-2xl pl-10 pr-4 py-3 text-sm font-body text-hc-text outline-none focus:border-hc-primary"
+            className="w-full bg-white border border-hc-text-light/15 rounded-2xl pl-10 pr-4 py-3 text-sm font-body text-hc-text outline-hidden focus:border-hc-primary"
           />
         </div>
       )}
@@ -1606,7 +1606,7 @@ const PackagesTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by name or location…"
-            className="w-full bg-white border border-hc-text-light/15 rounded-2xl pl-10 pr-4 py-3 text-sm font-body text-hc-text outline-none focus:border-hc-primary"
+            className="w-full bg-white border border-hc-text-light/15 rounded-2xl pl-10 pr-4 py-3 text-sm font-body text-hc-text outline-hidden focus:border-hc-primary"
           />
         </div>
       )}
@@ -1760,7 +1760,7 @@ const ReviewsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') =
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">Linked Property</label>
               <select value={editing.property_id} onChange={e => setEditing(p => p ? { ...p, property_id: e.target.value } : p)}
-                className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-none">
+                className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-hidden">
                 <option value="">None</option>
                 {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
@@ -1768,7 +1768,7 @@ const ReviewsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') =
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">Linked Package</label>
               <select value={editing.package_id} onChange={e => setEditing(p => p ? { ...p, package_id: e.target.value } : p)}
-                className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-none">
+                className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-hidden">
                 <option value="">None</option>
                 {packages.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
@@ -1926,7 +1926,7 @@ const BlogTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') => v
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-semibold text-hc-text uppercase tracking-wider font-body">Author</label>
                 <select value={editing.author_id} onChange={e => set('author_id', e.target.value)}
-                  className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-none">
+                  className="border border-hc-text-light/30 rounded-xl px-4 py-2.5 text-sm font-body bg-white focus:outline-hidden">
                   <option value="">No author</option>
                   {teamMembers.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                 </select>
@@ -2000,7 +2000,7 @@ const BlogTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') => v
 const CollectionEditor: React.FC = () => {
   const [types, setTypes] = useState<any[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
-  const [form, setForm] = useState<{ name: string; collection: string; subtitle: string; cover_image: string; cover_image_file?: File }>({
+  const [form, setForm] = useState<{ name: string; collection: string; subtitle: string; cover_image: string; cover_image_file?: File | undefined }>({
     name: '', collection: '', subtitle: '', cover_image: '',
   });
   const [saving, setSaving] = useState(false);
@@ -2080,7 +2080,7 @@ const CollectionEditor: React.FC = () => {
       <div className="flex gap-2 mb-4">
         <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Add new property type"
           onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
-          className="flex-1 border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+          className="flex-1 border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
         <Btn onClick={add} size="sm"><Plus size={14} />Add</Btn>
       </div>
 
@@ -2204,10 +2204,10 @@ const SettingsTab: React.FC<{ onToast: (msg: string, type: 'success' | 'error') 
         <div className="flex gap-2 mb-4">
           <input value={newName} onChange={e => setNewName(e.target.value)} placeholder={`Add new ${title.toLowerCase()}`}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
-            className="flex-1 border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+            className="flex-1 border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
           {extraField && (
             <input value={newExtra} onChange={e => setNewExtra(e.target.value)} placeholder={extraLabel ?? extraField}
-              className="flex-1 border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-none" />
+              className="flex-1 border border-hc-text-light/30 rounded-xl px-3 py-2 text-sm font-body bg-white focus:outline-hidden" />
           )}
           <Btn onClick={add} size="sm"><Plus size={14} />Add</Btn>
         </div>
@@ -2264,7 +2264,7 @@ interface TeamMemberForm {
   role: string;
   bio: string;
   photo_url: string;
-  photo_file?: File;
+  photo_file?: File | undefined;
   sort_order: number;
 }
 
@@ -2417,7 +2417,7 @@ const PasswordGate: React.FC<{ onUnlock: () => void }> = ({ onUnlock }) => {
               value={pw}
               onChange={e => setPw(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && check()}
-              className={`w-full border rounded-xl px-4 py-3 text-sm font-body focus:outline-none pr-10 transition-colors ${error ? 'border-red-400 bg-red-50' : 'border-hc-text-light/30'}`}
+              className={`w-full border rounded-xl px-4 py-3 text-sm font-body focus:outline-hidden pr-10 transition-colors ${error ? 'border-red-400 bg-red-50' : 'border-hc-text-light/30'}`}
             />
             <button type="button" onClick={() => setShow(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-hc-text-light text-xs">
               {show ? 'Hide' : 'Show'}

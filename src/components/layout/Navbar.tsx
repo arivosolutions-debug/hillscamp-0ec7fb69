@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@/lib/router-compat";
 import { Search, Menu, X, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 

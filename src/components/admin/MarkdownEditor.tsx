@@ -162,7 +162,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             rows={rows}
-            className="w-full px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-none resize-y"
+            className="w-full px-4 py-2.5 text-sm font-body text-hc-text bg-white focus:outline-hidden resize-y"
           />
         )}
       </div>

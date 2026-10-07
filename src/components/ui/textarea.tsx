@@ -17,7 +17,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           "font-body text-sm text-hc-text placeholder:text-hc-text-light",
           "leading-relaxed resize-none",
           // Focus: bottom stroke to primary
-          "outline-none transition-colors duration-200",
+          "outline-hidden transition-colors duration-200",
           "focus-visible:border-b-hc-primary",
           // States
           "disabled:cursor-not-allowed disabled:opacity-50",

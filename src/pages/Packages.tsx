@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -32,7 +32,7 @@ const Packages: React.FC = () => {
     const sentinel = filterSentinelRef.current;
     if (!sentinel) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setIsSticky(!entry.isIntersecting),
+      ([entry]) => setIsSticky(!entry?.isIntersecting),
       { threshold: 0, rootMargin: '-72px 0px 0px 0px' }
     );
     observer.observe(sentinel);

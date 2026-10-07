@@ -1,0 +1,22 @@
+{
+  "customizations": [
+    { "token": "--hc-* brand palette (13 colours)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "hc-* colour utilities (bg/text/border)", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "shadcn token values (HSL)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "surface-* colours", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "primary/secondary container colours", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "font-headline / font-body / font-logo", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "font-label", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "radius scale (sm..5xl)", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "shadow-card / card-lg / float / glow-amber", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "max-w-content", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "animate-kenburns / animate-fade-up + keyframes", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css" },
+    { "token": "section-fade-up", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "animate-fade-in-1..4", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "card-hover", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "hero-parallax", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "text-footer-link / text-footer-muted", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "hide-scrollbar / no-scrollbar", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "base typography (body, headings, smoothing)", "source": "src/index.css", "reappliedIn": "src/styles.css" }
+  ]
+}

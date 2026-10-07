@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { ArrowRight } from 'lucide-react';
 import { usePropertyTypes } from '@/hooks/usePropertyTypes';
 
@@ -48,8 +48,8 @@ interface CollectionCardProps {
   subtitle: string;
   image: string;
   href: string;
-  cols: string;
-  aspect: string;
+  cols?: string | undefined;
+  aspect?: string | undefined;
   index: number;
 }
 
@@ -58,7 +58,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
 }) => (
   <Link
     to={href}
-    className={`collection-card group relative overflow-hidden rounded-2xl md:rounded-3xl ${cols} ${aspect} block`}
+    className={`collection-card group relative overflow-hidden rounded-2xl md:rounded-3xl ${cols ?? ""} ${aspect ?? ""} block`}
     style={{ transitionDelay: `${index * 90}ms` }}
   >
     <img
