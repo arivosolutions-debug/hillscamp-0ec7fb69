@@ -56,7 +56,7 @@ export const getShareMeta = createServerFn({ method: "GET" })
       if (!r) return null;
       if (r.is_published === false) return null;
       return {
-        title: r.name || r.title || "Hills Camp",
+        title: String(r.name || r.title || "Hills Camp").trim(),
         description: clean(r.tagline || r.excerpt || r.short_description || r.description),
         image: shareSized(r.cover_image || r.image_url || r.hero_image),
       };
