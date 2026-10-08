@@ -41,9 +41,11 @@ export const getShareMeta = createServerFn({ method: "GET" })
     return d;
   })
   .handler(async ({ data }): Promise<ShareMeta | null> => {
-    const base =
-      process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "https://amlhmlfzvqdghbbuluio.supabase.co";
-    const key = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const env = (import.meta as any).env ?? {};
+    const base: string =
+      process.env["SUPABASE_URL"] || env.VITE_SUPABASE_URL || "https://amlhmlfzvqdghbbuluio.supabase.co";
+    const key: string | undefined =
+      process.env["SUPABASE_PUBLISHABLE_KEY"] || env.VITE_SUPABASE_PUBLISHABLE_KEY;
     if (!key) return null;
     try {
       const url = `${base}/rest/v1/${TABLE[data.kind]}?select=*&slug=eq.${encodeURIComponent(data.slug)}&limit=1`;
